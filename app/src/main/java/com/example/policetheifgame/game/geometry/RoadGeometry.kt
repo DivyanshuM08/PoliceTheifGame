@@ -27,7 +27,7 @@ class RoadGeometry(
     val roadLengthMeters: Float get() = levelData.roadLengthMeters
     val roadWidthMeters: Float get() = levelData.roadWidthMeters
     val startPositionMeters: Float get() = levelData.startPositionMeters
-    val finishPositionMeters: Float get() = levelData.finishPositionMeters
+    val finishPositionMeters: Float get() = totalPathLengthMeters
 
     val pathPoints: List<Point2D> = levelData.roadPath
     val boundaries: List<RoadBoundary> = levelData.boundaries
@@ -35,7 +35,7 @@ class RoadGeometry(
     val minX: Float = (boundaries.flatMap { listOf(it.left.x, it.right.x) } + pathPoints.map { it.x }).minOrNull() ?: 40f
     val maxX: Float = (boundaries.flatMap { listOf(it.left.x, it.right.x) } + pathPoints.map { it.x }).maxOrNull() ?: 85f
     val centerX: Float get() = (minX + maxX) / 2f
-    val centerY: Float get() = (startPositionMeters + finishPositionMeters) / 2f
+    val centerY: Float get() = (pathPoints.first().y + pathPoints.last().y) / 2f
 
     // Cumulative distances along centerline vertices
     private val cumulativeDistances: FloatArray

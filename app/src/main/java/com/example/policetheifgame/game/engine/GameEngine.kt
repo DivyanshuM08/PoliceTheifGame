@@ -49,6 +49,9 @@ class GameEngine(
     var policeSpeedMps: Float = 0f
         private set
 
+    var policeSpeedMultiplier: Float = 1.0f
+        private set
+
     private var lastDragTimeNanos: Long = 0L
 
     init {
@@ -83,6 +86,25 @@ class GameEngine(
     }
 
     /**
+     * Pauses the active game.
+     */
+    fun pause() {
+        if (status == GameStatus.PLAYING) {
+            status = GameStatus.PAUSED
+        }
+    }
+
+    /**
+     * Resumes a paused game.
+     */
+    fun resume() {
+        if (status == GameStatus.PAUSED) {
+            status = GameStatus.PLAYING
+            lastDragTimeNanos = 0L // prevent delta spike
+        }
+    }
+
+    /**
      * Restarts the game from scratch.
      */
     fun restart() {
@@ -93,10 +115,11 @@ class GameEngine(
     /**
      * Loads a new level and resets the engine.
      */
-    fun loadLevel(levelData: LevelData) {
+    fun loadLevel(levelData: LevelData, levelIndex: Int = 0) {
         roadGeometry = RoadGeometry(levelData)
         thiefSpeedMps = levelData.thiefSpeedMps
         initialThiefDistanceMeters = levelData.initialGapMeters
+        policeSpeedMultiplier = 1.0f
         reset()
     }
 
@@ -126,6 +149,8 @@ class GameEngine(
 
     /**
      * Handles police dragging by the player in world coordinates.
+     * Police car moves 1:1 with user's touch point within boundaries,
+     * and police speed is calculated directly from finger drag velocity.
      */
     fun onPoliceDragged(targetWorldPoint: Point2D, currentTimeNanos: Long = System.nanoTime()) {
         if (status == GameStatus.READY) {
@@ -146,12 +171,12 @@ class GameEngine(
         // Project position onto the road
         val projection = roadGeometry.getNearestRoadPosition(targetWorldPoint)
         val newDistance = projection.distanceAlongRoadMeters.coerceAtLeast(0f)
+        val deltaDist = newDistance - policeDistanceMeters
 
-        // Calculate speed
+        // Calculate speed directly from user finger movement
         if (lastDragTimeNanos > 0L && currentTimeNanos > lastDragTimeNanos) {
             val dtSeconds = (currentTimeNanos - lastDragTimeNanos) / 1_000_000_000f
             if (dtSeconds > 0.001f) {
-                val deltaDist = newDistance - policeDistanceMeters
                 val instantSpeed = deltaDist / dtSeconds
                 // Smooth speed
                 policeSpeedMps = 0.7f * policeSpeedMps + 0.3f * instantSpeed
@@ -195,7 +220,8 @@ class GameEngine(
             thiefSpeedMps = thiefSpeedMps,
             gapMeters = max(0f, thiefDistanceMeters - policeDistanceMeters),
             roadLengthMeters = roadGeometry.finishPositionMeters,
-            cameraCenter = Point2D(roadGeometry.centerX, roadGeometry.centerY)
+            cameraCenter = Point2D(roadGeometry.centerX, roadGeometry.centerY),
+            policeSpeedMultiplier = policeSpeedMultiplier
         )
     }
 

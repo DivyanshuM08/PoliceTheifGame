@@ -17,11 +17,16 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,7 +36,9 @@ import com.example.policetheifgame.game.model.GameStatus
 import com.example.policetheifgame.ui.components.GameCanvas
 import com.example.policetheifgame.ui.components.GameHud
 import com.example.policetheifgame.ui.components.GameOverDialog
+import com.example.policetheifgame.ui.components.InfoDialog
 import com.example.policetheifgame.ui.components.OnboardingTooltip
+import com.example.policetheifgame.ui.components.PauseDialog
 import java.util.Locale
 
 @Composable
@@ -39,8 +46,15 @@ fun GameScreen(
     viewModel: GameViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.initDependencies(context)
+    }
+
     val gameState by viewModel.uiState.collectAsState()
     val showTutorial by viewModel.showTutorial.collectAsState()
+    var showInfoDialog by remember { mutableStateOf(false) }
+    var wasPlayingBeforeInfo by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -57,7 +71,7 @@ fun GameScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        // 2. Telemetry HUD Overlay (positioned at top with system bars inset)
+        // 2. Telemetry HUD Overlay (minimal floating bar with Info, Mute, Pause icons)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,8 +80,15 @@ fun GameScreen(
         ) {
             GameHud(
                 gameState = gameState,
-                onRestart = { viewModel.restartGame() },
-                onOpenTutorial = { viewModel.openTutorial() }
+                onPause = { viewModel.pauseGame() },
+                onOpenInfo = {
+                    wasPlayingBeforeInfo = (gameState.status == GameStatus.PLAYING)
+                    if (wasPlayingBeforeInfo) {
+                        viewModel.pauseGame()
+                    }
+                    showInfoDialog = true
+                },
+                onToggleMute = { viewModel.toggleMute() }
             )
         }
 
@@ -146,17 +167,51 @@ fun GameScreen(
             }
         }
 
-        // 4. Game Over Dialog (Win / Loss with Next Level & Restart)
+        // 4. Pause Dialog (Pause / Resume chase)
+        if (gameState.status == GameStatus.PAUSED) {
+            PauseDialog(
+                gameState = gameState,
+                onResume = { viewModel.resumeGame() },
+                onRestart = { viewModel.restartGame() },
+                onToggleMute = { viewModel.toggleMute() }
+            )
+        }
+
+        // 5. Info Dialog (Course Intel & Telemetry popup)
+        if (showInfoDialog) {
+            InfoDialog(
+                gameState = gameState,
+                onDismiss = {
+                    showInfoDialog = false
+                    if (wasPlayingBeforeInfo) {
+                        viewModel.resumeGame()
+                        wasPlayingBeforeInfo = false
+                    }
+                },
+                onOpenTutorial = {
+                    showInfoDialog = false
+                    viewModel.openTutorial()
+                }
+            )
+        }
+
+        // 6. Game Over Dialog (Win / Loss with Next Level & Restart)
         GameOverDialog(
             gameState = gameState,
             onRestart = { viewModel.restartGame() },
             onNextLevel = { viewModel.nextLevel() }
         )
 
-        // 5. Onboarding Tutorial Dialog / Popups
+        // 7. Onboarding Tutorial Dialog / Popups
         if (showTutorial) {
             OnboardingTooltip(
-                onDismiss = { viewModel.dismissTutorial() }
+                onDismiss = {
+                    viewModel.dismissTutorial()
+                    if (wasPlayingBeforeInfo) {
+                        viewModel.resumeGame()
+                        wasPlayingBeforeInfo = false
+                    }
+                }
             )
         }
     }

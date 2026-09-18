@@ -1,26 +1,15 @@
 package com.example.policetheifgame.ui.components
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,278 +17,102 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.policetheifgame.game.model.GameState
 import com.example.policetheifgame.game.model.GameStatus
-import java.util.Locale
 
+/**
+ * Minimalist floating header showing only Info (ℹ️), Mute (🔊/🔇), and Pause (⏸) icons.
+ * Leaves the entire screen unobstructed for the road and chase.
+ */
 @Composable
 fun GameHud(
     gameState: GameState,
-    onRestart: (() -> Unit)? = null,
-    onOpenTutorial: (() -> Unit)? = null,
+    onPause: () -> Unit,
+    onOpenInfo: () -> Unit,
+    onToggleMute: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xDD121212) // Translucent dark surface
-        ),
-        shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, Color(0x33FFFFFF))
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
+        // Left side: Info button (ℹ️)
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(14.dp)
+                .size(44.dp)
+                .clip(CircleShape)
+                .background(Color(0xCC1A1C1E))
+                .border(1.5.dp, Color(0x6600E5FF), CircleShape)
         ) {
-            // Level indicator & Action header row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            TextButton(
+                onClick = onOpenInfo,
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
+                modifier = Modifier.fillMaxSize()
             ) {
-                // Level Title Badge
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFF263238))
-                        .padding(horizontal = 10.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text = "LVL ${gameState.displayLevelNumber}/${gameState.totalLevels} • ${gameState.levelTitle.uppercase()}",
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontWeight = FontWeight.Black,
-                            letterSpacing = 1.sp
-                        ),
-                        color = Color(0xFF00E5FF)
-                    )
-                }
-
-                // Quick Action Buttons (Help & Reset)
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    if (onOpenTutorial != null) {
-                        Box(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .clip(CircleShape)
-                                .background(Color(0xFF37474F))
-                        ) {
-                            TextButton(
-                                onClick = onOpenTutorial,
-                                contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                Text(
-                                    text = "?",
-                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Black),
-                                    color = Color.White
-                                )
-                            }
-                        }
-                    }
-
-                    if (onRestart != null && gameState.status == GameStatus.PLAYING) {
-                        TextButton(
-                            onClick = onRestart,
-                            colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFFFF9800)),
-                            modifier = Modifier.height(28.dp),
-                            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp)
-                        ) {
-                            Text(
-                                text = "↺ RESET",
-                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
-                            )
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Pursuit Status Row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(10.dp)
-                            .clip(CircleShape)
-                            .background(
-                                when (gameState.status) {
-                                    GameStatus.READY -> Color(0xFFFFA000)
-                                    GameStatus.PLAYING -> Color(0xFF00E676)
-                                    GameStatus.POLICE_WON -> Color(0xFF2979FF)
-                                    GameStatus.THIEF_WON -> Color(0xFFFF1744)
-                                }
-                            )
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = when (gameState.status) {
-                            GameStatus.READY -> "READY - TAP START CHASE"
-                            GameStatus.PLAYING -> "PURSUIT IN PROGRESS"
-                            GameStatus.POLICE_WON -> "THIEF CAUGHT!"
-                            GameStatus.THIEF_WON -> "PURSUIT FAILED"
-                        },
-                        style = MaterialTheme.typography.labelMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.5.sp
-                        ),
-                        color = Color.White
-                    )
-                }
-
                 Text(
-                    text = "TARGET: ${String.format(Locale.US, "%.1f", gameState.thiefSpeedMps)} m/s",
-                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-                    color = Color(0xFFB0BEC5)
+                    text = "ℹ️",
+                    fontSize = 20.sp
                 )
             }
+        }
 
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // Distance Telemetry
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TelemetryItem(
-                    label = "POLICE",
-                    value = String.format(Locale.US, "%.1f m", gameState.policeDistanceMeters),
-                    accentColor = Color(0xFF2979FF)
-                )
-
-                TelemetryItem(
-                    label = "GAP",
-                    value = String.format(Locale.US, "%.1f m", gameState.gapMeters),
-                    accentColor = Color(0xFFFFD600)
-                )
-
-                TelemetryItem(
-                    label = "THIEF",
-                    value = String.format(Locale.US, "%.1f m", gameState.thiefDistanceMeters),
-                    accentColor = Color(0xFFFF3D00)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Mini Track Progress Bar (0 to 100m)
-            BoxWithConstraints(
+        // Right side: Sound Mute toggle & Pause button
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            // Sound Mute / Unmute Button
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(18.dp)
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xCC1A1C1E))
+                    .border(
+                        1.5.dp,
+                        if (gameState.isSirenMuted) Color(0x66FF5252) else Color(0x44FFFFFF),
+                        CircleShape
+                    )
             ) {
-                val totalLength = gameState.roadLengthMeters.coerceAtLeast(1f)
-                val policeProgress = (gameState.policeDistanceMeters / totalLength).coerceIn(0f, 1f)
-                val thiefProgress = (gameState.thiefDistanceMeters / totalLength).coerceIn(0f, 1f)
-
-                Canvas(modifier = Modifier.fillMaxSize()) {
-                    val barWidth = size.width
-                    val barHeight = size.height
-
-                    // 1. Track Base
-                    drawRoundRect(
-                        color = Color(0xFF263238),
-                        cornerRadius = CornerRadius(barHeight / 2f, barHeight / 2f)
+                TextButton(
+                    onClick = onToggleMute,
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = if (gameState.isSirenMuted) "🔇" else "🔊",
+                        fontSize = 18.sp
                     )
+                }
+            }
 
-                    // 2. Thief pursuit track segment
-                    if (thiefProgress > 0f) {
-                        drawRoundRect(
-                            color = Color(0x44FF3D00),
-                            size = Size(barWidth * thiefProgress, barHeight),
-                            cornerRadius = CornerRadius(barHeight / 2f, barHeight / 2f)
-                        )
-                    }
-
-                    // 3. Police pursuit track segment
-                    if (policeProgress > 0f) {
-                        drawRoundRect(
-                            color = Color(0x662979FF),
-                            size = Size(barWidth * policeProgress, barHeight),
-                            cornerRadius = CornerRadius(barHeight / 2f, barHeight / 2f)
-                        )
-                    }
-
-                    // 4. Finish line flag at far right
-                    drawLine(
-                        color = Color.White,
-                        start = Offset(barWidth - 4f, 2f),
-                        end = Offset(barWidth - 4f, barHeight - 2f),
-                        strokeWidth = 3f
-                    )
-
-                    // 5. Thief Marker Pin (Red with white border)
-                    val thiefX = (barWidth * thiefProgress).coerceIn(8f, barWidth - 8f)
-                    drawCircle(
-                        color = Color(0xFFFF3D00),
-                        radius = 6.5f,
-                        center = Offset(thiefX, barHeight / 2f)
-                    )
-                    drawCircle(
-                        color = Color.White,
-                        radius = 6.5f,
-                        center = Offset(thiefX, barHeight / 2f),
-                        style = Stroke(width = 2f)
-                    )
-
-                    // 6. Police Marker Pin (Blue with white border)
-                    val policeX = (barWidth * policeProgress).coerceIn(8f, barWidth - 8f)
-                    drawCircle(
-                        color = Color(0xFF2979FF),
-                        radius = 7.5f,
-                        center = Offset(policeX, barHeight / 2f)
-                    )
-                    drawCircle(
-                        color = Color.White,
-                        radius = 7.5f,
-                        center = Offset(policeX, barHeight / 2f),
-                        style = Stroke(width = 2f)
+            // Pause Button (Only enabled when playing or ready)
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xCC1A1C1E))
+                    .border(1.5.dp, Color(0x6629B6F6), CircleShape)
+            ) {
+                TextButton(
+                    onClick = onPause,
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "⏸",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Black,
+                        color = Color(0xFF29B6F6)
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun TelemetryItem(
-    label: String,
-    value: String,
-    accentColor: Color
-) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall.copy(
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 0.5.sp
-            ),
-            color = accentColor
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.ExtraBold
-            ),
-            color = Color.White
-        )
     }
 }

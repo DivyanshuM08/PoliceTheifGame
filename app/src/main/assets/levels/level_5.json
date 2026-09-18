@@ -2,9 +2,9 @@
   "levelId": "level_5",
   "title": "Coastal Serpent",
   "roadLengthMeters": 100.0,
-  "roadWidthMeters": 6.0,
-  "thiefSpeedMps": 12.0,
-  "initialGapMeters": 26.0,
+  "roadWidthMeters": 10.5,
+  "thiefSpeedMps": 15.0,
+  "initialGapMeters": 16.0,
   "startPositionMeters": 0.0,
   "finishPositionMeters": 100.0,
   "roadPath": [
@@ -19,14 +19,14 @@
     { "x": 50.0, "y": 100.0 }
   ],
   "boundaries": [
-    { "left": { "x": 47.0, "y": 0.0 }, "right": { "x": 53.0, "y": 0.0 } },
-    { "left": { "x": 35.0, "y": 14.0 }, "right": { "x": 41.0, "y": 14.0 } },
-    { "left": { "x": 39.0, "y": 26.0 }, "right": { "x": 45.0, "y": 26.0 } },
-    { "left": { "x": 59.0, "y": 40.0 }, "right": { "x": 65.0, "y": 40.0 } },
-    { "left": { "x": 63.0, "y": 52.0 }, "right": { "x": 69.0, "y": 52.0 } },
-    { "left": { "x": 39.0, "y": 66.0 }, "right": { "x": 45.0, "y": 66.0 } },
-    { "left": { "x": 33.0, "y": 78.0 }, "right": { "x": 39.0, "y": 78.0 } },
-    { "left": { "x": 53.0, "y": 90.0 }, "right": { "x": 59.0, "y": 90.0 } },
-    { "left": { "x": 47.0, "y": 100.0 }, "right": { "x": 53.0, "y": 100.0 } }
+    { "left": { "x": 44.75, "y": 0.0 }, "right": { "x": 55.25, "y": 0.0 } },
+    { "left": { "x": 32.75, "y": 14.0 }, "right": { "x": 43.25, "y": 14.0 } },
+    { "left": { "x": 36.75, "y": 26.0 }, "right": { "x": 47.25, "y": 26.0 } },
+    { "left": { "x": 56.75, "y": 40.0 }, "right": { "x": 67.25, "y": 40.0 } },
+    { "left": { "x": 60.75, "y": 52.0 }, "right": { "x": 71.25, "y": 52.0 } },
+    { "left": { "x": 36.75, "y": 66.0 }, "right": { "x": 47.25, "y": 66.0 } },
+    { "left": { "x": 30.75, "y": 78.0 }, "right": { "x": 41.25, "y": 78.0 } },
+    { "left": { "x": 50.75, "y": 90.0 }, "right": { "x": 61.25, "y": 90.0 } },
+    { "left": { "x": 44.75, "y": 100.0 }, "right": { "x": 55.25, "y": 100.0 } }
   ]
 }

@@ -2,9 +2,9 @@
   "levelId": "level_1",
   "title": "Sunny Highway",
   "roadLengthMeters": 100.0,
-  "roadWidthMeters": 8.0,
-  "thiefSpeedMps": 10.0,
-  "initialGapMeters": 20.0,
+  "roadWidthMeters": 12.0,
+  "thiefSpeedMps": 9.0,
+  "initialGapMeters": 16.0,
   "startPositionMeters": 0.0,
   "finishPositionMeters": 100.0,
   "roadPath": [
@@ -21,7 +21,7 @@
     { "x": 60.0, "y": 100.0 }
   ],
   "boundaries": [
-    { "left": { "x": 46.0, "y": 0.0 }, "right": { "x": 54.0, "y": 0.0 } },
+    { "left": { "x": 44.0, "y": 0.0 }, "right": { "x": 56.0, "y": 0.0 } },
     { "left": { "x": 44.0, "y": 10.0 }, "right": { "x": 56.0, "y": 10.0 } },
     { "left": { "x": 46.0, "y": 20.0 }, "right": { "x": 58.0, "y": 20.0 } },
     { "left": { "x": 50.0, "y": 30.0 }, "right": { "x": 62.0, "y": 30.0 } },
@@ -31,6 +31,6 @@
     { "left": { "x": 72.0, "y": 70.0 }, "right": { "x": 84.0, "y": 70.0 } },
     { "left": { "x": 70.0, "y": 80.0 }, "right": { "x": 82.0, "y": 80.0 } },
     { "left": { "x": 64.0, "y": 90.0 }, "right": { "x": 76.0, "y": 90.0 } },
-    { "left": { "x": 56.0, "y": 100.0 }, "right": { "x": 64.0, "y": 100.0 } }
+    { "left": { "x": 54.0, "y": 100.0 }, "right": { "x": 66.0, "y": 100.0 } }
   ]
 }

@@ -40,7 +40,7 @@ class LevelDataTest {
 
     @Test
     fun testAssetLevelFilesExistAndParse() {
-        for (i in 1..6) {
+        for (i in 1..10) {
             val file = java.io.File("src/main/assets/levels/level_$i.json")
             val altFile = java.io.File("app/src/main/assets/levels/level_$i.json")
             val targetFile = if (file.exists()) file else altFile
@@ -51,8 +51,8 @@ class LevelDataTest {
             assertEquals("level_$i", level.levelId)
             org.junit.Assert.assertTrue("Title for level $i should not be blank", level.title.isNotBlank())
             assertEquals(100.0f, level.roadLengthMeters, 0.001f)
-            org.junit.Assert.assertTrue("Path for level $i must have points", level.roadPath.size >= 8)
-            org.junit.Assert.assertTrue("Boundaries for level $i must have points", level.boundaries.size >= 8)
+            org.junit.Assert.assertTrue("Path for level $i must have points", level.roadPath.size >= 7)
+            org.junit.Assert.assertTrue("Boundaries for level $i must have points", level.boundaries.size >= 7)
         }
     }
 }

@@ -1,8 +1,11 @@
 package com.example.policetheifgame.ui
 
+import android.content.Context
 import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.policetheifgame.game.audio.SirenSoundManager
+import com.example.policetheifgame.game.data.GamePreferences
 import com.example.policetheifgame.game.engine.GameEngine
 import com.example.policetheifgame.game.geometry.GameViewport
 import com.example.policetheifgame.game.geometry.LevelData
@@ -20,16 +23,20 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel managing game lifecycle, multi-level progression, and onboarding tutorial.
+ * ViewModel managing game lifecycle, multi-level progression, persistence, siren audio, and onboarding tutorial.
  */
 class GameViewModel @JvmOverloads constructor(
-    initialLevelIndex: Int = 0
+    initialLevelIndex: Int = 0,
+    private var preferences: GamePreferences? = null,
+    private var sirenManager: SirenSoundManager? = null
 ) : ViewModel() {
 
-    var currentLevelIndex: Int = initialLevelIndex.coerceIn(0, LevelRepository.totalLevels - 1)
+    var currentLevelIndex: Int = (preferences?.currentLevelIndex ?: initialLevelIndex)
+        .coerceIn(0, LevelRepository.totalLevels - 1)
         private set
 
-    var unlockedLevelIndex: Int = currentLevelIndex
+    var unlockedLevelIndex: Int = (preferences?.unlockedLevelIndex ?: currentLevelIndex)
+        .coerceIn(0, LevelRepository.totalLevels - 1)
         private set
 
     private var currentLevel: LevelData = LevelRepository.getLevel(currentLevelIndex)
@@ -40,16 +47,54 @@ class GameViewModel @JvmOverloads constructor(
         initialThiefDistanceMeters = currentLevel.initialGapMeters
     )
 
+    private val _showTutorial = MutableStateFlow(preferences?.hasSeenOnboarding != true)
+    val showTutorial: StateFlow<Boolean> = _showTutorial.asStateFlow()
+
+    private val _isSirenMuted = MutableStateFlow(preferences?.isSirenMuted ?: false)
+    val isSirenMuted: StateFlow<Boolean> = _isSirenMuted.asStateFlow()
+
     private val _uiState = MutableStateFlow(createEnrichedSnapshot())
     val uiState: StateFlow<GameState> = _uiState.asStateFlow()
-
-    private val _showTutorial = MutableStateFlow(true) // Show onboarding on first land
-    val showTutorial: StateFlow<Boolean> = _showTutorial.asStateFlow()
 
     private var gameLoopJob: Job? = null
 
     init {
+        gameEngine.loadLevel(currentLevel, currentLevelIndex)
         publishSnapshot()
+    }
+
+    /**
+     * Initializes persistence and audio managers from application Context.
+     * Safe for Compose runtime and no-op if already injected.
+     */
+    fun initDependencies(context: Context) {
+        var needsSnapshot = false
+        if (preferences == null) {
+            val prefs = GamePreferences(context.applicationContext)
+            preferences = prefs
+            _showTutorial.value = !prefs.hasSeenOnboarding
+            _isSirenMuted.value = prefs.isSirenMuted
+
+            val savedLevel = prefs.currentLevelIndex.coerceIn(0, LevelRepository.totalLevels - 1)
+            if (savedLevel != currentLevelIndex && gameEngine.status == GameStatus.READY) {
+                currentLevelIndex = savedLevel
+                currentLevel = LevelRepository.getLevel(currentLevelIndex)
+                gameEngine.loadLevel(currentLevel, currentLevelIndex)
+            }
+            if (prefs.unlockedLevelIndex > unlockedLevelIndex) {
+                unlockedLevelIndex = prefs.unlockedLevelIndex
+            }
+            needsSnapshot = true
+        }
+
+        if (sirenManager == null) {
+            sirenManager = SirenSoundManager(initialMuted = _isSirenMuted.value)
+            needsSnapshot = true
+        }
+
+        if (needsSnapshot) {
+            publishSnapshot()
+        }
     }
 
     fun openTutorial() {
@@ -58,15 +103,48 @@ class GameViewModel @JvmOverloads constructor(
 
     fun dismissTutorial() {
         _showTutorial.value = false
+        preferences?.hasSeenOnboarding = true
+    }
+
+    fun toggleMute() {
+        val newMuted = sirenManager?.toggleMute() ?: !_isSirenMuted.value
+        _isSirenMuted.value = newMuted
+        preferences?.isSirenMuted = newMuted
+        publishSnapshot()
     }
 
     /**
-     * Starts the chase and begins the coroutine update loop.
+     * Starts the chase and begins the coroutine update loop and siren audio.
      */
     fun startGame() {
         gameEngine.start()
+        sirenManager?.play()
         publishSnapshot()
         startGameLoop()
+    }
+
+    /**
+     * Pauses the active game and siren sound.
+     */
+    fun pauseGame() {
+        if (gameEngine.status == GameStatus.PLAYING) {
+            gameEngine.pause()
+            sirenManager?.pause()
+            gameLoopJob?.cancel()
+            publishSnapshot()
+        }
+    }
+
+    /**
+     * Resumes a paused game and restores siren sound.
+     */
+    fun resumeGame() {
+        if (gameEngine.status == GameStatus.PAUSED) {
+            gameEngine.resume()
+            sirenManager?.play()
+            publishSnapshot()
+            startGameLoop()
+        }
     }
 
     /**
@@ -75,6 +153,7 @@ class GameViewModel @JvmOverloads constructor(
     fun restartGame() {
         gameLoopJob?.cancel()
         gameEngine.restart()
+        sirenManager?.play()
         publishSnapshot()
         startGameLoop()
     }
@@ -96,9 +175,11 @@ class GameViewModel @JvmOverloads constructor(
      */
     fun selectLevel(index: Int) {
         gameLoopJob?.cancel()
+        sirenManager?.stop()
         currentLevelIndex = index.coerceIn(0, LevelRepository.totalLevels - 1)
+        preferences?.currentLevelIndex = currentLevelIndex
         currentLevel = LevelRepository.getLevel(currentLevelIndex)
-        gameEngine.loadLevel(currentLevel)
+        gameEngine.loadLevel(currentLevel, currentLevelIndex)
         publishSnapshot()
     }
 
@@ -106,8 +187,16 @@ class GameViewModel @JvmOverloads constructor(
      * Handles user dragging the police car on the screen.
      */
     fun onPoliceDrag(screenOffset: Offset, viewport: GameViewport) {
+        if (gameEngine.status == GameStatus.PAUSED) return
+
+        val wasReady = gameEngine.status == GameStatus.READY
         val worldPoint = viewport.screenToWorld(screenOffset)
         gameEngine.onPoliceDragged(worldPoint)
+
+        if (wasReady && gameEngine.status == GameStatus.PLAYING) {
+            sirenManager?.play()
+        }
+
         publishSnapshot()
 
         if (gameEngine.status == GameStatus.PLAYING && (gameLoopJob == null || gameLoopJob?.isActive == false)) {
@@ -127,8 +216,12 @@ class GameViewModel @JvmOverloads constructor(
                 lastTimeNanos = nowNanos
 
                 gameEngine.tick(deltaSeconds)
-                publishSnapshot()
 
+                if (gameEngine.status == GameStatus.POLICE_WON || gameEngine.status == GameStatus.THIEF_WON) {
+                    sirenManager?.stop()
+                }
+
+                publishSnapshot()
                 delay(targetFrameTimeMs)
             }
             publishSnapshot()
@@ -141,13 +234,16 @@ class GameViewModel @JvmOverloads constructor(
             val nextLvl = (currentLevelIndex + 1).coerceAtMost(LevelRepository.totalLevels - 1)
             if (nextLvl > unlockedLevelIndex) {
                 unlockedLevelIndex = nextLvl
+                preferences?.unlockedLevelIndex = nextLvl
             }
         }
         return base.copy(
             levelIndex = currentLevelIndex,
             levelTitle = currentLevel.title,
             totalLevels = LevelRepository.totalLevels,
-            unlockedLevelIndex = unlockedLevelIndex
+            unlockedLevelIndex = unlockedLevelIndex,
+            isSirenMuted = _isSirenMuted.value,
+            policeSpeedMultiplier = gameEngine.policeSpeedMultiplier
         )
     }
 
@@ -158,5 +254,7 @@ class GameViewModel @JvmOverloads constructor(
     override fun onCleared() {
         super.onCleared()
         gameLoopJob?.cancel()
+        sirenManager?.release()
+        sirenManager = null
     }
 }
