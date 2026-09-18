@@ -266,5 +266,55 @@ class GameEngineTest {
         assertTrue("Left road edge must be within screen width", leftScreen.x >= 0f)
         assertTrue("Right road edge must be within screen width", rightScreen.x <= screenSize.width)
     }
+
+    /**
+     * Requirement 11: LevelRepository loads all 6 levels with progressively increasing challenge.
+     */
+    @Test
+    fun test11_levelRepositoryLoadsAll6LevelsWithIncreasingDifficulty() {
+        val totalLevels = com.example.policetheifgame.game.geometry.LevelRepository.totalLevels
+        assertEquals(6, totalLevels)
+
+        var previousSpeed = 0f
+        var previousWidth = 100f
+
+        for (i in 0 until totalLevels) {
+            val level = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(i)
+            assertTrue("Level title must not be blank", level.title.isNotBlank())
+            assertTrue("Road path must have at least 8 waypoints", level.roadPath.size >= 8)
+            assertTrue("Boundaries must match path size", level.boundaries.size == level.roadPath.size)
+            assertEquals(100.0f, level.roadLengthMeters, 0.001f)
+
+            // Speed must increase or stay high
+            assertTrue("Thief speed should increase with level: ${level.thiefSpeedMps} >= $previousSpeed", level.thiefSpeedMps >= previousSpeed)
+            previousSpeed = level.thiefSpeedMps
+
+            // Road width should decrease or stay challenging
+            assertTrue("Road width should narrow or remain tight: ${level.roadWidthMeters} <= $previousWidth", level.roadWidthMeters <= previousWidth)
+            previousWidth = level.roadWidthMeters
+        }
+    }
+
+    /**
+     * Requirement 12: Engine dynamically reconfigures speed and boundaries for higher levels.
+     */
+    @Test
+    fun test12_engineReconfiguresPerLevel() {
+        val level5 = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(4)
+        assertEquals("Coastal Serpent", level5.title)
+        assertEquals(12.0f, level5.thiefSpeedMps, 0.001f)
+        assertEquals(26.0f, level5.initialGapMeters, 0.001f)
+
+        gameEngine.loadLevel(level5)
+        assertEquals(26.0f, gameEngine.thiefDistanceMeters, 0.001f)
+        assertEquals(0.0f, gameEngine.policeDistanceMeters, 0.001f)
+
+        gameEngine.start()
+        gameEngine.tick(1.0f)
+
+        // Moves at 12.0 m/s
+        assertEquals(38.0f, gameEngine.thiefDistanceMeters, 0.001f)
+    }
 }
+
 

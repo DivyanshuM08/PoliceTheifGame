@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -43,6 +44,7 @@ import java.util.Locale
 fun GameHud(
     gameState: GameState,
     onRestart: (() -> Unit)? = null,
+    onOpenTutorial: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -60,7 +62,74 @@ fun GameHud(
                 .fillMaxWidth()
                 .padding(14.dp)
         ) {
-            // Status bar row
+            // Level indicator & Action header row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Level Title Badge
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFF263238))
+                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "LVL ${gameState.displayLevelNumber}/${gameState.totalLevels} • ${gameState.levelTitle.uppercase()}",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.Black,
+                            letterSpacing = 1.sp
+                        ),
+                        color = Color(0xFF00E5FF)
+                    )
+                }
+
+                // Quick Action Buttons (Help & Reset)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    if (onOpenTutorial != null) {
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFF37474F))
+                        ) {
+                            TextButton(
+                                onClick = onOpenTutorial,
+                                contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                Text(
+                                    text = "?",
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Black),
+                                    color = Color.White
+                                )
+                            }
+                        }
+                    }
+
+                    if (onRestart != null && gameState.status == GameStatus.PLAYING) {
+                        TextButton(
+                            onClick = onRestart,
+                            colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFFFF9800)),
+                            modifier = Modifier.height(28.dp),
+                            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp)
+                        ) {
+                            Text(
+                                text = "↺ RESET",
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Pursuit Status Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -90,32 +159,17 @@ fun GameHud(
                         },
                         style = MaterialTheme.typography.labelMedium.copy(
                             fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
+                            letterSpacing = 0.5.sp
                         ),
                         color = Color.White
                     )
                 }
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (gameState.status == GameStatus.PLAYING && onRestart != null) {
-                        TextButton(
-                            onClick = onRestart,
-                            colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFFFF9800)),
-                            modifier = Modifier.height(28.dp)
-                        ) {
-                            Text(
-                                text = "↺ RESET",
-                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
-                            )
-                        }
-                    } else {
-                        Text(
-                            text = "SPEED: 10 m/s",
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-                            color = Color(0xFFB0BEC5)
-                        )
-                    }
-                }
+                Text(
+                    text = "TARGET: ${String.format(Locale.US, "%.1f", gameState.thiefSpeedMps)} m/s",
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                    color = Color(0xFFB0BEC5)
+                )
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -146,7 +200,7 @@ fun GameHud(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Mini Track Progress Bar (0 to 100m) - Rendered safely with Canvas
+            // Mini Track Progress Bar (0 to 100m)
             BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxWidth()

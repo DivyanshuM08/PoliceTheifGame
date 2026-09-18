@@ -13,12 +13,15 @@ data class RoadBoundary(
 )
 
 /**
- * Raw data model for a level's road geometry.
+ * Raw data model for a level's road geometry and parameters.
  */
 data class LevelData(
     val levelId: String,
+    val title: String = "Level",
     val roadLengthMeters: Float,
     val roadWidthMeters: Float,
+    val thiefSpeedMps: Float = 10.0f,
+    val initialGapMeters: Float = 20.0f,
     val startPositionMeters: Float,
     val finishPositionMeters: Float,
     val roadPath: List<Point2D>,
@@ -59,8 +62,11 @@ data class LevelData(
 
             return LevelData(
                 levelId = "level_1",
+                title = "Sunny Highway",
                 roadLengthMeters = 100.0f,
                 roadWidthMeters = 8.0f,
+                thiefSpeedMps = 10.0f,
+                initialGapMeters = 20.0f,
                 startPositionMeters = 0.0f,
                 finishPositionMeters = 100.0f,
                 roadPath = path,
@@ -75,8 +81,11 @@ data class LevelData(
         fun fromJson(jsonStr: String): LevelData {
             val root = JSONObject(jsonStr)
             val levelId = root.optString("levelId", "custom_level")
+            val title = root.optString("title", "Level $levelId")
             val roadLength = (root.optDouble("roadLengthMeters", root.optDouble("roadLength", 100.0))).toFloat()
             val roadWidth = (root.optDouble("roadWidthMeters", root.optDouble("roadWidth", 8.0))).toFloat()
+            val thiefSpeed = root.optDouble("thiefSpeedMps", 10.0).toFloat()
+            val initialGap = root.optDouble("initialGapMeters", 20.0).toFloat()
             val startPos = (root.optDouble("startPositionMeters", root.optDouble("startPosition", 0.0))).toFloat()
             val finishPos = (root.optDouble("finishPositionMeters", root.optDouble("finishPosition", roadLength.toDouble()))).toFloat()
 
@@ -102,8 +111,11 @@ data class LevelData(
 
             return LevelData(
                 levelId = levelId,
+                title = title,
                 roadLengthMeters = roadLength,
                 roadWidthMeters = roadWidth,
+                thiefSpeedMps = thiefSpeed,
+                initialGapMeters = initialGap,
                 startPositionMeters = startPos,
                 finishPositionMeters = finishPos,
                 roadPath = pathPoints,

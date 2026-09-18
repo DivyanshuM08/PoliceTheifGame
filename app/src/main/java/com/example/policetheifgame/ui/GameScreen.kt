@@ -31,6 +31,8 @@ import com.example.policetheifgame.game.model.GameStatus
 import com.example.policetheifgame.ui.components.GameCanvas
 import com.example.policetheifgame.ui.components.GameHud
 import com.example.policetheifgame.ui.components.GameOverDialog
+import com.example.policetheifgame.ui.components.OnboardingTooltip
+import java.util.Locale
 
 @Composable
 fun GameScreen(
@@ -38,6 +40,7 @@ fun GameScreen(
     modifier: Modifier = Modifier
 ) {
     val gameState by viewModel.uiState.collectAsState()
+    val showTutorial by viewModel.showTutorial.collectAsState()
 
     Box(
         modifier = modifier
@@ -63,7 +66,8 @@ fun GameScreen(
         ) {
             GameHud(
                 gameState = gameState,
-                onRestart = { viewModel.restartGame() }
+                onRestart = { viewModel.restartGame() },
+                onOpenTutorial = { viewModel.openTutorial() }
             )
         }
 
@@ -89,6 +93,17 @@ fun GameScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
+                            text = "LEVEL ${gameState.displayLevelNumber}: ${gameState.levelTitle.uppercase()}",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 1.sp
+                            ),
+                            color = Color(0xFF00E5FF)
+                        )
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Text(
                             text = "POLICE VS THIEF",
                             style = MaterialTheme.typography.headlineSmall.copy(
                                 fontWeight = FontWeight.Black,
@@ -100,7 +115,7 @@ fun GameScreen(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         Text(
-                            text = "A criminal vehicle is escaping at 10 m/s along the road!\n\nDrag your police cruiser to chase and intercept them before the 100m finish line.\n\n⚠️ Stay within road boundaries — driving off the road ends the pursuit!",
+                            text = "The suspect is fleeing at ${String.format(Locale.US, "%.1f", gameState.thiefSpeedMps)} m/s!\n\nDrag your police cruiser along the road to chase and intercept them before the 100m finish line.\n\n⚠️ Stay within road boundaries — driving off the road ends the pursuit!",
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
                             color = Color(0xFFCFD8DC),
@@ -131,10 +146,18 @@ fun GameScreen(
             }
         }
 
-        // 4. Game Over Dialog (Win / Loss with Restart)
+        // 4. Game Over Dialog (Win / Loss with Next Level & Restart)
         GameOverDialog(
             gameState = gameState,
-            onRestart = { viewModel.restartGame() }
+            onRestart = { viewModel.restartGame() },
+            onNextLevel = { viewModel.nextLevel() }
         )
+
+        // 5. Onboarding Tutorial Dialog / Popups
+        if (showTutorial) {
+            OnboardingTooltip(
+                onDismiss = { viewModel.dismissTutorial() }
+            )
+        }
     }
 }

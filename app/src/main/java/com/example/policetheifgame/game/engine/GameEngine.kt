@@ -1,5 +1,6 @@
 package com.example.policetheifgame.game.engine
 
+import com.example.policetheifgame.game.geometry.LevelData
 import com.example.policetheifgame.game.geometry.RoadGeometry
 import com.example.policetheifgame.game.model.GameOverReason
 import com.example.policetheifgame.game.model.GameState
@@ -14,12 +15,13 @@ import kotlin.math.min
  */
 class GameEngine(
     var roadGeometry: RoadGeometry,
-    val thiefSpeedMps: Float = 10.0f,
-    val initialThiefDistanceMeters: Float = 20.0f,
+    var thiefSpeedMps: Float = 10.0f,
+    var initialThiefDistanceMeters: Float = 20.0f,
     val initialPoliceDistanceMeters: Float = 0.0f,
     val catchDistanceMeters: Float = 2.5f,
     val roadBoundaryToleranceMeters: Float = 0.6f
 ) {
+
     var status: GameStatus = GameStatus.READY
         private set
 
@@ -87,6 +89,17 @@ class GameEngine(
         reset()
         start()
     }
+
+    /**
+     * Loads a new level and resets the engine.
+     */
+    fun loadLevel(levelData: LevelData) {
+        roadGeometry = RoadGeometry(levelData)
+        thiefSpeedMps = levelData.thiefSpeedMps
+        initialThiefDistanceMeters = levelData.initialGapMeters
+        reset()
+    }
+
 
     /**
      * Advances the simulation by [deltaTimeSeconds].

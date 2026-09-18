@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.policetheifgame.game.engine.GameEngine
 import com.example.policetheifgame.game.geometry.GameViewport
 import com.example.policetheifgame.game.geometry.LevelData
+import com.example.policetheifgame.game.geometry.LevelRepository
 import com.example.policetheifgame.game.geometry.RoadGeometry
 import com.example.policetheifgame.game.model.GameState
 import com.example.policetheifgame.game.model.GameStatus
@@ -19,41 +20,86 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel managing the Police vs Thief game lifecycle and state exposure.
+ * ViewModel managing game lifecycle, multi-level progression, and onboarding tutorial.
  */
 class GameViewModel @JvmOverloads constructor(
-    initialLevel: LevelData = LevelData.createDefaultLevel1()
+    initialLevelIndex: Int = 0
 ) : ViewModel() {
 
-    private val roadGeometry = RoadGeometry(initialLevel)
-    val gameEngine = GameEngine(roadGeometry)
+    var currentLevelIndex: Int = initialLevelIndex.coerceIn(0, LevelRepository.totalLevels - 1)
+        private set
 
-    private val _uiState = MutableStateFlow(gameEngine.getSnapshot())
+    var unlockedLevelIndex: Int = currentLevelIndex
+        private set
+
+    private var currentLevel: LevelData = LevelRepository.getLevel(currentLevelIndex)
+
+    val gameEngine = GameEngine(
+        roadGeometry = RoadGeometry(currentLevel),
+        thiefSpeedMps = currentLevel.thiefSpeedMps,
+        initialThiefDistanceMeters = currentLevel.initialGapMeters
+    )
+
+    private val _uiState = MutableStateFlow(createEnrichedSnapshot())
     val uiState: StateFlow<GameState> = _uiState.asStateFlow()
+
+    private val _showTutorial = MutableStateFlow(true) // Show onboarding on first land
+    val showTutorial: StateFlow<Boolean> = _showTutorial.asStateFlow()
 
     private var gameLoopJob: Job? = null
 
     init {
-        _uiState.value = gameEngine.getSnapshot()
+        publishSnapshot()
+    }
+
+    fun openTutorial() {
+        _showTutorial.value = true
+    }
+
+    fun dismissTutorial() {
+        _showTutorial.value = false
     }
 
     /**
-     * Starts the game and begins the coroutine update loop.
+     * Starts the chase and begins the coroutine update loop.
      */
     fun startGame() {
         gameEngine.start()
-        _uiState.value = gameEngine.getSnapshot()
+        publishSnapshot()
         startGameLoop()
     }
 
     /**
-     * Restarts the game from initial positions.
+     * Restarts the current level from initial positions.
      */
     fun restartGame() {
         gameLoopJob?.cancel()
         gameEngine.restart()
-        _uiState.value = gameEngine.getSnapshot()
+        publishSnapshot()
         startGameLoop()
+    }
+
+    /**
+     * Advances to the next level.
+     */
+    fun nextLevel() {
+        if (currentLevelIndex < LevelRepository.totalLevels - 1) {
+            selectLevel(currentLevelIndex + 1)
+        } else {
+            // Replay from level 1 or restart final
+            restartGame()
+        }
+    }
+
+    /**
+     * Selects and loads an unlocked level.
+     */
+    fun selectLevel(index: Int) {
+        gameLoopJob?.cancel()
+        currentLevelIndex = index.coerceIn(0, LevelRepository.totalLevels - 1)
+        currentLevel = LevelRepository.getLevel(currentLevelIndex)
+        gameEngine.loadLevel(currentLevel)
+        publishSnapshot()
     }
 
     /**
@@ -62,9 +108,8 @@ class GameViewModel @JvmOverloads constructor(
     fun onPoliceDrag(screenOffset: Offset, viewport: GameViewport) {
         val worldPoint = viewport.screenToWorld(screenOffset)
         gameEngine.onPoliceDragged(worldPoint)
-        _uiState.value = gameEngine.getSnapshot()
+        publishSnapshot()
 
-        // Ensure game loop is active if drag started the game
         if (gameEngine.status == GameStatus.PLAYING && (gameLoopJob == null || gameLoopJob?.isActive == false)) {
             startGameLoop()
         }
@@ -82,24 +127,32 @@ class GameViewModel @JvmOverloads constructor(
                 lastTimeNanos = nowNanos
 
                 gameEngine.tick(deltaSeconds)
-                _uiState.value = gameEngine.getSnapshot()
+                publishSnapshot()
 
                 delay(targetFrameTimeMs)
             }
-            // Emit final state when loop exits
-            _uiState.value = gameEngine.getSnapshot()
+            publishSnapshot()
         }
     }
 
-    /**
-     * Loads a new level geometry without changing game logic.
-     */
-    fun loadLevel(levelData: LevelData) {
-        gameLoopJob?.cancel()
-        val newGeometry = RoadGeometry(levelData)
-        gameEngine.roadGeometry = newGeometry
-        gameEngine.reset()
-        _uiState.value = gameEngine.getSnapshot()
+    private fun createEnrichedSnapshot(): GameState {
+        val base = gameEngine.getSnapshot()
+        if (base.status == GameStatus.POLICE_WON) {
+            val nextLvl = (currentLevelIndex + 1).coerceAtMost(LevelRepository.totalLevels - 1)
+            if (nextLvl > unlockedLevelIndex) {
+                unlockedLevelIndex = nextLvl
+            }
+        }
+        return base.copy(
+            levelIndex = currentLevelIndex,
+            levelTitle = currentLevel.title,
+            totalLevels = LevelRepository.totalLevels,
+            unlockedLevelIndex = unlockedLevelIndex
+        )
+    }
+
+    private fun publishSnapshot() {
+        _uiState.value = createEnrichedSnapshot()
     }
 
     override fun onCleared() {
