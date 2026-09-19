@@ -1,0 +1,37 @@
+{
+  "levelId": "level_20",
+  "title": "The Master Labyrinth",
+  "roadLengthMeters": 150.0,
+  "roadWidthMeters": 5.8,
+  "thiefSpeedMps": 33.0,
+  "initialGapMeters": 32.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 150.0,
+  "isPuzzle": true,
+  "policeStart": {"x": 15.0, "y": 15.0},
+  "thiefStart": {"x": 50.0, "y": 35.0},
+  "destination": {"x": 50.0, "y": 125.0},
+  "thiefRoute": [
+    {"x": 50.0, "y": 35.0},
+    {"x": 65.0, "y": 35.0},
+    {"x": 65.0, "y": 55.0},
+    {"x": 85.0, "y": 55.0},
+    {"x": 85.0, "y": 105.0},
+    {"x": 50.0, "y": 105.0},
+    {"x": 50.0, "y": 125.0}
+  ],
+  "corridors": [
+    {"id": "c_outer_south", "widthMeters": 5.8, "path": [{"x": 15.0, "y": 10.0}, {"x": 85.0, "y": 10.0}]},
+    {"id": "c_outer_west", "widthMeters": 5.8, "path": [{"x": 15.0, "y": 10.0}, {"x": 15.0, "y": 105.0}]},
+    {"id": "c_outer_east", "widthMeters": 5.8, "path": [{"x": 85.0, "y": 10.0}, {"x": 85.0, "y": 105.0}]},
+    {"id": "c_outer_north", "widthMeters": 5.8, "path": [{"x": 15.0, "y": 105.0}, {"x": 85.0, "y": 105.0}]},
+    {"id": "c_inner_south", "widthMeters": 5.8, "path": [{"x": 35.0, "y": 35.0}, {"x": 65.0, "y": 35.0}]},
+    {"id": "c_inner_north", "widthMeters": 5.8, "path": [{"x": 35.0, "y": 75.0}, {"x": 65.0, "y": 75.0}]},
+    {"id": "c_inner_west", "widthMeters": 5.8, "path": [{"x": 35.0, "y": 35.0}, {"x": 35.0, "y": 75.0}]},
+    {"id": "c_inner_east", "widthMeters": 5.8, "path": [{"x": 65.0, "y": 35.0}, {"x": 65.0, "y": 75.0}]},
+    {"id": "c_conn_west", "widthMeters": 5.8, "path": [{"x": 15.0, "y": 55.0}, {"x": 35.0, "y": 55.0}]},
+    {"id": "c_conn_east", "widthMeters": 5.8, "path": [{"x": 65.0, "y": 55.0}, {"x": 85.0, "y": 55.0}]},
+    {"id": "c_center_trap", "widthMeters": 5.8, "isDeadEnd": true, "path": [{"x": 50.0, "y": 55.0}, {"x": 50.0, "y": 40.0}]},
+    {"id": "c_escape_chute", "widthMeters": 5.8, "path": [{"x": 50.0, "y": 75.0}, {"x": 50.0, "y": 125.0}]}
+  ]
+}

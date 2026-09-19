@@ -1,0 +1,30 @@
+{
+  "levelId": "level_14",
+  "title": "City Block Grid",
+  "roadLengthMeters": 115.0,
+  "roadWidthMeters": 8.5,
+  "thiefSpeedMps": 19.5,
+  "initialGapMeters": 24.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 115.0,
+  "isPuzzle": true,
+  "policeStart": {"x": 20.0, "y": 20.0},
+  "thiefStart": {"x": 50.0, "y": 30.0},
+  "destination": {"x": 80.0, "y": 110.0},
+  "thiefRoute": [
+    {"x": 50.0, "y": 30.0},
+    {"x": 50.0, "y": 55.0},
+    {"x": 80.0, "y": 55.0},
+    {"x": 80.0, "y": 95.0},
+    {"x": 80.0, "y": 110.0}
+  ],
+  "corridors": [
+    {"id": "c_street_south", "widthMeters": 8.5, "path": [{"x": 20.0, "y": 15.0}, {"x": 80.0, "y": 15.0}]},
+    {"id": "c_street_mid", "widthMeters": 8.5, "path": [{"x": 20.0, "y": 55.0}, {"x": 80.0, "y": 55.0}]},
+    {"id": "c_street_north", "widthMeters": 8.5, "path": [{"x": 20.0, "y": 95.0}, {"x": 80.0, "y": 95.0}]},
+    {"id": "c_ave_west", "widthMeters": 8.5, "path": [{"x": 20.0, "y": 15.0}, {"x": 20.0, "y": 95.0}]},
+    {"id": "c_ave_center", "widthMeters": 8.5, "path": [{"x": 50.0, "y": 15.0}, {"x": 50.0, "y": 95.0}]},
+    {"id": "c_ave_east", "widthMeters": 8.5, "path": [{"x": 80.0, "y": 15.0}, {"x": 80.0, "y": 95.0}]},
+    {"id": "c_exit", "widthMeters": 8.5, "path": [{"x": 80.0, "y": 95.0}, {"x": 80.0, "y": 110.0}]}
+  ]
+}

@@ -275,13 +275,13 @@ class GameEngineTest {
     @Test
     fun test11_levelRepositoryLoadsAll10LevelsWithIncreasingDifficulty() {
         val totalLevels = com.example.policetheifgame.game.geometry.LevelRepository.totalLevels
-        assertEquals(10, totalLevels)
+        assertEquals(20, totalLevels)
 
         var previousLength = 0f
         var previousSpeed = 0f
         var previousWidth = 100f
 
-        for (i in 0 until totalLevels) {
+        for (i in 0 until 10) {
             val level = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(i)
             assertTrue("Level title must not be blank", level.title.isNotBlank())
             assertTrue("Road path must have at least 7 waypoints", level.roadPath.size >= 7)
@@ -379,7 +379,7 @@ class GameEngineTest {
         val viewModel = com.example.policetheifgame.ui.GameViewModel(initialLevelIndex = 3)
         assertEquals(3, viewModel.currentLevelIndex)
         assertEquals("Mountain Pass", viewModel.uiState.value.levelTitle)
-        assertEquals(10, viewModel.uiState.value.totalLevels)
+        assertEquals(20, viewModel.uiState.value.totalLevels)
 
         // Toggle mute
         val initialMuted = viewModel.isSirenMuted.value
@@ -490,7 +490,8 @@ class GameEngineTest {
         var prevSpeed = 0f
         var prevWidth = 999f
 
-        for (i in 0 until com.example.policetheifgame.game.geometry.LevelRepository.totalLevels) {
+        // Levels 1 to 10: Highway progression
+        for (i in 0 until 10) {
             val level = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(i)
 
             assertTrue(
@@ -509,6 +510,25 @@ class GameEngineTest {
             prevLength = level.roadLengthMeters
             prevSpeed = level.thiefSpeedMps
             prevWidth = level.roadWidthMeters
+        }
+
+        // Levels 11 to 20: Puzzle maze progression
+        var prevPuzzleSpeed = 0f
+        var prevCorridorWidth = 999f
+        for (i in 10 until 20) {
+            val level = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(i)
+            assertTrue("Level ${i + 1} must be marked as puzzle", level.isPuzzle)
+            assertTrue(
+                "Level ${i + 1} thief speed (${level.thiefSpeedMps}) must be > prev ($prevPuzzleSpeed)",
+                level.thiefSpeedMps > prevPuzzleSpeed
+            )
+            assertTrue(
+                "Level ${i + 1} corridor width (${level.roadWidthMeters}) must be <= prev ($prevCorridorWidth)",
+                level.roadWidthMeters <= prevCorridorWidth
+            )
+            assertTrue("Level ${i + 1} must have corridors", level.corridors.size >= 4)
+            prevPuzzleSpeed = level.thiefSpeedMps
+            prevCorridorWidth = level.roadWidthMeters
         }
     }
 
@@ -603,6 +623,130 @@ class GameEngineTest {
             finishScreenPos.y > 40f
         )
     }
+
+    /**
+     * Requirement 21: Puzzle levels 11 through 20 loaded correctly with corridors, start, destination, and thief routes.
+     */
+    @Test
+    fun test21_puzzleLevelsLoadedCorrectlyWithCorridorsAndRoutes() {
+        for (i in 10 until 20) {
+            val level = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(i)
+            assertTrue("Level ${i + 1} must have isPuzzle = true", level.isPuzzle)
+            assertTrue("Level ${i + 1} corridors must not be empty", level.corridors.isNotEmpty())
+            org.junit.Assert.assertNotNull("Level ${i + 1} policeStartPosition must exist", level.policeStartPosition)
+            org.junit.Assert.assertNotNull("Level ${i + 1} thiefStartPosition must exist", level.thiefStartPosition)
+            org.junit.Assert.assertNotNull("Level ${i + 1} destinationPosition must exist", level.destinationPosition)
+            assertTrue("Level ${i + 1} thiefRoute must have at least 2 points", level.thiefRoute.size >= 2)
+        }
+    }
+
+    /**
+     * Requirement 22: Corridor containment & off-road crash in puzzle maze.
+     */
+    @Test
+    fun test22_puzzleRoadGeometryCorridorContainmentAndOffRoad() {
+        val level11 = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(10)
+        val geom = RoadGeometry(level11)
+        val engine = GameEngine(roadGeometry = geom, thiefSpeedMps = level11.thiefSpeedMps)
+        engine.start()
+
+        // Police starts at (50, 12), which is inside corridor c_south [(50,10) to (50,35)]
+        assertTrue("Police start point must be on road corridor", geom.isPositionOnRoad(Point2D(50f, 12f)))
+
+        // Point inside left loop corridor (30, 50) is valid
+        assertTrue("Point in left loop must be on road", geom.isPositionOnRoad(Point2D(30f, 50f)))
+
+        // Point far outside corridors (0, 0) or inside maze wall island (10, 50) is OFF-ROAD
+        assertFalse("Grass point outside maze must not be on road", geom.isPositionOnRoad(Point2D(0f, 0f)))
+
+        // Dragging police off-road triggers GameStatus.THIEF_WON with OFF_ROAD
+        engine.onPoliceDragged(Point2D(0f, 0f))
+        assertEquals(GameStatus.THIEF_WON, engine.status)
+        assertEquals(GameOverReason.OFF_ROAD, engine.reason)
+    }
+
+    /**
+     * Requirement 23: Free 2D dragging and U-turn heading rotation in puzzle maze.
+     */
+    @Test
+    fun test23_puzzleFree2DDragAndUTurnHeadingRotation() {
+        val level11 = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(10)
+        val geom = RoadGeometry(level11)
+        val engine = GameEngine(roadGeometry = geom, thiefSpeedMps = level11.thiefSpeedMps)
+        engine.start()
+
+        // Drag North along entry corridor: (50, 12) -> (50, 20)
+        engine.onPoliceDragged(Point2D(50f, 20f))
+        assertEquals(0f, engine.policeHeadingDeg, 5.0f)
+
+        // Drag East within corridor: (50, 20) -> (53, 20)
+        engine.onPoliceDragged(Point2D(53f, 20f))
+        assertEquals(90f, engine.policeHeadingDeg, 5.0f)
+
+        // Drag South (reversing / 180° U-turn): (53, 20) -> (53, 15)
+        engine.onPoliceDragged(Point2D(53f, 15f))
+        assertEquals(180f, Math.abs(engine.policeHeadingDeg), 5.0f)
+
+        // Drag West: (53, 15) -> (47, 15)
+        engine.onPoliceDragged(Point2D(47f, 15f))
+        assertEquals(-90f, engine.policeHeadingDeg, 5.0f)
+    }
+
+    /**
+     * Requirement 24: Thief navigates route waypoints across the maze.
+     */
+    @Test
+    fun test24_puzzleThiefRouteTraversalTowardsDestination() {
+        val level11 = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(10)
+        val geom = RoadGeometry(level11)
+        val engine = GameEngine(roadGeometry = geom, thiefSpeedMps = 10f)
+        engine.start()
+
+        val startPos = level11.thiefStartPosition!!
+        assertEquals(startPos.x, engine.thiefPosition.x, 0.1f)
+        assertEquals(startPos.y, engine.thiefPosition.y, 0.1f)
+
+        // Tick 2 seconds (covers 20m along thief route)
+        engine.tick(2.0f)
+        assertTrue("Thief must have traversed distance", engine.thiefDistanceMeters > 0f)
+        assertFalse("Game should still be playing", engine.isGameOver)
+    }
+
+    /**
+     * Requirement 25: Police catches thief inside puzzle maze triggers POLICE_WON.
+     */
+    @Test
+    fun test25_puzzlePoliceCatchesThiefInMaze() {
+        val level11 = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(10)
+        val geom = RoadGeometry(level11)
+        val engine = GameEngine(roadGeometry = geom, thiefSpeedMps = 10f)
+        engine.start()
+
+        val thiefPos = engine.thiefPosition
+        // Drag police to thief's exact position
+        engine.onPoliceDragged(Point2D(thiefPos.x, thiefPos.y))
+
+        assertEquals(GameStatus.POLICE_WON, engine.status)
+        assertEquals(GameOverReason.CAUGHT_THIEF, engine.reason)
+    }
+
+    /**
+     * Requirement 26: Thief reaching destination escape gate triggers THIEF_WON / THIEF_ESCAPED.
+     */
+    @Test
+    fun test26_puzzleThiefEscapesDestinationGate() {
+        val level11 = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(10)
+        val geom = RoadGeometry(level11)
+        val engine = GameEngine(roadGeometry = geom, thiefSpeedMps = 20f)
+        engine.start()
+
+        // Advance enough time to complete the entire route (route is ~100m, at 20 m/s takes ~5s)
+        engine.tick(10.0f)
+
+        assertEquals(GameStatus.THIEF_WON, engine.status)
+        assertEquals(GameOverReason.THIEF_ESCAPED, engine.reason)
+    }
 }
+
 
 

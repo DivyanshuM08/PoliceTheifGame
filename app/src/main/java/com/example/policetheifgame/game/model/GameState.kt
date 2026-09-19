@@ -29,7 +29,7 @@ data class GameState(
     val reason: GameOverReason = GameOverReason.NONE,
     val levelIndex: Int = 0,
     val levelTitle: String = "Sunny Highway",
-    val totalLevels: Int = 10,
+    val totalLevels: Int = 20,
     val unlockedLevelIndex: Int = 0,
     val policeDistanceMeters: Float = 0f,
     val policePosition: Point2D = Point2D(50f, 0f),
@@ -44,7 +44,9 @@ data class GameState(
     val cameraCenter: Point2D = Point2D(50f, 15f),
     val isSirenMuted: Boolean = false,
     val policeSpeedMultiplier: Float = 1.0f,
-    val isPoliceChasing: Boolean = false
+    val isPoliceChasing: Boolean = false,
+    val isPuzzle: Boolean = false,
+    val destinationPosition: Point2D? = null
 ) {
     val isFinalLevel: Boolean get() = levelIndex >= totalLevels - 1
     val displayLevelNumber: Int get() = levelIndex + 1

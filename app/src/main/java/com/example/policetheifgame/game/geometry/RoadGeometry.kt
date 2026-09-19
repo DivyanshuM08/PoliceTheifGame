@@ -32,10 +32,39 @@ class RoadGeometry(
     val pathPoints: List<Point2D> = levelData.roadPath
     val boundaries: List<RoadBoundary> = levelData.boundaries
 
-    val minX: Float = (boundaries.flatMap { listOf(it.left.x, it.right.x) } + pathPoints.map { it.x }).minOrNull() ?: 40f
-    val maxX: Float = (boundaries.flatMap { listOf(it.left.x, it.right.x) } + pathPoints.map { it.x }).maxOrNull() ?: 85f
+    val isPuzzle: Boolean get() = levelData.isPuzzle
+    val corridors: List<RoadCorridor> get() = levelData.corridors
+    val policeStartPosition: Point2D get() = levelData.policeStartPosition ?: pathPoints.first()
+    val thiefStartPosition: Point2D get() = levelData.thiefStartPosition ?: getRoadCenterAtDistance(levelData.initialGapMeters)
+    val destinationPosition: Point2D get() = levelData.destinationPosition ?: pathPoints.last()
+    val thiefRoute: List<Point2D> get() = if (levelData.thiefRoute.isNotEmpty()) levelData.thiefRoute else pathPoints
+
+    val minX: Float = if (isPuzzle && corridors.isNotEmpty()) {
+        corridors.flatMap { c -> c.path.map { it.x - c.widthMeters / 2f } }.minOrNull() ?: 20f
+    } else {
+        (boundaries.flatMap { listOf(it.left.x, it.right.x) } + pathPoints.map { it.x }).minOrNull() ?: 40f
+    }
+
+    val maxX: Float = if (isPuzzle && corridors.isNotEmpty()) {
+        corridors.flatMap { c -> c.path.map { it.x + c.widthMeters / 2f } }.maxOrNull() ?: 80f
+    } else {
+        (boundaries.flatMap { listOf(it.left.x, it.right.x) } + pathPoints.map { it.x }).maxOrNull() ?: 85f
+    }
+
+    val minY: Float = if (isPuzzle && corridors.isNotEmpty()) {
+        corridors.flatMap { c -> c.path.map { it.y - c.widthMeters / 2f } }.minOrNull() ?: 0f
+    } else {
+        pathPoints.minOfOrNull { it.y } ?: pathPoints.first().y
+    }
+
+    val maxY: Float = if (isPuzzle && corridors.isNotEmpty()) {
+        corridors.flatMap { c -> c.path.map { it.y + c.widthMeters / 2f } }.maxOrNull() ?: 100f
+    } else {
+        pathPoints.maxOfOrNull { it.y } ?: pathPoints.last().y
+    }
+
     val centerX: Float get() = (minX + maxX) / 2f
-    val centerY: Float get() = (pathPoints.first().y + pathPoints.last().y) / 2f
+    val centerY: Float get() = (minY + maxY) / 2f
 
     // Cumulative distances along centerline vertices
     private val cumulativeDistances: FloatArray
@@ -133,6 +162,23 @@ class RoadGeometry(
      * with an optional tolerance in meters.
      */
     fun isPositionOnRoad(point: Point2D, toleranceMeters: Float = 0.5f): Boolean {
+        if (isPuzzle && corridors.isNotEmpty()) {
+            // Check if point is within the width of ANY corridor segment
+            for (corridor in corridors) {
+                val halfW = corridor.widthMeters / 2f + toleranceMeters
+                val path = corridor.path
+                for (i in 0 until path.size - 1) {
+                    val p0 = path[i]
+                    val p1 = path[i + 1]
+                    val dist = distanceToSegment(point, p0, p1)
+                    if (dist <= halfW) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
         // Quick bounding box check
         if (boundaries.size >= 2) {
             // Check against segment quadrilaterals
@@ -152,6 +198,19 @@ class RoadGeometry(
         return Math.abs(proj.lateralOffsetMeters) <= halfW &&
                 proj.distanceAlongRoadMeters >= -toleranceMeters &&
                 proj.distanceAlongRoadMeters <= totalPathLengthMeters + toleranceMeters
+    }
+
+    /**
+     * Calculates the perpendicular / clamped distance from a 2D point to a line segment [a, b].
+     */
+    fun distanceToSegment(point: Point2D, a: Point2D, b: Point2D): Float {
+        val segVec = b - a
+        val lenSq = segVec.lengthSquared()
+        if (lenSq < 1e-6f) return point.distanceTo(a)
+        val ptVec = point - a
+        val t = (ptVec.dot(segVec) / lenSq).coerceIn(0f, 1f)
+        val projection = a + segVec * t
+        return point.distanceTo(projection)
     }
 
     /**

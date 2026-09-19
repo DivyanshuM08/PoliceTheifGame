@@ -1,0 +1,32 @@
+{
+  "levelId": "level_16",
+  "title": "Metro Underground",
+  "roadLengthMeters": 125.0,
+  "roadWidthMeters": 7.5,
+  "thiefSpeedMps": 24.5,
+  "initialGapMeters": 28.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 125.0,
+  "isPuzzle": true,
+  "policeStart": {"x": 25.0, "y": 20.0},
+  "thiefStart": {"x": 75.0, "y": 25.0},
+  "destination": {"x": 50.0, "y": 115.0},
+  "thiefRoute": [
+    {"x": 75.0, "y": 25.0},
+    {"x": 75.0, "y": 50.0},
+    {"x": 25.0, "y": 50.0},
+    {"x": 25.0, "y": 95.0},
+    {"x": 50.0, "y": 95.0},
+    {"x": 50.0, "y": 115.0}
+  ],
+  "corridors": [
+    {"id": "c_south_bottom", "widthMeters": 7.5, "path": [{"x": 25.0, "y": 15.0}, {"x": 75.0, "y": 15.0}]},
+    {"id": "c_south_west", "widthMeters": 7.5, "path": [{"x": 25.0, "y": 15.0}, {"x": 25.0, "y": 50.0}]},
+    {"id": "c_south_east", "widthMeters": 7.5, "path": [{"x": 75.0, "y": 15.0}, {"x": 75.0, "y": 50.0}]},
+    {"id": "c_mid_concourse", "widthMeters": 7.5, "path": [{"x": 25.0, "y": 50.0}, {"x": 75.0, "y": 50.0}]},
+    {"id": "c_north_west", "widthMeters": 7.5, "path": [{"x": 25.0, "y": 50.0}, {"x": 25.0, "y": 95.0}, {"x": 50.0, "y": 95.0}]},
+    {"id": "c_north_east", "widthMeters": 7.5, "path": [{"x": 75.0, "y": 50.0}, {"x": 75.0, "y": 95.0}, {"x": 50.0, "y": 95.0}]},
+    {"id": "c_tunnel_blind", "widthMeters": 7.5, "isDeadEnd": true, "path": [{"x": 50.0, "y": 50.0}, {"x": 50.0, "y": 75.0}]},
+    {"id": "c_portal_exit", "widthMeters": 7.5, "path": [{"x": 50.0, "y": 95.0}, {"x": 50.0, "y": 115.0}]}
+  ]
+}

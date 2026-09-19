@@ -1,0 +1,31 @@
+{
+  "levelId": "level_13",
+  "title": "Twin Island Crossing",
+  "roadLengthMeters": 110.0,
+  "roadWidthMeters": 9.0,
+  "thiefSpeedMps": 17.0,
+  "initialGapMeters": 22.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 110.0,
+  "isPuzzle": true,
+  "policeStart": {"x": 25.0, "y": 20.0},
+  "thiefStart": {"x": 50.0, "y": 35.0},
+  "destination": {"x": 85.0, "y": 105.0},
+  "thiefRoute": [
+    {"x": 50.0, "y": 35.0},
+    {"x": 50.0, "y": 55.0},
+    {"x": 25.0, "y": 55.0},
+    {"x": 25.0, "y": 95.0},
+    {"x": 75.0, "y": 95.0},
+    {"x": 85.0, "y": 105.0}
+  ],
+  "corridors": [
+    {"id": "c_south_perim", "widthMeters": 9.0, "path": [{"x": 25.0, "y": 15.0}, {"x": 75.0, "y": 15.0}]},
+    {"id": "c_west_perim", "widthMeters": 9.0, "path": [{"x": 25.0, "y": 15.0}, {"x": 25.0, "y": 95.0}]},
+    {"id": "c_east_perim", "widthMeters": 9.0, "path": [{"x": 75.0, "y": 15.0}, {"x": 75.0, "y": 95.0}]},
+    {"id": "c_north_perim", "widthMeters": 9.0, "path": [{"x": 25.0, "y": 95.0}, {"x": 75.0, "y": 95.0}]},
+    {"id": "c_center_vert", "widthMeters": 9.0, "path": [{"x": 50.0, "y": 15.0}, {"x": 50.0, "y": 95.0}]},
+    {"id": "c_center_horiz", "widthMeters": 9.0, "path": [{"x": 25.0, "y": 55.0}, {"x": 75.0, "y": 55.0}]},
+    {"id": "c_exit_spur", "widthMeters": 9.0, "path": [{"x": 75.0, "y": 95.0}, {"x": 85.0, "y": 105.0}]}
+  ]
+}

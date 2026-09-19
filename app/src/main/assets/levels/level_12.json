@@ -1,0 +1,28 @@
+{
+  "levelId": "level_12",
+  "title": "Cul-De-Sac Trap",
+  "roadLengthMeters": 105.0,
+  "roadWidthMeters": 9.5,
+  "thiefSpeedMps": 14.5,
+  "initialGapMeters": 20.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 105.0,
+  "isPuzzle": true,
+  "policeStart": {"x": 50.0, "y": 12.0},
+  "thiefStart": {"x": 50.0, "y": 30.0},
+  "destination": {"x": 60.0, "y": 105.0},
+  "thiefRoute": [
+    {"x": 50.0, "y": 30.0},
+    {"x": 75.0, "y": 30.0},
+    {"x": 75.0, "y": 90.0},
+    {"x": 60.0, "y": 105.0}
+  ],
+  "corridors": [
+    {"id": "c_entry", "widthMeters": 9.5, "path": [{"x": 50.0, "y": 10.0}, {"x": 50.0, "y": 30.0}]},
+    {"id": "c_south_crossway", "widthMeters": 9.5, "path": [{"x": 25.0, "y": 30.0}, {"x": 75.0, "y": 30.0}]},
+    {"id": "c_dead_end", "widthMeters": 9.5, "isDeadEnd": true, "path": [{"x": 25.0, "y": 30.0}, {"x": 25.0, "y": 75.0}]},
+    {"id": "c_center_avenue", "widthMeters": 9.5, "path": [{"x": 50.0, "y": 30.0}, {"x": 50.0, "y": 90.0}]},
+    {"id": "c_right_avenue", "widthMeters": 9.5, "path": [{"x": 75.0, "y": 30.0}, {"x": 75.0, "y": 90.0}]},
+    {"id": "c_north_exit", "widthMeters": 9.5, "path": [{"x": 50.0, "y": 90.0}, {"x": 75.0, "y": 90.0}, {"x": 60.0, "y": 105.0}]}
+  ]
+}

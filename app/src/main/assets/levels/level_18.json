@@ -1,0 +1,37 @@
+{
+  "levelId": "level_18",
+  "title": "Circuit Maze",
+  "roadLengthMeters": 135.0,
+  "roadWidthMeters": 6.5,
+  "thiefSpeedMps": 29.0,
+  "initialGapMeters": 30.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 135.0,
+  "isPuzzle": true,
+  "policeStart": {"x": 50.0, "y": 12.0},
+  "thiefStart": {"x": 50.0, "y": 45.0},
+  "destination": {"x": 15.0, "y": 125.0},
+  "thiefRoute": [
+    {"x": 50.0, "y": 45.0},
+    {"x": 75.0, "y": 45.0},
+    {"x": 75.0, "y": 80.0},
+    {"x": 45.0, "y": 80.0},
+    {"x": 45.0, "y": 105.0},
+    {"x": 15.0, "y": 105.0},
+    {"x": 15.0, "y": 125.0}
+  ],
+  "corridors": [
+    {"id": "c_base", "widthMeters": 6.5, "path": [{"x": 15.0, "y": 15.0}, {"x": 85.0, "y": 15.0}]},
+    {"id": "c_vert_1", "widthMeters": 6.5, "path": [{"x": 15.0, "y": 15.0}, {"x": 15.0, "y": 55.0}]},
+    {"id": "c_vert_2", "widthMeters": 6.5, "path": [{"x": 50.0, "y": 10.0}, {"x": 50.0, "y": 55.0}]},
+    {"id": "c_vert_3", "widthMeters": 6.5, "path": [{"x": 85.0, "y": 15.0}, {"x": 85.0, "y": 55.0}]},
+    {"id": "c_tier_1", "widthMeters": 6.5, "path": [{"x": 15.0, "y": 45.0}, {"x": 85.0, "y": 45.0}]},
+    {"id": "c_tier_2", "widthMeters": 6.5, "path": [{"x": 30.0, "y": 80.0}, {"x": 75.0, "y": 80.0}]},
+    {"id": "c_tier_3", "widthMeters": 6.5, "path": [{"x": 15.0, "y": 105.0}, {"x": 85.0, "y": 105.0}]},
+    {"id": "c_vert_mid_left", "widthMeters": 6.5, "path": [{"x": 30.0, "y": 45.0}, {"x": 30.0, "y": 80.0}]},
+    {"id": "c_vert_mid_right", "widthMeters": 6.5, "path": [{"x": 75.0, "y": 45.0}, {"x": 75.0, "y": 80.0}]},
+    {"id": "c_vert_top_center", "widthMeters": 6.5, "path": [{"x": 45.0, "y": 80.0}, {"x": 45.0, "y": 105.0}]},
+    {"id": "c_vert_top_left", "widthMeters": 6.5, "path": [{"x": 15.0, "y": 105.0}, {"x": 15.0, "y": 125.0}]},
+    {"id": "c_vert_top_right", "widthMeters": 6.5, "isDeadEnd": true, "path": [{"x": 85.0, "y": 105.0}, {"x": 85.0, "y": 125.0}]}
+  ]
+}

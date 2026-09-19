@@ -1,0 +1,31 @@
+{
+  "levelId": "level_19",
+  "title": "Double Diamond Flyover",
+  "roadLengthMeters": 140.0,
+  "roadWidthMeters": 6.0,
+  "thiefSpeedMps": 31.0,
+  "initialGapMeters": 30.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 140.0,
+  "isPuzzle": true,
+  "policeStart": {"x": 35.0, "y": 20.0},
+  "thiefStart": {"x": 65.0, "y": 25.0},
+  "destination": {"x": 50.0, "y": 120.0},
+  "thiefRoute": [
+    {"x": 65.0, "y": 25.0},
+    {"x": 65.0, "y": 45.0},
+    {"x": 35.0, "y": 45.0},
+    {"x": 35.0, "y": 75.0},
+    {"x": 50.0, "y": 75.0},
+    {"x": 50.0, "y": 120.0}
+  ],
+  "corridors": [
+    {"id": "c_transit_1", "widthMeters": 6.0, "path": [{"x": 35.0, "y": 15.0}, {"x": 35.0, "y": 95.0}]},
+    {"id": "c_transit_2", "widthMeters": 6.0, "path": [{"x": 65.0, "y": 15.0}, {"x": 65.0, "y": 95.0}]},
+    {"id": "c_cross_alpha", "widthMeters": 6.0, "path": [{"x": 35.0, "y": 45.0}, {"x": 65.0, "y": 45.0}]},
+    {"id": "c_cross_beta", "widthMeters": 6.0, "path": [{"x": 15.0, "y": 75.0}, {"x": 85.0, "y": 75.0}]},
+    {"id": "c_stack_west", "widthMeters": 6.0, "isDeadEnd": true, "path": [{"x": 15.0, "y": 75.0}, {"x": 15.0, "y": 100.0}]},
+    {"id": "c_stack_east", "widthMeters": 6.0, "isDeadEnd": true, "path": [{"x": 85.0, "y": 75.0}, {"x": 85.0, "y": 100.0}]},
+    {"id": "c_north_hwy", "widthMeters": 6.0, "path": [{"x": 50.0, "y": 75.0}, {"x": 50.0, "y": 120.0}]}
+  ]
+}

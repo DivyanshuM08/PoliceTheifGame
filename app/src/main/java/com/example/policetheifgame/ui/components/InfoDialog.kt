@@ -227,7 +227,10 @@ fun InfoDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Controls: Drag your police cruiser directly along the road to chase the thief. Police speed matches your finger dragging speed.\n\n⚠️ Stay within road boundaries — driving into the grass will fail the chase!",
+                    text = if (gameState.isPuzzle)
+                        "Controls: Drag your police cruiser through the maze corridors to corner the suspect before they escape through the checkered exit gate! You can make U-turns and take shortcuts.\n\n⚠️ Stay inside corridor pathways — colliding with maze walls will crash your cruiser!"
+                    else
+                        "Controls: Drag your police cruiser directly along the road to chase the thief. Police speed matches your finger dragging speed.\n\n⚠️ Stay within road boundaries — driving into the grass will fail the chase!",
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center,
                     color = Color(0xFFB0BEC5),

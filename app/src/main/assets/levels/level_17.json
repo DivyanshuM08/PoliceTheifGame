@@ -1,0 +1,32 @@
+{
+  "levelId": "level_17",
+  "title": "Neon Cloverleaf",
+  "roadLengthMeters": 130.0,
+  "roadWidthMeters": 7.0,
+  "thiefSpeedMps": 27.0,
+  "initialGapMeters": 28.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 130.0,
+  "isPuzzle": true,
+  "policeStart": {"x": 50.0, "y": 12.0},
+  "thiefStart": {"x": 50.0, "y": 40.0},
+  "destination": {"x": 50.0, "y": 120.0},
+  "thiefRoute": [
+    {"x": 50.0, "y": 40.0},
+    {"x": 20.0, "y": 40.0},
+    {"x": 20.0, "y": 80.0},
+    {"x": 50.0, "y": 80.0},
+    {"x": 50.0, "y": 120.0}
+  ],
+  "corridors": [
+    {"id": "c_main_spine", "widthMeters": 7.0, "path": [{"x": 50.0, "y": 10.0}, {"x": 50.0, "y": 120.0}]},
+    {"id": "c_cross_low", "widthMeters": 7.0, "path": [{"x": 20.0, "y": 40.0}, {"x": 80.0, "y": 40.0}]},
+    {"id": "c_cross_high", "widthMeters": 7.0, "path": [{"x": 20.0, "y": 80.0}, {"x": 80.0, "y": 80.0}]},
+    {"id": "c_ring_west", "widthMeters": 7.0, "path": [{"x": 20.0, "y": 40.0}, {"x": 20.0, "y": 80.0}]},
+    {"id": "c_ring_east", "widthMeters": 7.0, "path": [{"x": 80.0, "y": 40.0}, {"x": 80.0, "y": 80.0}]},
+    {"id": "c_clover_sw", "widthMeters": 7.0, "isDeadEnd": true, "path": [{"x": 20.0, "y": 40.0}, {"x": 10.0, "y": 20.0}]},
+    {"id": "c_clover_se", "widthMeters": 7.0, "isDeadEnd": true, "path": [{"x": 80.0, "y": 40.0}, {"x": 90.0, "y": 20.0}]},
+    {"id": "c_clover_nw", "widthMeters": 7.0, "isDeadEnd": true, "path": [{"x": 20.0, "y": 80.0}, {"x": 10.0, "y": 100.0}]},
+    {"id": "c_clover_ne", "widthMeters": 7.0, "isDeadEnd": true, "path": [{"x": 80.0, "y": 80.0}, {"x": 90.0, "y": 100.0}]}
+  ]
+}

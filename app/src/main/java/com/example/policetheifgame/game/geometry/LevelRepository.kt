@@ -372,6 +372,296 @@ object LevelRepository {
                 RoadBoundary(Point2D(61.0f, 210.0f), Point2D(67.0f, 210.0f)),
                 RoadBoundary(Point2D(47.0f, 220.0f), Point2D(53.0f, 220.0f))
             )
+        ),
+
+        // Level 11: The Clover Fork (Pac-Man Intro Maze, 10.0m width, 12.0 m/s)
+        LevelData(
+            levelId = "level_11",
+            title = "The Clover Fork",
+            roadLengthMeters = 95.0f,
+            roadWidthMeters = 10.0f,
+            thiefSpeedMps = 12.0f,
+            initialGapMeters = 20.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 95.0f,
+            roadPath = listOf(Point2D(50f, 10f), Point2D(50f, 35f), Point2D(70f, 35f), Point2D(70f, 75f), Point2D(50f, 75f), Point2D(50f, 95f)),
+            boundaries = emptyList(),
+            isPuzzle = true,
+            corridors = listOf(
+                RoadCorridor("c_south", listOf(Point2D(50f, 10f), Point2D(50f, 35f)), 10.0f),
+                RoadCorridor("c_left_loop", listOf(Point2D(50f, 35f), Point2D(30f, 35f), Point2D(30f, 75f), Point2D(50f, 75f)), 10.0f),
+                RoadCorridor("c_right_loop", listOf(Point2D(50f, 35f), Point2D(70f, 35f), Point2D(70f, 75f), Point2D(50f, 75f)), 10.0f),
+                RoadCorridor("c_crosswalk", listOf(Point2D(30f, 55f), Point2D(70f, 55f)), 10.0f),
+                RoadCorridor("c_north_exit", listOf(Point2D(50f, 75f), Point2D(50f, 95f)), 10.0f)
+            ),
+            policeStartPosition = Point2D(50f, 12f),
+            thiefStartPosition = Point2D(50f, 35f),
+            destinationPosition = Point2D(50f, 95f),
+            thiefRoute = listOf(Point2D(50f, 35f), Point2D(70f, 35f), Point2D(70f, 75f), Point2D(50f, 75f), Point2D(50f, 95f))
+        ),
+
+        // Level 12: Cul-De-Sac Trap (Dead Ends & U-Turns, 9.5m width, 14.5 m/s)
+        LevelData(
+            levelId = "level_12",
+            title = "Cul-De-Sac Trap",
+            roadLengthMeters = 105.0f,
+            roadWidthMeters = 9.5f,
+            thiefSpeedMps = 14.5f,
+            initialGapMeters = 20.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 105.0f,
+            roadPath = listOf(Point2D(50f, 10f), Point2D(50f, 30f), Point2D(75f, 30f), Point2D(75f, 90f), Point2D(60f, 105f)),
+            boundaries = emptyList(),
+            isPuzzle = true,
+            corridors = listOf(
+                RoadCorridor("c_entry", listOf(Point2D(50f, 10f), Point2D(50f, 30f)), 9.5f),
+                RoadCorridor("c_south_crossway", listOf(Point2D(25f, 30f), Point2D(75f, 30f)), 9.5f),
+                RoadCorridor("c_dead_end", listOf(Point2D(25f, 30f), Point2D(25f, 75f)), 9.5f, isDeadEnd = true),
+                RoadCorridor("c_center_avenue", listOf(Point2D(50f, 30f), Point2D(50f, 90f)), 9.5f),
+                RoadCorridor("c_right_avenue", listOf(Point2D(75f, 30f), Point2D(75f, 90f)), 9.5f),
+                RoadCorridor("c_north_exit", listOf(Point2D(50f, 90f), Point2D(75f, 90f), Point2D(60f, 105f)), 9.5f)
+            ),
+            policeStartPosition = Point2D(50f, 12f),
+            thiefStartPosition = Point2D(50f, 30f),
+            destinationPosition = Point2D(60f, 105f),
+            thiefRoute = listOf(Point2D(50f, 30f), Point2D(75f, 30f), Point2D(75f, 90f), Point2D(60f, 105f))
+        ),
+
+        // Level 13: Twin Island Crossing (Ghost House Style, 9.0m width, 17.0 m/s)
+        LevelData(
+            levelId = "level_13",
+            title = "Twin Island Crossing",
+            roadLengthMeters = 110.0f,
+            roadWidthMeters = 9.0f,
+            thiefSpeedMps = 17.0f,
+            initialGapMeters = 22.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 110.0f,
+            roadPath = listOf(Point2D(50f, 15f), Point2D(50f, 55f), Point2D(25f, 55f), Point2D(25f, 95f), Point2D(75f, 95f), Point2D(85f, 105f)),
+            boundaries = emptyList(),
+            isPuzzle = true,
+            corridors = listOf(
+                RoadCorridor("c_south_perim", listOf(Point2D(25f, 15f), Point2D(75f, 15f)), 9.0f),
+                RoadCorridor("c_west_perim", listOf(Point2D(25f, 15f), Point2D(25f, 95f)), 9.0f),
+                RoadCorridor("c_east_perim", listOf(Point2D(75f, 15f), Point2D(75f, 95f)), 9.0f),
+                RoadCorridor("c_north_perim", listOf(Point2D(25f, 95f), Point2D(75f, 95f)), 9.0f),
+                RoadCorridor("c_center_vert", listOf(Point2D(50f, 15f), Point2D(50f, 95f)), 9.0f),
+                RoadCorridor("c_center_horiz", listOf(Point2D(25f, 55f), Point2D(75f, 55f)), 9.0f),
+                RoadCorridor("c_exit_spur", listOf(Point2D(75f, 95f), Point2D(85f, 105f)), 9.0f)
+            ),
+            policeStartPosition = Point2D(25f, 20f),
+            thiefStartPosition = Point2D(50f, 35f),
+            destinationPosition = Point2D(85f, 105f),
+            thiefRoute = listOf(Point2D(50f, 35f), Point2D(50f, 55f), Point2D(25f, 55f), Point2D(25f, 95f), Point2D(75f, 95f), Point2D(85f, 105f))
+        ),
+
+        // Level 14: City Block Grid (2x2 Blocks, 8.5m width, 19.5 m/s)
+        LevelData(
+            levelId = "level_14",
+            title = "City Block Grid",
+            roadLengthMeters = 115.0f,
+            roadWidthMeters = 8.5f,
+            thiefSpeedMps = 19.5f,
+            initialGapMeters = 24.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 115.0f,
+            roadPath = listOf(Point2D(50f, 15f), Point2D(50f, 55f), Point2D(80f, 55f), Point2D(80f, 95f), Point2D(80f, 110f)),
+            boundaries = emptyList(),
+            isPuzzle = true,
+            corridors = listOf(
+                RoadCorridor("c_street_south", listOf(Point2D(20f, 15f), Point2D(80f, 15f)), 8.5f),
+                RoadCorridor("c_street_mid", listOf(Point2D(20f, 55f), Point2D(80f, 55f)), 8.5f),
+                RoadCorridor("c_street_north", listOf(Point2D(20f, 95f), Point2D(80f, 95f)), 8.5f),
+                RoadCorridor("c_ave_west", listOf(Point2D(20f, 15f), Point2D(20f, 95f)), 8.5f),
+                RoadCorridor("c_ave_center", listOf(Point2D(50f, 15f), Point2D(50f, 95f)), 8.5f),
+                RoadCorridor("c_ave_east", listOf(Point2D(80f, 15f), Point2D(80f, 95f)), 8.5f),
+                RoadCorridor("c_exit", listOf(Point2D(80f, 95f), Point2D(80f, 110f)), 8.5f)
+            ),
+            policeStartPosition = Point2D(20f, 20f),
+            thiefStartPosition = Point2D(50f, 30f),
+            destinationPosition = Point2D(80f, 110f),
+            thiefRoute = listOf(Point2D(50f, 30f), Point2D(50f, 55f), Point2D(80f, 55f), Point2D(80f, 95f), Point2D(80f, 110f))
+        ),
+
+        // Level 15: Warehouse Labyrinth (5 Corridors, 2 Traps, 8.0m width, 22.0 m/s)
+        LevelData(
+            levelId = "level_15",
+            title = "Warehouse Labyrinth",
+            roadLengthMeters = 120.0f,
+            roadWidthMeters = 8.0f,
+            thiefSpeedMps = 22.0f,
+            initialGapMeters = 26.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 120.0f,
+            roadPath = listOf(Point2D(50f, 10f), Point2D(50f, 35f), Point2D(80f, 35f), Point2D(80f, 65f), Point2D(45f, 65f), Point2D(45f, 115f)),
+            boundaries = emptyList(),
+            isPuzzle = true,
+            corridors = listOf(
+                RoadCorridor("c_entry", listOf(Point2D(50f, 10f), Point2D(50f, 35f)), 8.0f),
+                RoadCorridor("c_cross_1", listOf(Point2D(20f, 35f), Point2D(80f, 35f)), 8.0f),
+                RoadCorridor("c_trap_west", listOf(Point2D(20f, 35f), Point2D(20f, 65f)), 8.0f, isDeadEnd = true),
+                RoadCorridor("c_east_zigzag", listOf(Point2D(80f, 35f), Point2D(80f, 65f), Point2D(45f, 65f), Point2D(45f, 95f)), 8.0f),
+                RoadCorridor("c_center_mid", listOf(Point2D(50f, 35f), Point2D(50f, 65f)), 8.0f),
+                RoadCorridor("c_cross_2", listOf(Point2D(20f, 95f), Point2D(80f, 95f)), 8.0f),
+                RoadCorridor("c_trap_northwest", listOf(Point2D(20f, 95f), Point2D(20f, 75f)), 8.0f, isDeadEnd = true),
+                RoadCorridor("c_north_exit", listOf(Point2D(45f, 95f), Point2D(45f, 115f)), 8.0f)
+            ),
+            policeStartPosition = Point2D(50f, 12f),
+            thiefStartPosition = Point2D(50f, 38f),
+            destinationPosition = Point2D(45f, 115f),
+            thiefRoute = listOf(Point2D(50f, 38f), Point2D(80f, 35f), Point2D(80f, 65f), Point2D(45f, 65f), Point2D(45f, 95f), Point2D(45f, 115f))
+        ),
+
+        // Level 16: Metro Underground (Dual Loops & Central Spine, 7.5m width, 24.5 m/s)
+        LevelData(
+            levelId = "level_16",
+            title = "Metro Underground",
+            roadLengthMeters = 125.0f,
+            roadWidthMeters = 7.5f,
+            thiefSpeedMps = 24.5f,
+            initialGapMeters = 28.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 125.0f,
+            roadPath = listOf(Point2D(75f, 25f), Point2D(75f, 50f), Point2D(25f, 50f), Point2D(25f, 95f), Point2D(50f, 95f), Point2D(50f, 115f)),
+            boundaries = emptyList(),
+            isPuzzle = true,
+            corridors = listOf(
+                RoadCorridor("c_south_bottom", listOf(Point2D(25f, 15f), Point2D(75f, 15f)), 7.5f),
+                RoadCorridor("c_south_west", listOf(Point2D(25f, 15f), Point2D(25f, 50f)), 7.5f),
+                RoadCorridor("c_south_east", listOf(Point2D(75f, 15f), Point2D(75f, 50f)), 7.5f),
+                RoadCorridor("c_mid_concourse", listOf(Point2D(25f, 50f), Point2D(75f, 50f)), 7.5f),
+                RoadCorridor("c_north_west", listOf(Point2D(25f, 50f), Point2D(25f, 95f), Point2D(50f, 95f)), 7.5f),
+                RoadCorridor("c_north_east", listOf(Point2D(75f, 50f), Point2D(75f, 95f), Point2D(50f, 95f)), 7.5f),
+                RoadCorridor("c_express_spine", listOf(Point2D(50f, 15f), Point2D(50f, 95f)), 7.5f),
+                RoadCorridor("c_surface_exit", listOf(Point2D(50f, 95f), Point2D(50f, 115f)), 7.5f)
+            ),
+            policeStartPosition = Point2D(25f, 20f),
+            thiefStartPosition = Point2D(75f, 25f),
+            destinationPosition = Point2D(50f, 115f),
+            thiefRoute = listOf(Point2D(75f, 25f), Point2D(75f, 50f), Point2D(25f, 50f), Point2D(25f, 95f), Point2D(50f, 95f), Point2D(50f, 115f))
+        ),
+
+        // Level 17: Suburban Switchbacks (3 Cul-De-Sacs, 7.0m width, 27.0 m/s)
+        LevelData(
+            levelId = "level_17",
+            title = "Suburban Switchbacks",
+            roadLengthMeters = 130.0f,
+            roadWidthMeters = 7.0f,
+            thiefSpeedMps = 27.0f,
+            initialGapMeters = 28.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 130.0f,
+            roadPath = listOf(Point2D(20f, 25f), Point2D(20f, 55f), Point2D(50f, 55f), Point2D(50f, 95f), Point2D(80f, 95f), Point2D(80f, 120f)),
+            boundaries = emptyList(),
+            isPuzzle = true,
+            corridors = listOf(
+                RoadCorridor("c_blvd_south", listOf(Point2D(20f, 15f), Point2D(80f, 15f)), 7.0f),
+                RoadCorridor("c_cul_1", listOf(Point2D(80f, 15f), Point2D(80f, 45f)), 7.0f, isDeadEnd = true),
+                RoadCorridor("c_west_spine", listOf(Point2D(20f, 15f), Point2D(20f, 95f)), 7.0f),
+                RoadCorridor("c_mid_street", listOf(Point2D(20f, 55f), Point2D(65f, 55f)), 7.0f),
+                RoadCorridor("c_cul_2", listOf(Point2D(65f, 55f), Point2D(85f, 55f)), 7.0f, isDeadEnd = true),
+                RoadCorridor("c_north_ave", listOf(Point2D(20f, 95f), Point2D(80f, 95f)), 7.0f),
+                RoadCorridor("c_cul_3", listOf(Point2D(20f, 95f), Point2D(20f, 115f)), 7.0f, isDeadEnd = true),
+                RoadCorridor("c_north_spine", listOf(Point2D(50f, 55f), Point2D(50f, 95f)), 7.0f),
+                RoadCorridor("c_hwy_exit", listOf(Point2D(80f, 95f), Point2D(80f, 120f)), 7.0f)
+            ),
+            policeStartPosition = Point2D(20f, 18f),
+            thiefStartPosition = Point2D(20f, 35f),
+            destinationPosition = Point2D(80f, 120f),
+            thiefRoute = listOf(Point2D(20f, 35f), Point2D(20f, 55f), Point2D(50f, 55f), Point2D(50f, 95f), Point2D(80f, 95f), Point2D(80f, 120f))
+        ),
+
+        // Level 18: Old Town Alleyways (Tight 6.5m Corners, 29.0 m/s)
+        LevelData(
+            levelId = "level_18",
+            title = "Old Town Alleyways",
+            roadLengthMeters = 135.0f,
+            roadWidthMeters = 6.5f,
+            thiefSpeedMps = 29.0f,
+            initialGapMeters = 30.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 135.0f,
+            roadPath = listOf(Point2D(50f, 25f), Point2D(50f, 60f), Point2D(80f, 60f), Point2D(80f, 100f), Point2D(50f, 100f), Point2D(50f, 120f)),
+            boundaries = emptyList(),
+            isPuzzle = true,
+            corridors = listOf(
+                RoadCorridor("c_south_promenade", listOf(Point2D(20f, 15f), Point2D(80f, 15f)), 6.5f),
+                RoadCorridor("c_east_alley", listOf(Point2D(80f, 15f), Point2D(80f, 60f), Point2D(55f, 60f)), 6.5f),
+                RoadCorridor("c_west_alley", listOf(Point2D(20f, 15f), Point2D(20f, 60f), Point2D(45f, 60f)), 6.5f),
+                RoadCorridor("c_plaza_conn", listOf(Point2D(45f, 60f), Point2D(55f, 60f)), 6.5f),
+                RoadCorridor("c_nw_chicane", listOf(Point2D(20f, 60f), Point2D(20f, 100f), Point2D(50f, 100f)), 6.5f),
+                RoadCorridor("c_ne_chicane", listOf(Point2D(80f, 60f), Point2D(80f, 100f), Point2D(50f, 100f)), 6.5f),
+                RoadCorridor("c_center_spine", listOf(Point2D(50f, 15f), Point2D(50f, 100f)), 6.5f),
+                RoadCorridor("c_gate_exit", listOf(Point2D(50f, 100f), Point2D(50f, 120f)), 6.5f)
+            ),
+            policeStartPosition = Point2D(20f, 18f),
+            thiefStartPosition = Point2D(50f, 25f),
+            destinationPosition = Point2D(50f, 120f),
+            thiefRoute = listOf(Point2D(50f, 25f), Point2D(50f, 60f), Point2D(80f, 60f), Point2D(80f, 100f), Point2D(50f, 100f), Point2D(50f, 120f))
+        ),
+
+        // Level 19: Shipping Yard Matrix (10 Corridors, 4 Loading Docks, 6.0m width, 31.0 m/s)
+        LevelData(
+            levelId = "level_19",
+            title = "Shipping Yard Matrix",
+            roadLengthMeters = 140.0f,
+            roadWidthMeters = 6.0f,
+            thiefSpeedMps = 31.0f,
+            initialGapMeters = 30.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 140.0f,
+            roadPath = listOf(Point2D(65f, 25f), Point2D(65f, 45f), Point2D(35f, 45f), Point2D(35f, 75f), Point2D(50f, 75f), Point2D(50f, 120f)),
+            boundaries = emptyList(),
+            isPuzzle = true,
+            corridors = listOf(
+                RoadCorridor("c_entry_dock", listOf(Point2D(15f, 15f), Point2D(85f, 15f)), 6.0f),
+                RoadCorridor("c_pier_1", listOf(Point2D(15f, 15f), Point2D(15f, 45f)), 6.0f, isDeadEnd = true),
+                RoadCorridor("c_pier_2", listOf(Point2D(85f, 15f), Point2D(85f, 45f)), 6.0f, isDeadEnd = true),
+                RoadCorridor("c_transit_1", listOf(Point2D(35f, 15f), Point2D(35f, 95f)), 6.0f),
+                RoadCorridor("c_transit_2", listOf(Point2D(65f, 15f), Point2D(65f, 95f)), 6.0f),
+                RoadCorridor("c_cross_alpha", listOf(Point2D(35f, 45f), Point2D(65f, 45f)), 6.0f),
+                RoadCorridor("c_cross_beta", listOf(Point2D(15f, 75f), Point2D(85f, 75f)), 6.0f),
+                RoadCorridor("c_stack_west", listOf(Point2D(15f, 75f), Point2D(15f, 100f)), 6.0f, isDeadEnd = true),
+                RoadCorridor("c_stack_east", listOf(Point2D(85f, 75f), Point2D(85f, 100f)), 6.0f, isDeadEnd = true),
+                RoadCorridor("c_north_hwy", listOf(Point2D(50f, 75f), Point2D(50f, 120f)), 6.0f)
+            ),
+            policeStartPosition = Point2D(35f, 20f),
+            thiefStartPosition = Point2D(65f, 25f),
+            destinationPosition = Point2D(50f, 120f),
+            thiefRoute = listOf(Point2D(65f, 25f), Point2D(65f, 45f), Point2D(35f, 45f), Point2D(35f, 75f), Point2D(50f, 75f), Point2D(50f, 120f))
+        ),
+
+        // Level 20: The Master Labyrinth (Full Pac-Man Style Maze, 5.8m width, 33.0 m/s)
+        LevelData(
+            levelId = "level_20",
+            title = "The Master Labyrinth",
+            roadLengthMeters = 150.0f,
+            roadWidthMeters = 5.8f,
+            thiefSpeedMps = 33.0f,
+            initialGapMeters = 32.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 150.0f,
+            roadPath = listOf(Point2D(50f, 35f), Point2D(65f, 35f), Point2D(65f, 55f), Point2D(85f, 55f), Point2D(85f, 105f), Point2D(50f, 105f), Point2D(50f, 125f)),
+            boundaries = emptyList(),
+            isPuzzle = true,
+            corridors = listOf(
+                RoadCorridor("c_outer_south", listOf(Point2D(15f, 10f), Point2D(85f, 10f)), 5.8f),
+                RoadCorridor("c_outer_west", listOf(Point2D(15f, 10f), Point2D(15f, 105f)), 5.8f),
+                RoadCorridor("c_outer_east", listOf(Point2D(85f, 10f), Point2D(85f, 105f)), 5.8f),
+                RoadCorridor("c_outer_north", listOf(Point2D(15f, 105f), Point2D(85f, 105f)), 5.8f),
+                RoadCorridor("c_inner_south", listOf(Point2D(35f, 35f), Point2D(65f, 35f)), 5.8f),
+                RoadCorridor("c_inner_north", listOf(Point2D(35f, 75f), Point2D(65f, 75f)), 5.8f),
+                RoadCorridor("c_inner_west", listOf(Point2D(35f, 35f), Point2D(35f, 75f)), 5.8f),
+                RoadCorridor("c_inner_east", listOf(Point2D(65f, 35f), Point2D(65f, 75f)), 5.8f),
+                RoadCorridor("c_conn_west", listOf(Point2D(15f, 55f), Point2D(35f, 55f)), 5.8f),
+                RoadCorridor("c_conn_east", listOf(Point2D(65f, 55f), Point2D(85f, 55f)), 5.8f),
+                RoadCorridor("c_center_trap", listOf(Point2D(50f, 55f), Point2D(50f, 40f)), 5.8f, isDeadEnd = true),
+                RoadCorridor("c_escape_chute", listOf(Point2D(50f, 75f), Point2D(50f, 125f)), 5.8f)
+            ),
+            policeStartPosition = Point2D(15f, 15f),
+            thiefStartPosition = Point2D(50f, 35f),
+            destinationPosition = Point2D(50f, 125f),
+            thiefRoute = listOf(Point2D(50f, 35f), Point2D(65f, 35f), Point2D(65f, 55f), Point2D(85f, 55f), Point2D(85f, 105f), Point2D(50f, 105f), Point2D(50f, 125f))
         )
     )
 

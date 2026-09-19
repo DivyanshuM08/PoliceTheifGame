@@ -88,8 +88,8 @@ fun OnboardingTooltip(
             ),
             TutorialStep(
                 icon = "🏆",
-                title = "10 Challenging Levels!",
-                description = "Catch the suspect to unlock 10 increasingly difficult courses with tighter chicanes, narrower roads, and faster getaway speeds!",
+                title = "20 Challenging Levels!",
+                description = "Catch suspects across 10 high-speed highway pursuit courses and 10 Pac-Man style puzzle mazes with U-turns, deceptive corridors, and escape gates!",
                 tip = "Tap the '?' icon anytime in the top bar to review these tips.",
                 accentColor = Color(0xFF00E676)
             )

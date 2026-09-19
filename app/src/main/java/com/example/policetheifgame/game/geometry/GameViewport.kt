@@ -87,8 +87,8 @@ data class GameViewport(
             if (screenSize.width <= 0f || screenSize.height <= 0f) {
                 return GameViewport(screenSize = screenSize)
             }
-            val minY = roadGeometry.pathPoints.first().y
-            val maxY = roadGeometry.pathPoints.last().y
+            val minY = roadGeometry.minY
+            val maxY = roadGeometry.maxY
             val roadYHeight = (maxY - minY).coerceAtLeast(10f)
 
             // Padding: 6m at bottom keeps police car (5.6m length, centered at Y=0) fully visible.

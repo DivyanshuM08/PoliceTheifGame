@@ -97,5 +97,35 @@ class LevelDataTest {
         assertEquals(6.0f, level10.roadWidthMeters, 0.001f)
         org.junit.Assert.assertTrue("Level 10 has more curves/waypoints than Level 1", level10.roadPath.size > level1.roadPath.size)
     }
+
+    @Test
+    fun testPuzzleAssetLevelFilesExistAndParse() {
+        var prevSpeed = 0f
+        for (i in 11..20) {
+            val file = java.io.File("src/main/assets/levels/level_$i.json")
+            val altFile = java.io.File("app/src/main/assets/levels/level_$i.json")
+            val targetFile = if (file.exists()) file else altFile
+            org.junit.Assert.assertTrue("File for puzzle level $i should exist at ${targetFile.absolutePath}", targetFile.exists())
+
+            val json = targetFile.readText()
+            val level = LevelData.fromJson(json)
+            assertEquals("level_$i", level.levelId)
+            org.junit.Assert.assertTrue("Title for level $i should not be blank", level.title.isNotBlank())
+            org.junit.Assert.assertTrue("Level $i must be marked as puzzle", level.isPuzzle)
+            org.junit.Assert.assertTrue("Level $i must have corridors", level.corridors.isNotEmpty())
+            org.junit.Assert.assertNotNull("Level $i must have police start", level.policeStartPosition)
+            org.junit.Assert.assertNotNull("Level $i must have thief start", level.thiefStartPosition)
+            org.junit.Assert.assertNotNull("Level $i must have destination", level.destinationPosition)
+            org.junit.Assert.assertTrue("Level $i must have thief route", level.thiefRoute.size >= 2)
+
+            // Thief speed scales up across puzzle levels
+            org.junit.Assert.assertTrue(
+                "Level $i speed (${level.thiefSpeedMps}) must be greater than previous ($prevSpeed)",
+                level.thiefSpeedMps > prevSpeed
+            )
+            prevSpeed = level.thiefSpeedMps
+        }
+    }
 }
+
 

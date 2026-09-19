@@ -1,0 +1,32 @@
+{
+  "levelId": "level_15",
+  "title": "Warehouse Labyrinth",
+  "roadLengthMeters": 120.0,
+  "roadWidthMeters": 8.0,
+  "thiefSpeedMps": 22.0,
+  "initialGapMeters": 26.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 120.0,
+  "isPuzzle": true,
+  "policeStart": {"x": 50.0, "y": 12.0},
+  "thiefStart": {"x": 50.0, "y": 38.0},
+  "destination": {"x": 45.0, "y": 115.0},
+  "thiefRoute": [
+    {"x": 50.0, "y": 38.0},
+    {"x": 80.0, "y": 35.0},
+    {"x": 80.0, "y": 65.0},
+    {"x": 45.0, "y": 65.0},
+    {"x": 45.0, "y": 95.0},
+    {"x": 45.0, "y": 115.0}
+  ],
+  "corridors": [
+    {"id": "c_entry", "widthMeters": 8.0, "path": [{"x": 50.0, "y": 10.0}, {"x": 50.0, "y": 35.0}]},
+    {"id": "c_cross_1", "widthMeters": 8.0, "path": [{"x": 20.0, "y": 35.0}, {"x": 80.0, "y": 35.0}]},
+    {"id": "c_trap_west", "widthMeters": 8.0, "isDeadEnd": true, "path": [{"x": 20.0, "y": 35.0}, {"x": 20.0, "y": 65.0}]},
+    {"id": "c_east_zigzag", "widthMeters": 8.0, "path": [{"x": 80.0, "y": 35.0}, {"x": 80.0, "y": 65.0}, {"x": 45.0, "y": 65.0}, {"x": 45.0, "y": 95.0}]},
+    {"id": "c_center_mid", "widthMeters": 8.0, "path": [{"x": 50.0, "y": 35.0}, {"x": 50.0, "y": 65.0}]},
+    {"id": "c_cross_2", "widthMeters": 8.0, "path": [{"x": 20.0, "y": 95.0}, {"x": 80.0, "y": 95.0}]},
+    {"id": "c_trap_northwest", "widthMeters": 8.0, "isDeadEnd": true, "path": [{"x": 20.0, "y": 95.0}, {"x": 20.0, "y": 75.0}]},
+    {"id": "c_north_exit", "widthMeters": 8.0, "path": [{"x": 45.0, "y": 95.0}, {"x": 45.0, "y": 115.0}]}
+  ]
+}

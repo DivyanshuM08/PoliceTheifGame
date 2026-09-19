@@ -56,10 +56,10 @@ fun GameOverDialog(
     }
 
     val description = when {
-        isWin && gameState.isFinalLevel -> "Master Officer! You intercepted the suspects across all ${gameState.totalLevels} courses and restored peace to the highway!"
-        isWin -> "Brilliant pursuit! You caught the suspect on ${gameState.levelTitle} before they reached the finish line."
-        gameState.reason == GameOverReason.OFF_ROAD -> "Your patrol car drove off the road boundaries into the ditch! Keep the car strictly on the road."
-        gameState.reason == GameOverReason.THIEF_ESCAPED -> "The suspect vehicle reached the ${gameState.roadLengthMeters.toInt()}m finish line and escaped into the city!"
+        isWin && gameState.isFinalLevel -> "Master Officer! You intercepted the suspects across all ${gameState.totalLevels} courses and mazes!"
+        isWin -> if (gameState.isPuzzle) "Brilliant interception! You cornered the suspect in ${gameState.levelTitle} before they reached the escape gate!" else "Brilliant pursuit! You caught the suspect on ${gameState.levelTitle} before they reached the finish line."
+        gameState.reason == GameOverReason.OFF_ROAD -> if (gameState.isPuzzle) "Your patrol car crashed into the maze walls! Navigate corridors carefully." else "Your patrol car drove off the road boundaries into the ditch! Keep the car strictly on the road."
+        gameState.reason == GameOverReason.THIEF_ESCAPED -> if (gameState.isPuzzle) "The suspect solved the labyrinth and escaped through the escape gate!" else "The suspect vehicle reached the ${gameState.roadLengthMeters.toInt()}m finish line and escaped into the city!"
         else -> "Better luck next time!"
     }
 

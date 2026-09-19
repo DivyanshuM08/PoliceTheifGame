@@ -13,7 +13,19 @@ data class RoadBoundary(
 )
 
 /**
+ * Represents an individual road corridor or lane in a multi-pathway maze puzzle.
+ */
+data class RoadCorridor(
+    val id: String = "",
+    val path: List<Point2D>,
+    val widthMeters: Float = 8.0f,
+    val isDeadEnd: Boolean = false
+)
+
+/**
  * Raw data model for a level's road geometry and parameters.
+ * Supports both classic single-track highway courses (Levels 1-10) and
+ * Pac-Man style multi-corridor puzzle mazes (Levels 11-20).
  */
 data class LevelData(
     val levelId: String,
@@ -25,7 +37,13 @@ data class LevelData(
     val startPositionMeters: Float,
     val finishPositionMeters: Float,
     val roadPath: List<Point2D>,
-    val boundaries: List<RoadBoundary>
+    val boundaries: List<RoadBoundary>,
+    val isPuzzle: Boolean = false,
+    val corridors: List<RoadCorridor> = emptyList(),
+    val policeStartPosition: Point2D? = null,
+    val thiefStartPosition: Point2D? = null,
+    val destinationPosition: Point2D? = null,
+    val thiefRoute: List<Point2D> = emptyList()
 ) {
     companion object {
         /**
@@ -101,6 +119,51 @@ data class LevelData(
                 }
             }
 
+            val isPuzzle = root.optBoolean("isPuzzle", false)
+            val corridors = mutableListOf<RoadCorridor>()
+            val corridorsArray = root.optJSONArray("corridors")
+            if (corridorsArray != null) {
+                for (i in 0 until corridorsArray.length()) {
+                    val cObj = corridorsArray.optJSONObject(i)
+                    if (cObj != null) {
+                        val cid = cObj.optString("id", "c_$i")
+                        val cWidth = cObj.optDouble("widthMeters", roadWidth.toDouble()).toFloat()
+                        val isDeadEnd = cObj.optBoolean("isDeadEnd", false)
+                        val cPath = mutableListOf<Point2D>()
+                        val cPathArr = cObj.optJSONArray("path") ?: JSONArray()
+                        for (j in 0 until cPathArr.length()) {
+                            parsePoint(cPathArr.get(j))?.let { cPath.add(it) }
+                        }
+                        if (cPath.size >= 2) {
+                            corridors.add(RoadCorridor(cid, cPath, cWidth, isDeadEnd))
+                        }
+                    }
+                }
+            }
+
+            val policeStart = parsePoint(root.opt("policeStart"))
+            val thiefStart = parsePoint(root.opt("thiefStart"))
+            val destination = parsePoint(root.opt("destination"))
+
+            val thiefRoute = mutableListOf<Point2D>()
+            val thiefRouteArr = root.optJSONArray("thiefRoute")
+            if (thiefRouteArr != null) {
+                for (i in 0 until thiefRouteArr.length()) {
+                    parsePoint(thiefRouteArr.get(i))?.let { thiefRoute.add(it) }
+                }
+            }
+
+            // Fallback for roadPath in puzzle levels: ensure roadPath has at least 2 points
+            val finalRoadPath = if (pathPoints.size >= 2) {
+                pathPoints
+            } else if (thiefRoute.size >= 2) {
+                thiefRoute
+            } else if (corridors.isNotEmpty() && corridors.first().path.size >= 2) {
+                corridors.first().path
+            } else {
+                listOf(Point2D(50f, 0f), Point2D(50f, 10f))
+            }
+
             return LevelData(
                 levelId = levelId,
                 title = title,
@@ -110,8 +173,14 @@ data class LevelData(
                 initialGapMeters = initialGap,
                 startPositionMeters = startPos,
                 finishPositionMeters = finishPos,
-                roadPath = pathPoints,
-                boundaries = boundaries
+                roadPath = finalRoadPath,
+                boundaries = boundaries,
+                isPuzzle = isPuzzle,
+                corridors = corridors,
+                policeStartPosition = policeStart,
+                thiefStartPosition = thiefStart,
+                destinationPosition = destination,
+                thiefRoute = thiefRoute
             )
         }
 
