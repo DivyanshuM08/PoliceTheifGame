@@ -1,0 +1,559 @@
+{
+  "levelId": "level_18",
+  "title": "Octagon Citadel",
+  "roadLengthMeters": 155.0,
+  "roadWidthMeters": 4.0,
+  "thiefSpeedMps": 50.0,
+  "initialGapMeters": 29.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 155.0,
+  "isPuzzle": true,
+  "policeStart": {
+    "x": 50.0,
+    "y": 10.0
+  },
+  "thiefStart": {
+    "x": 75.0,
+    "y": 25.0
+  },
+  "destination": {
+    "x": 50.0,
+    "y": 155.0
+  },
+  "thiefRoute": [
+    {
+      "x": 75.0,
+      "y": 25.0
+    },
+    {
+      "x": 75.0,
+      "y": 45.0
+    },
+    {
+      "x": 50.0,
+      "y": 45.0
+    },
+    {
+      "x": 50.0,
+      "y": 68.0
+    },
+    {
+      "x": 75.0,
+      "y": 68.0
+    },
+    {
+      "x": 75.0,
+      "y": 90.0
+    },
+    {
+      "x": 50.0,
+      "y": 90.0
+    },
+    {
+      "x": 50.0,
+      "y": 112.0
+    },
+    {
+      "x": 75.0,
+      "y": 112.0
+    },
+    {
+      "x": 75.0,
+      "y": 134.0
+    },
+    {
+      "x": 50.0,
+      "y": 134.0
+    },
+    {
+      "x": 50.0,
+      "y": 146.0
+    },
+    {
+      "x": 50.0,
+      "y": 155.0
+    }
+  ],
+  "corridors": [
+    {
+      "id": "c18_entry",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 10.0
+        },
+        {
+          "x": 50.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r1_w",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 25.0
+        },
+        {
+          "x": 50.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r1_e",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 25.0
+        },
+        {
+          "x": 75.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c18_col1_w",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 25.0
+        },
+        {
+          "x": 20.0,
+          "y": 45.0
+        }
+      ]
+    },
+    {
+      "id": "c18_col1_e",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 25.0
+        },
+        {
+          "x": 75.0,
+          "y": 45.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r2_w",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 45.0
+        },
+        {
+          "x": 50.0,
+          "y": 45.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r2_e",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 45.0
+        },
+        {
+          "x": 75.0,
+          "y": 45.0
+        }
+      ]
+    },
+    {
+      "id": "c18_col2_m",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 45.0
+        },
+        {
+          "x": 50.0,
+          "y": 68.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r3_w",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 68.0
+        },
+        {
+          "x": 50.0,
+          "y": 68.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r3_e",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 68.0
+        },
+        {
+          "x": 75.0,
+          "y": 68.0
+        }
+      ]
+    },
+    {
+      "id": "c18_col3_w",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 68.0
+        },
+        {
+          "x": 20.0,
+          "y": 90.0
+        }
+      ]
+    },
+    {
+      "id": "c18_col3_e",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 68.0
+        },
+        {
+          "x": 75.0,
+          "y": 90.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r4_w",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 90.0
+        },
+        {
+          "x": 50.0,
+          "y": 90.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r4_e",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 90.0
+        },
+        {
+          "x": 75.0,
+          "y": 90.0
+        }
+      ]
+    },
+    {
+      "id": "c18_col4_m",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 90.0
+        },
+        {
+          "x": 50.0,
+          "y": 112.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r5_w",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 112.0
+        },
+        {
+          "x": 50.0,
+          "y": 112.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r5_e",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 112.0
+        },
+        {
+          "x": 75.0,
+          "y": 112.0
+        }
+      ]
+    },
+    {
+      "id": "c18_col5_w",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 112.0
+        },
+        {
+          "x": 20.0,
+          "y": 134.0
+        }
+      ]
+    },
+    {
+      "id": "c18_col5_e",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 112.0
+        },
+        {
+          "x": 75.0,
+          "y": 134.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r6_w",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 134.0
+        },
+        {
+          "x": 50.0,
+          "y": 134.0
+        }
+      ]
+    },
+    {
+      "id": "c18_r6_e",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 134.0
+        },
+        {
+          "x": 75.0,
+          "y": 134.0
+        }
+      ]
+    },
+    {
+      "id": "c18_col6_m",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 134.0
+        },
+        {
+          "x": 50.0,
+          "y": 146.0
+        }
+      ]
+    },
+    {
+      "id": "c18_exit",
+      "widthMeters": 4.0,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 146.0
+        },
+        {
+          "x": 50.0,
+          "y": 155.0
+        }
+      ]
+    },
+    {
+      "id": "c18_trap1",
+      "widthMeters": 4.0,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 25.0
+        },
+        {
+          "x": 8.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c18_trap2",
+      "widthMeters": 4.0,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 25.0
+        },
+        {
+          "x": 88.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c18_trap3",
+      "widthMeters": 4.0,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 45.0
+        },
+        {
+          "x": 8.0,
+          "y": 45.0
+        }
+      ]
+    },
+    {
+      "id": "c18_trap4",
+      "widthMeters": 4.0,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 45.0
+        },
+        {
+          "x": 88.0,
+          "y": 45.0
+        }
+      ]
+    },
+    {
+      "id": "c18_trap5",
+      "widthMeters": 4.0,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 68.0
+        },
+        {
+          "x": 8.0,
+          "y": 68.0
+        }
+      ]
+    },
+    {
+      "id": "c18_trap6",
+      "widthMeters": 4.0,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 68.0
+        },
+        {
+          "x": 88.0,
+          "y": 68.0
+        }
+      ]
+    },
+    {
+      "id": "c18_trap7",
+      "widthMeters": 4.0,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 112.0
+        },
+        {
+          "x": 8.0,
+          "y": 112.0
+        }
+      ]
+    },
+    {
+      "id": "c18_trap8",
+      "widthMeters": 4.0,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 112.0
+        },
+        {
+          "x": 88.0,
+          "y": 112.0
+        }
+      ]
+    },
+    {
+      "id": "c18_trap9",
+      "widthMeters": 4.0,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 134.0
+        },
+        {
+          "x": 8.0,
+          "y": 134.0
+        }
+      ]
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,11 +18,16 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,30 +37,51 @@ import com.example.policetheifgame.game.model.GameStatus
 import com.example.policetheifgame.ui.components.GameCanvas
 import com.example.policetheifgame.ui.components.GameHud
 import com.example.policetheifgame.ui.components.GameOverDialog
+import com.example.policetheifgame.ui.components.InfoDialog
+import com.example.policetheifgame.ui.components.OnboardingTooltip
+import com.example.policetheifgame.ui.components.PauseDialog
+import java.util.Locale
 
 @Composable
 fun GameScreen(
     viewModel: GameViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.initDependencies(context)
+    }
+
     val gameState by viewModel.uiState.collectAsState()
+    val showTutorial by viewModel.showTutorial.collectAsState()
+    var showInfoDialog by remember { mutableStateOf(false) }
+    var wasPlayingBeforeInfo by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(Color(0xFF2E6B34)) // Seamless green terrain background
     ) {
         // 1. Playable Game Canvas (World rendering & gesture handling)
         GameCanvas(
             gameState = gameState,
             roadGeometry = viewModel.gameEngine.roadGeometry,
+            onDragStart = { screenOffset, viewport ->
+                viewModel.onPoliceDragStart(screenOffset, viewport)
+            },
             onDrag = { screenOffset, viewport ->
                 viewModel.onPoliceDrag(screenOffset, viewport)
             },
-            modifier = Modifier.fillMaxSize()
+            onDragEnd = {
+                viewModel.onPoliceDragEnd()
+            },
+            modifier = Modifier
+                .fillMaxSize()
+                .navigationBarsPadding()
+                .padding(bottom = 20.dp)
         )
 
-        // 2. Telemetry HUD Overlay (positioned at top with system bars inset)
+        // 2. Telemetry HUD Overlay (minimal floating bar with Info, Mute, Pause icons)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -63,7 +90,16 @@ fun GameScreen(
         ) {
             GameHud(
                 gameState = gameState,
-                onRestart = { viewModel.restartGame() }
+                onPause = { viewModel.pauseGame() },
+                onOpenInfo = {
+                    wasPlayingBeforeInfo = (gameState.status == GameStatus.PLAYING)
+                    if (wasPlayingBeforeInfo) {
+                        viewModel.pauseGame()
+                    }
+                    showInfoDialog = true
+                },
+                onToggleMute = { viewModel.toggleMute() },
+                onReturnToMap = { viewModel.returnToLevelMap() }
             )
         }
 
@@ -89,6 +125,17 @@ fun GameScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
+                            text = "LEVEL ${gameState.displayLevelNumber}: ${gameState.levelTitle.uppercase()}",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 1.sp
+                            ),
+                            color = Color(0xFF00E5FF)
+                        )
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Text(
                             text = "POLICE VS THIEF",
                             style = MaterialTheme.typography.headlineSmall.copy(
                                 fontWeight = FontWeight.Black,
@@ -100,7 +147,7 @@ fun GameScreen(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         Text(
-                            text = "A criminal vehicle is escaping at 10 m/s along the road!\n\nDrag your police cruiser to chase and intercept them before the 100m finish line.\n\n⚠️ Stay within road boundaries — driving off the road ends the pursuit!",
+                            text = "The suspect is fleeing at ${String.format(Locale.US, "%.1f", gameState.thiefSpeedMps)} m/s!\n\nDrag your police cruiser along the road to chase and intercept them before the ${gameState.roadLengthMeters.toInt()}m finish line.\n\n⚠️ Stay within road boundaries — driving off the road ends the pursuit!",
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
                             color = Color(0xFFCFD8DC),
@@ -126,15 +173,72 @@ fun GameScreen(
                                 color = Color.White
                             )
                         }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        androidx.compose.material3.TextButton(
+                            onClick = { viewModel.returnToLevelMap() },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "🗺️ Back to Level Map",
+                                color = Color(0xFFFFD54F),
+                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                            )
+                        }
                     }
                 }
             }
         }
 
-        // 4. Game Over Dialog (Win / Loss with Restart)
+        // 4. Pause Dialog (Pause / Resume chase)
+        if (gameState.status == GameStatus.PAUSED) {
+            PauseDialog(
+                gameState = gameState,
+                onResume = { viewModel.resumeGame() },
+                onRestart = { viewModel.restartGame() },
+                onToggleMute = { viewModel.toggleMute() },
+                onReturnToMap = { viewModel.returnToLevelMap() }
+            )
+        }
+
+        // 5. Info Dialog (Course Intel & Telemetry popup)
+        if (showInfoDialog) {
+            InfoDialog(
+                gameState = gameState,
+                onDismiss = {
+                    showInfoDialog = false
+                    if (wasPlayingBeforeInfo) {
+                        viewModel.resumeGame()
+                        wasPlayingBeforeInfo = false
+                    }
+                },
+                onOpenTutorial = {
+                    showInfoDialog = false
+                    viewModel.openTutorial()
+                }
+            )
+        }
+
+        // 6. Game Over Dialog (Win / Loss with Next Level & Restart)
         GameOverDialog(
             gameState = gameState,
-            onRestart = { viewModel.restartGame() }
+            onRestart = { viewModel.restartGame() },
+            onNextLevel = { viewModel.nextLevel() },
+            onReturnToMap = { viewModel.returnToLevelMap() }
         )
+
+        // 7. Onboarding Tutorial Dialog / Popups
+        if (showTutorial) {
+            OnboardingTooltip(
+                onDismiss = {
+                    viewModel.dismissTutorial()
+                    if (wasPlayingBeforeInfo) {
+                        viewModel.resumeGame()
+                        wasPlayingBeforeInfo = false
+                    }
+                }
+            )
+        }
     }
 }

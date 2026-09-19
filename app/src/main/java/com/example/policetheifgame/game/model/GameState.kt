@@ -6,6 +6,7 @@ package com.example.policetheifgame.game.model
 enum class GameStatus {
     READY,
     PLAYING,
+    PAUSED,
     POLICE_WON,
     THIEF_WON
 }
@@ -26,6 +27,10 @@ enum class GameOverReason {
 data class GameState(
     val status: GameStatus = GameStatus.READY,
     val reason: GameOverReason = GameOverReason.NONE,
+    val levelIndex: Int = 0,
+    val levelTitle: String = "Sunny Highway",
+    val totalLevels: Int = 20,
+    val unlockedLevelIndex: Int = 0,
     val policeDistanceMeters: Float = 0f,
     val policePosition: Point2D = Point2D(50f, 0f),
     val policeHeadingDeg: Float = 0f,
@@ -36,5 +41,14 @@ data class GameState(
     val thiefSpeedMps: Float = 10f,
     val gapMeters: Float = 20f,
     val roadLengthMeters: Float = 100f,
-    val cameraCenter: Point2D = Point2D(50f, 15f)
-)
+    val cameraCenter: Point2D = Point2D(50f, 15f),
+    val isSirenMuted: Boolean = false,
+    val policeSpeedMultiplier: Float = 1.0f,
+    val isPoliceChasing: Boolean = false,
+    val isPuzzle: Boolean = false,
+    val destinationPosition: Point2D? = null
+) {
+    val isFinalLevel: Boolean get() = levelIndex >= totalLevels - 1
+    val displayLevelNumber: Int get() = levelIndex + 1
+}
+

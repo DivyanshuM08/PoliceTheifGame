@@ -17,6 +17,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,7 +38,9 @@ import java.util.Locale
 @Composable
 fun GameOverDialog(
     gameState: GameState,
-    onRestart: () -> Unit
+    onRestart: () -> Unit,
+    onNextLevel: (() -> Unit)? = null,
+    onReturnToMap: (() -> Unit)? = null
 ) {
     if (gameState.status != GameStatus.POLICE_WON && gameState.status != GameStatus.THIEF_WON) {
         return
@@ -46,6 +49,7 @@ fun GameOverDialog(
     val isWin = gameState.status == GameStatus.POLICE_WON
 
     val title = when {
+        isWin && gameState.isFinalLevel -> "ALL LEVELS CLEARED!"
         isWin -> "THIEF CAUGHT!"
         gameState.reason == GameOverReason.OFF_ROAD -> "OFF-ROAD CRASH!"
         gameState.reason == GameOverReason.THIEF_ESCAPED -> "THIEF ESCAPED!"
@@ -53,9 +57,10 @@ fun GameOverDialog(
     }
 
     val description = when {
-        isWin -> "Brilliant pursuit! You intercepted the getaway vehicle before it reached the finish line."
-        gameState.reason == GameOverReason.OFF_ROAD -> "Your patrol car drove off the road boundaries into the ditch! Keep the car strictly on the road."
-        gameState.reason == GameOverReason.THIEF_ESCAPED -> "The suspect vehicle reached the 100m finish line and escaped into the city!"
+        isWin && gameState.isFinalLevel -> "Master Officer! You intercepted the suspects across all ${gameState.totalLevels} courses and mazes!"
+        isWin -> if (gameState.isPuzzle) "Brilliant interception! You cornered the suspect in ${gameState.levelTitle} before they reached the escape gate!" else "Brilliant pursuit! You caught the suspect on ${gameState.levelTitle} before they reached the finish line."
+        gameState.reason == GameOverReason.OFF_ROAD -> if (gameState.isPuzzle) "Your patrol car crashed into the maze walls! Navigate corridors carefully." else "Your patrol car drove off the road boundaries into the ditch! Keep the car strictly on the road."
+        gameState.reason == GameOverReason.THIEF_ESCAPED -> if (gameState.isPuzzle) "The suspect solved the labyrinth and escaped through the escape gate!" else "The suspect vehicle reached the ${gameState.roadLengthMeters.toInt()}m finish line and escaped into the city!"
         else -> "Better luck next time!"
     }
 
@@ -66,6 +71,7 @@ fun GameOverDialog(
     }
 
     val iconText = when {
+        isWin && gameState.isFinalLevel -> "🎖️"
         isWin -> "🏆"
         gameState.reason == GameOverReason.OFF_ROAD -> "💥"
         else -> "🚨"
@@ -110,7 +116,8 @@ fun GameOverDialog(
                         fontWeight = FontWeight.Black,
                         letterSpacing = 1.sp
                     ),
-                    color = primaryColor
+                    color = primaryColor,
+                    textAlign = TextAlign.Center
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -134,42 +141,116 @@ fun GameOverDialog(
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Police Distance", style = MaterialTheme.typography.labelSmall, color = Color(0xFF90A4AE))
+                        Text("Course", style = MaterialTheme.typography.labelSmall, color = Color(0xFF90A4AE))
                         Text(
-                            String.format(Locale.US, "%.1f m", gameState.policeDistanceMeters),
+                            "LVL ${gameState.displayLevelNumber}/${gameState.totalLevels}",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = Color.White
                         )
                     }
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Thief Distance", style = MaterialTheme.typography.labelSmall, color = Color(0xFF90A4AE))
+                        Text("Police Dist", style = MaterialTheme.typography.labelSmall, color = Color(0xFF90A4AE))
+                        Text(
+                            String.format(Locale.US, "%.1f m", gameState.policeDistanceMeters),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = Color(0xFF2979FF)
+                        )
+                    }
+
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Thief Dist", style = MaterialTheme.typography.labelSmall, color = Color(0xFF90A4AE))
                         Text(
                             String.format(Locale.US, "%.1f m", gameState.thiefDistanceMeters),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White
+                            color = Color(0xFFFF3D00)
                         )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Button(
-                    onClick = onRestart,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(52.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = primaryColor),
-                    shape = RoundedCornerShape(14.dp)
-                ) {
-                    Text(
-                        text = "RESTART CHASE",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.ExtraBold,
-                            letterSpacing = 1.sp
-                        ),
-                        color = Color.Black
-                    )
+                // Action buttons
+                if (isWin && onNextLevel != null) {
+                    Button(
+                        onClick = onNextLevel,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = primaryColor),
+                        shape = RoundedCornerShape(14.dp)
+                    ) {
+                        Text(
+                            text = if (gameState.isFinalLevel) "PLAY AGAIN (FROM LVL 1)" else "NEXT LEVEL (LVL ${gameState.displayLevelNumber + 1}) ❯",
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                fontWeight = FontWeight.ExtraBold,
+                                letterSpacing = 0.5.sp
+                            ),
+                            color = Color.Black
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedButton(
+                        onClick = onRestart,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(44.dp),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text("Replay This Level", color = Color.White)
+                    }
+
+                    if (onReturnToMap != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedButton(
+                            onClick = onReturnToMap,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(44.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = Color(0xFFFFD54F)
+                            )
+                        ) {
+                            Text("🗺️ Level Map", color = Color(0xFFFFD54F), fontWeight = FontWeight.Bold)
+                        }
+                    }
+                } else {
+                    Button(
+                        onClick = onRestart,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = primaryColor),
+                        shape = RoundedCornerShape(14.dp)
+                    ) {
+                        Text(
+                            text = "RETRY CHASE",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.ExtraBold,
+                                letterSpacing = 1.sp
+                            ),
+                            color = Color.Black
+                        )
+                    }
+
+                    if (onReturnToMap != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedButton(
+                            onClick = onReturnToMap,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(44.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = Color(0xFFFFD54F)
+                            )
+                        ) {
+                            Text("🗺️ Level Map", color = Color(0xFFFFD54F), fontWeight = FontWeight.Bold)
+                        }
+                    }
                 }
             }
         }
