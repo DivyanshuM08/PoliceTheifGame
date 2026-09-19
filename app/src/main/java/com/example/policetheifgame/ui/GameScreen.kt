@@ -98,7 +98,8 @@ fun GameScreen(
                     }
                     showInfoDialog = true
                 },
-                onToggleMute = { viewModel.toggleMute() }
+                onToggleMute = { viewModel.toggleMute() },
+                onReturnToMap = { viewModel.returnToLevelMap() }
             )
         }
 
@@ -172,6 +173,19 @@ fun GameScreen(
                                 color = Color.White
                             )
                         }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        androidx.compose.material3.TextButton(
+                            onClick = { viewModel.returnToLevelMap() },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "🗺️ Back to Level Map",
+                                color = Color(0xFFFFD54F),
+                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                            )
+                        }
                     }
                 }
             }
@@ -183,7 +197,8 @@ fun GameScreen(
                 gameState = gameState,
                 onResume = { viewModel.resumeGame() },
                 onRestart = { viewModel.restartGame() },
-                onToggleMute = { viewModel.toggleMute() }
+                onToggleMute = { viewModel.toggleMute() },
+                onReturnToMap = { viewModel.returnToLevelMap() }
             )
         }
 
@@ -209,7 +224,8 @@ fun GameScreen(
         GameOverDialog(
             gameState = gameState,
             onRestart = { viewModel.restartGame() },
-            onNextLevel = { viewModel.nextLevel() }
+            onNextLevel = { viewModel.nextLevel() },
+            onReturnToMap = { viewModel.returnToLevelMap() }
         )
 
         // 7. Onboarding Tutorial Dialog / Popups

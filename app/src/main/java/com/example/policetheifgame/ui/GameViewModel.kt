@@ -55,6 +55,9 @@ class GameViewModel @JvmOverloads constructor(
     private val _isSirenMuted = MutableStateFlow(preferences?.isSirenMuted ?: false)
     val isSirenMuted: StateFlow<Boolean> = _isSirenMuted.asStateFlow()
 
+    private val _currentScreen = MutableStateFlow(AppScreen.LEVEL_MAP)
+    val currentScreen: StateFlow<AppScreen> = _currentScreen.asStateFlow()
+
     private val _uiState = MutableStateFlow(createEnrichedSnapshot())
     val uiState: StateFlow<GameState> = _uiState.asStateFlow()
 
@@ -83,16 +86,16 @@ class GameViewModel @JvmOverloads constructor(
             _showTutorial.value = !prefs.hasSeenOnboarding
             _isSirenMuted.value = prefs.isSirenMuted
 
-            // Testing Level 15: Set to 14 (revert back to prefs.currentLevelIndex.coerceIn(0, LevelRepository.totalLevels - 1))
-//            val savedLevel = 19
-            val savedLevel = prefs.currentLevelIndex.coerceIn(0, LevelRepository.totalLevels - 1)
+            val savedUnlocked = prefs.unlockedLevelIndex.coerceIn(0, LevelRepository.totalLevels - 1)
+            if (savedUnlocked > unlockedLevelIndex) {
+                unlockedLevelIndex = savedUnlocked
+            }
+
+            val savedLevel = prefs.currentLevelIndex.coerceIn(0, LevelRepository.totalLevels - 1).coerceAtMost(unlockedLevelIndex)
             if (savedLevel != currentLevelIndex && gameEngine.status == GameStatus.READY) {
                 currentLevelIndex = savedLevel
                 currentLevel = LevelRepository.getLevel(currentLevelIndex)
                 gameEngine.loadLevel(currentLevel, currentLevelIndex)
-            }
-            if (prefs.unlockedLevelIndex > unlockedLevelIndex) {
-                unlockedLevelIndex = prefs.unlockedLevelIndex
             }
             needsSnapshot = true
         }
@@ -215,6 +218,38 @@ class GameViewModel @JvmOverloads constructor(
         preferences?.currentLevelIndex = currentLevelIndex
         currentLevel = LevelRepository.getLevel(currentLevelIndex)
         gameEngine.loadLevel(currentLevel, currentLevelIndex)
+        publishSnapshot()
+    }
+
+    /**
+     * Opens an unlocked level from the Candy Crush-style Level Map.
+     * Returns false if the requested level is currently locked.
+     */
+    fun openLevelFromMap(index: Int): Boolean {
+        if (index < 0 || index >= LevelRepository.totalLevels) {
+            return false
+        }
+        if (index > unlockedLevelIndex) {
+            return false // Locked! Preceding level must be completed first
+        }
+        selectLevel(index)
+        _currentScreen.value = AppScreen.GAMEPLAY
+        return true
+    }
+
+    /**
+     * Returns from active gameplay back to the Level Map (Ladder).
+     */
+    fun returnToLevelMap() {
+        gameLoopJob?.cancel()
+        if (gameEngine.status == GameStatus.PLAYING) {
+            gameEngine.pause()
+        }
+        isActivelyChasing = false
+        isDraggingPolice = false
+        dragTouchOffsetWorld = Point2D(0f, 0f)
+        sirenManager?.stop()
+        _currentScreen.value = AppScreen.LEVEL_MAP
         publishSnapshot()
     }
 

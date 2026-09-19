@@ -39,7 +39,8 @@ import java.util.Locale
 fun GameOverDialog(
     gameState: GameState,
     onRestart: () -> Unit,
-    onNextLevel: (() -> Unit)? = null
+    onNextLevel: (() -> Unit)? = null,
+    onReturnToMap: (() -> Unit)? = null
 ) {
     if (gameState.status != GameStatus.POLICE_WON && gameState.status != GameStatus.THIEF_WON) {
         return
@@ -200,6 +201,22 @@ fun GameOverDialog(
                     ) {
                         Text("Replay This Level", color = Color.White)
                     }
+
+                    if (onReturnToMap != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedButton(
+                            onClick = onReturnToMap,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(44.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = Color(0xFFFFD54F)
+                            )
+                        ) {
+                            Text("🗺️ Level Map", color = Color(0xFFFFD54F), fontWeight = FontWeight.Bold)
+                        }
+                    }
                 } else {
                     Button(
                         onClick = onRestart,
@@ -217,6 +234,22 @@ fun GameOverDialog(
                             ),
                             color = Color.Black
                         )
+                    }
+
+                    if (onReturnToMap != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedButton(
+                            onClick = onReturnToMap,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(44.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = Color(0xFFFFD54F)
+                            )
+                        ) {
+                            Text("🗺️ Level Map", color = Color(0xFFFFD54F), fontWeight = FontWeight.Bold)
+                        }
                     }
                 }
             }

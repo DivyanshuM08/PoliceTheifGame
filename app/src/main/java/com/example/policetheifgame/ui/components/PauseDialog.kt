@@ -42,7 +42,8 @@ fun PauseDialog(
     gameState: GameState,
     onResume: () -> Unit,
     onRestart: () -> Unit,
-    onToggleMute: () -> Unit
+    onToggleMute: () -> Unit,
+    onReturnToMap: () -> Unit
 ) {
     Dialog(
         onDismissRequest = onResume,
@@ -191,6 +192,22 @@ fun PauseDialog(
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text("Restart This Level", color = Color.White)
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Return to Map button
+                OutlinedButton(
+                    onClick = onReturnToMap,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color(0xFFFFD54F)
+                    )
+                ) {
+                    Text("🗺️ Back to Level Map", color = Color(0xFFFFD54F), fontWeight = FontWeight.Bold)
                 }
             }
         }

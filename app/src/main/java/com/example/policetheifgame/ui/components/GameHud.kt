@@ -34,6 +34,7 @@ fun GameHud(
     onPause: () -> Unit,
     onOpenInfo: () -> Unit,
     onToggleMute: () -> Unit,
+    onReturnToMap: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -43,23 +44,49 @@ fun GameHud(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Left side: Info button (ℹ️)
-        Box(
-            modifier = Modifier
-                .size(44.dp)
-                .clip(CircleShape)
-                .background(Color(0xCC1A1C1E))
-                .border(1.5.dp, Color(0x6600E5FF), CircleShape)
+        // Left side: Map button (🗺️) and Info button (ℹ️)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            TextButton(
-                onClick = onOpenInfo,
-                contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
-                modifier = Modifier.fillMaxSize()
+            // Level Map button (🗺️)
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xCC1A1C1E))
+                    .border(1.5.dp, Color(0x66FFD54F), CircleShape)
             ) {
-                Text(
-                    text = "ℹ️",
-                    fontSize = 20.sp
-                )
+                TextButton(
+                    onClick = onReturnToMap,
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "🗺️",
+                        fontSize = 20.sp
+                    )
+                }
+            }
+
+            // Info button (ℹ️)
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xCC1A1C1E))
+                    .border(1.5.dp, Color(0x6600E5FF), CircleShape)
+            ) {
+                TextButton(
+                    onClick = onOpenInfo,
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "ℹ️",
+                        fontSize = 20.sp
+                    )
+                }
             }
         }
 

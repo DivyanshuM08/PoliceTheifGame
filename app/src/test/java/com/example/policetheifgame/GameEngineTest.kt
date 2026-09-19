@@ -10,6 +10,7 @@ import com.example.policetheifgame.game.geometry.RoadGeometry
 import com.example.policetheifgame.game.model.GameOverReason
 import com.example.policetheifgame.game.model.GameStatus
 import com.example.policetheifgame.game.model.Point2D
+import com.example.policetheifgame.ui.AppScreen
 import com.example.policetheifgame.ui.GameViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -754,6 +755,76 @@ class GameEngineTest {
 
         assertEquals(GameStatus.THIEF_WON, engine.status)
         assertEquals(GameOverReason.THIEF_ESCAPED, engine.reason)
+    }
+
+    /**
+     * Requirement 27: App launches into Level Map screen by default.
+     */
+    @Test
+    fun test27_appLaunchesIntoLevelMapScreen() {
+        val vm = GameViewModel()
+        assertEquals(AppScreen.LEVEL_MAP, vm.currentScreen.value)
+    }
+
+    /**
+     * Requirement 28: Locked levels cannot be opened from the Level Map.
+     */
+    @Test
+    fun test28_cannotSelectLockedLevelOnMap() {
+        val vm = GameViewModel()
+        // Default unlocked level is index 0 (Level 1)
+        assertEquals(0, vm.unlockedLevelIndex)
+
+        // Attempting to jump ahead to locked Level 2 (index 1) or Level 8 (index 7) fails
+        val openedLvl2 = vm.openLevelFromMap(1)
+        assertFalse("Cannot open locked level 2 when only level 1 is unlocked", openedLvl2)
+        assertEquals(AppScreen.LEVEL_MAP, vm.currentScreen.value)
+
+        val openedLvl8 = vm.openLevelFromMap(7)
+        assertFalse("Cannot open locked level 8", openedLvl8)
+        assertEquals(AppScreen.LEVEL_MAP, vm.currentScreen.value)
+    }
+
+    /**
+     * Requirement 29: Any unlocked or previously cleared level can be selected and replayed.
+     */
+    @Test
+    fun test29_canSelectAndReplayAnyUnlockedLevelOnMap() {
+        val vm = GameViewModel()
+        // Select and open Level 1 (index 0)
+        val openedLvl1 = vm.openLevelFromMap(0)
+        assertTrue("Level 1 is unlocked and can be opened", openedLvl1)
+        assertEquals(AppScreen.GAMEPLAY, vm.currentScreen.value)
+        assertEquals(0, vm.currentLevelIndex)
+
+        // Return to map
+        vm.returnToLevelMap()
+        assertEquals(AppScreen.LEVEL_MAP, vm.currentScreen.value)
+    }
+
+    /**
+     * Requirement 30: When user is at Level 7 (index 6 unlocked), Level 4 can be replayed, but Level 8 is locked.
+     */
+    @Test
+    fun test30_candyCrushProgressionRuleUserAtLevel7CanReplay4CannotPlay8() {
+        // Mock a ViewModel where user unlocked up to Level 7 (index 6)
+        val vm = GameViewModel(initialLevelIndex = 6)
+        assertEquals(6, vm.unlockedLevelIndex)
+
+        // Player wants to replay Level 4 (index 3)
+        val openedLvl4 = vm.openLevelFromMap(3)
+        assertTrue("User at Level 7 can freely replay Level 4", openedLvl4)
+        assertEquals(3, vm.currentLevelIndex)
+        assertEquals(AppScreen.GAMEPLAY, vm.currentScreen.value)
+
+        // Return to map
+        vm.returnToLevelMap()
+        assertEquals(AppScreen.LEVEL_MAP, vm.currentScreen.value)
+
+        // Player tries to play Level 8 (index 7) -> must fail because Level 7 is not beaten yet
+        val openedLvl8 = vm.openLevelFromMap(7)
+        assertFalse("User cannot play Level 8 until Level 7 is completed", openedLvl8)
+        assertEquals(AppScreen.LEVEL_MAP, vm.currentScreen.value)
     }
 }
 
