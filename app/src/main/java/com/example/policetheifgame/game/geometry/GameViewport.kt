@@ -91,9 +91,9 @@ data class GameViewport(
             val maxY = roadGeometry.pathPoints.last().y
             val roadYHeight = (maxY - minY).coerceAtLeast(10f)
 
-            // Padding: 5m at bottom keeps police car (5.6m length, centered at Y=0) fully visible.
+            // Padding: 6m at bottom keeps police car (5.6m length, centered at Y=0) fully visible.
             // 5m at top keeps checkered finish line and cars fully visible below top edge.
-            val bottomPadding = 5.0f
+            val bottomPadding = 6.0f
             val topPadding = 5.0f
             val totalHeightNeeded = roadYHeight + bottomPadding + topPadding
 

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -59,7 +60,7 @@ fun GameScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(Color(0xFF2E6B34)) // Seamless green terrain background
     ) {
         // 1. Playable Game Canvas (World rendering & gesture handling)
         GameCanvas(
@@ -74,7 +75,10 @@ fun GameScreen(
             onDragEnd = {
                 viewModel.onPoliceDragEnd()
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .navigationBarsPadding()
+                .padding(bottom = 20.dp)
         )
 
         // 2. Telemetry HUD Overlay (minimal floating bar with Info, Mute, Pause icons)

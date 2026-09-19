@@ -12,15 +12,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -84,8 +88,8 @@ fun OnboardingTooltip(
             ),
             TutorialStep(
                 icon = "🏆",
-                title = "6 Challenging Levels!",
-                description = "Catch the suspect to unlock 6 increasingly difficult courses with tighter chicanes, narrower roads, and faster getaway speeds!",
+                title = "10 Challenging Levels!",
+                description = "Catch the suspect to unlock 10 increasingly difficult courses with tighter chicanes, narrower roads, and faster getaway speeds!",
                 tip = "Tap the '?' icon anytime in the top bar to review these tips.",
                 accentColor = Color(0xFF00E676)
             )
@@ -97,19 +101,24 @@ fun OnboardingTooltip(
 
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = false)
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = false,
+            usePlatformDefaultWidth = false
+        )
     ) {
         Card(
             modifier = modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+                .fillMaxWidth(0.92f)
+                .padding(vertical = 16.dp),
             shape = RoundedCornerShape(24.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp),
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 20.dp, vertical = 22.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Header with step count and Skip button
@@ -229,17 +238,21 @@ fun OnboardingTooltip(
                 // Navigation buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (currentStep > 0) {
                         OutlinedButton(
                             onClick = { currentStep-- },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(48.dp),
+                            modifier = Modifier.heightIn(min = 48.dp),
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
                             shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text("Back", color = Color.White)
+                            Text(
+                                text = "❮ Back",
+                                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
+                                color = Color.White
+                            )
                         }
                     }
 
@@ -252,14 +265,21 @@ fun OnboardingTooltip(
                             }
                         },
                         modifier = Modifier
-                            .weight(if (currentStep > 0) 1.5f else 1f)
-                            .height(48.dp),
+                            .weight(1f)
+                            .heightIn(min = 48.dp),
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = step.accentColor),
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            text = if (currentStep < steps.size - 1) "Next" else "START PLAYING! ❯",
-                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                            text = if (currentStep < steps.size - 1) "Next ❯" else "START PLAYING! ❯",
+                            style = MaterialTheme.typography.labelLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.5.sp
+                            ),
+                            maxLines = 1,
+                            softWrap = false,
+                            textAlign = TextAlign.Center,
                             color = Color.Black
                         )
                     }

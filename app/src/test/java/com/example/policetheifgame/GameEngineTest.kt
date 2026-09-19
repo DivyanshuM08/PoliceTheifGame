@@ -10,6 +10,7 @@ import com.example.policetheifgame.game.geometry.RoadGeometry
 import com.example.policetheifgame.game.model.GameOverReason
 import com.example.policetheifgame.game.model.GameStatus
 import com.example.policetheifgame.game.model.Point2D
+import com.example.policetheifgame.ui.GameViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -470,6 +471,7 @@ class GameEngineTest {
         assertFalse(viewModel.uiState.value.isPoliceChasing)
 
         // 4. Drag again and pause
+        viewModel.onPoliceDragStart(dragScreenOffset, viewport)
         viewModel.onPoliceDrag(dragScreenOffset, viewport)
         assertTrue(viewModel.isActivelyChasing)
         viewModel.pauseGame()
@@ -508,6 +510,98 @@ class GameEngineTest {
             prevSpeed = level.thiefSpeedMps
             prevWidth = level.roadWidthMeters
         }
+    }
+
+    /**
+     * Requirement 19: Police car cannot be teleported by touching random parts of the road.
+     * Dragging only initiates if the touch starts at/near the police car's position.
+     * When user releases finger, the police car remains in place, and dragging can only
+     * restart from the car's current position (not from original start or anywhere else).
+     */
+    @Test
+    fun test19_noTeleportationOnRandomTapAndCanRestartDragFromCarPosition() {
+        val viewModel = GameViewModel()
+        viewModel.startGame()
+
+        val viewport = GameViewport.createOverview(
+            screenSize = Size(1080f, 2400f),
+            roadGeometry = viewModel.gameEngine.roadGeometry
+        )
+
+        val initialPolicePos = viewModel.gameEngine.policePosition
+        assertEquals(50f, initialPolicePos.x, 0.1f)
+        assertEquals(0f, initialPolicePos.y, 0.1f)
+
+        // 1. User taps at Y=60m (midway/near top of road)
+        val farScreenOffset = viewport.worldToScreen(Point2D(50f, 60f))
+        viewModel.onPoliceDragStart(farScreenOffset, viewport)
+        viewModel.onPoliceDrag(farScreenOffset, viewport)
+
+        // Car must NOT have moved / teleported
+        assertEquals("Police car must NOT teleport on far tap", 0f, viewModel.gameEngine.policePosition.y, 0.1f)
+        assertFalse("Drag must not be active", viewModel.isDraggingPolice)
+
+        // 2. User starts drag at the car's position (at Y=0m)
+        val carScreenOffset = viewport.worldToScreen(initialPolicePos)
+        viewModel.onPoliceDragStart(carScreenOffset, viewport)
+        assertTrue("Drag must be active when started on car", viewModel.isDraggingPolice)
+
+        // Drag the car up to Y=8m (behind thief who starts at 14m+)
+        val dragTo8mOffset = viewport.worldToScreen(Point2D(50f, 8f))
+        viewModel.onPoliceDrag(dragTo8mOffset, viewport)
+        assertEquals(8f, viewModel.gameEngine.policePosition.y, 1.0f)
+        assertEquals(GameStatus.PLAYING, viewModel.gameEngine.status)
+
+        // 3. User releases finger at Y=8m
+        viewModel.onPoliceDragEnd()
+        assertFalse(viewModel.isDraggingPolice)
+        val leftPos = viewModel.gameEngine.policePosition
+        assertEquals(8f, leftPos.y, 1.0f)
+
+        // 4. User attempts to drag from bottom (Y=0m) again
+        val farBottomOffset = viewport.worldToScreen(Point2D(50f, -5f))
+        viewModel.onPoliceDragStart(farBottomOffset, viewport)
+        viewModel.onPoliceDrag(farBottomOffset, viewport)
+
+        // Car must remain at Y=8m, not teleport back to Y=0m
+        assertEquals("Car must not teleport back to bottom when tapped at 0m", leftPos.y, viewModel.gameEngine.policePosition.y, 0.1f)
+        assertFalse("Drag must not start from distant bottom point", viewModel.isDraggingPolice)
+
+        // 5. User touches where car was left (Y=8m)
+        val resumeScreenOffset = viewport.worldToScreen(leftPos)
+        viewModel.onPoliceDragStart(resumeScreenOffset, viewport)
+        assertTrue("Drag can resume from car's last position", viewModel.isDraggingPolice)
+
+        // Drag further to Y=11m
+        val dragTo11mOffset = viewport.worldToScreen(Point2D(50f, 11f))
+        viewModel.onPoliceDrag(dragTo11mOffset, viewport)
+        assertEquals(11f, viewModel.gameEngine.policePosition.y, 1.0f)
+    }
+
+    /**
+     * Requirement 20: Viewport overview and bottom padding ensure the police car (centered at Y=0m)
+     * is completely inside the visible viewport and has clearance from the bottom edge.
+     */
+    @Test
+    fun test20_bottomPaddingEnsuresPoliceCarFullyVisibleAboveBottom() {
+        val viewport = GameViewport.createOverview(
+            screenSize = Size(1080f, 2400f),
+            roadGeometry = roadGeometry
+        )
+
+        // At Y=0m, police car screen Y must be above the screen bottom (screenSize.height = 2400)
+        val policeScreenPos = viewport.worldToScreen(roadGeometry.pathPoints.first())
+        assertTrue(
+            "Police car must be well above screen bottom (y=${policeScreenPos.y}, screenHeight=2400)",
+            policeScreenPos.y < 2350f
+        )
+        // Checkered finish line at top of road must be below screen top (y > 0)
+        val finishWorldPos = roadGeometry.pathPoints.last()
+        val finishScreenPos = viewport.worldToScreen(finishWorldPos)
+        assertTrue(
+            "Finish line must be comfortably below top edge (y=${finishScreenPos.y})",
+            finishScreenPos.y > 40f
+        )
     }
 }
 

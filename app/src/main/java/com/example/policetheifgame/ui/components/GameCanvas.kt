@@ -360,7 +360,7 @@ private fun DrawScope.drawPoliceCar(
     val carLength = maxOf(viewport.metersToPixels(5.6f), 52f)
 
     // Touch Drag Target / Halo Indicator (Generous touch target)
-    val haloRadius = maxOf(carLength * 1.5f, 55f)
+    val haloRadius = maxOf(viewport.metersToPixels(8.5f), 65f)
     drawCircle(
         color = Color(0x332196F3),
         radius = haloRadius,

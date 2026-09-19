@@ -60,6 +60,9 @@ class GameViewModel @JvmOverloads constructor(
     private var gameLoopJob: Job? = null
     var isActivelyChasing: Boolean = false
         private set
+    var isDraggingPolice: Boolean = false
+        private set
+    private var dragTouchOffsetWorld: Point2D = Point2D(0f, 0f)
     private var lastDragTimestampMs: Long = 0L
 
     init {
@@ -126,9 +129,15 @@ class GameViewModel @JvmOverloads constructor(
      * Starts the chase and begins the coroutine update loop.
      * Siren remains stopped until the player actively drags the police car in pursuit.
      */
+    /**
+     * Starts the chase and begins the coroutine update loop.
+     * Siren remains stopped until the player actively drags the police car in pursuit.
+     */
     fun startGame() {
         gameEngine.start()
         isActivelyChasing = false
+        isDraggingPolice = false
+        dragTouchOffsetWorld = Point2D(0f, 0f)
         sirenManager?.stop()
         publishSnapshot()
         startGameLoop()
@@ -141,6 +150,8 @@ class GameViewModel @JvmOverloads constructor(
         if (gameEngine.status == GameStatus.PLAYING) {
             gameEngine.pause()
             isActivelyChasing = false
+            isDraggingPolice = false
+            dragTouchOffsetWorld = Point2D(0f, 0f)
             sirenManager?.stop()
             gameLoopJob?.cancel()
             publishSnapshot()
@@ -154,6 +165,8 @@ class GameViewModel @JvmOverloads constructor(
         if (gameEngine.status == GameStatus.PAUSED) {
             gameEngine.resume()
             isActivelyChasing = false
+            isDraggingPolice = false
+            dragTouchOffsetWorld = Point2D(0f, 0f)
             sirenManager?.stop()
             publishSnapshot()
             startGameLoop()
@@ -166,6 +179,8 @@ class GameViewModel @JvmOverloads constructor(
     fun restartGame() {
         gameLoopJob?.cancel()
         isActivelyChasing = false
+        isDraggingPolice = false
+        dragTouchOffsetWorld = Point2D(0f, 0f)
         sirenManager?.stop()
         gameEngine.restart()
         publishSnapshot()
@@ -190,6 +205,8 @@ class GameViewModel @JvmOverloads constructor(
     fun selectLevel(index: Int) {
         gameLoopJob?.cancel()
         isActivelyChasing = false
+        isDraggingPolice = false
+        dragTouchOffsetWorld = Point2D(0f, 0f)
         sirenManager?.stop()
         currentLevelIndex = index.coerceIn(0, LevelRepository.totalLevels - 1)
         preferences?.currentLevelIndex = currentLevelIndex
@@ -200,20 +217,50 @@ class GameViewModel @JvmOverloads constructor(
 
     /**
      * Handles user starting a drag on the police car.
+     * Prevents teleportation: only initiates dragging if the touch starts at/near the
+     * police cruiser's current position (using screen and world grab thresholds).
      */
     fun onPoliceDragStart(screenOffset: Offset, viewport: GameViewport) {
-        if (gameEngine.status == GameStatus.PAUSED) return
-        val worldPoint = viewport.screenToWorld(screenOffset)
-        handlePoliceDrag(worldPoint)
+        if (gameEngine.status != GameStatus.PLAYING) {
+            isDraggingPolice = false
+            return
+        }
+
+        val carPos = gameEngine.policePosition
+        val carScreenPos = viewport.worldToScreen(carPos)
+        val distancePx = (screenOffset - carScreenPos).getDistance()
+
+        val touchWorldPoint = viewport.screenToWorld(screenOffset)
+        val distanceWorld = touchWorldPoint.distanceTo(carPos)
+
+        // Comfortable grab threshold: at least 120px screen radius or 8.5 world meters
+        val grabThresholdPx = maxOf(viewport.metersToPixels(8.5f), 120f)
+
+        if (distancePx > grabThresholdPx && distanceWorld > 8.5f) {
+            // Touch started away from the police cruiser -> ignore to prevent teleportation
+            isDraggingPolice = false
+            return
+        }
+
+        isDraggingPolice = true
+        // Keep offset between touch and car center to prevent snapping/jumping
+        dragTouchOffsetWorld = Point2D(touchWorldPoint.x - carPos.x, touchWorldPoint.y - carPos.y)
+        handlePoliceDrag(carPos)
     }
 
     /**
      * Handles user actively dragging the police car on the screen.
+     * Only moves if the drag was initiated on the police car.
      */
     fun onPoliceDrag(screenOffset: Offset, viewport: GameViewport) {
-        if (gameEngine.status == GameStatus.PAUSED) return
-        val worldPoint = viewport.screenToWorld(screenOffset)
-        handlePoliceDrag(worldPoint)
+        if (!isDraggingPolice || gameEngine.status != GameStatus.PLAYING) return
+
+        val touchWorldPoint = viewport.screenToWorld(screenOffset)
+        val targetCarPos = Point2D(
+            touchWorldPoint.x - dragTouchOffsetWorld.x,
+            touchWorldPoint.y - dragTouchOffsetWorld.y
+        )
+        handlePoliceDrag(targetCarPos)
     }
 
     private fun handlePoliceDrag(worldPoint: Point2D) {
@@ -229,6 +276,7 @@ class GameViewModel @JvmOverloads constructor(
             // e.g. Crashed off-road or caught thief immediately
             isActivelyChasing = false
             sirenManager?.stop()
+            isDraggingPolice = false
         }
 
         publishSnapshot()
@@ -242,6 +290,8 @@ class GameViewModel @JvmOverloads constructor(
      * Handles finger release or drag cancellation: immediately stops pursuit siren.
      */
     fun onPoliceDragEnd() {
+        isDraggingPolice = false
+        dragTouchOffsetWorld = Point2D(0f, 0f)
         isActivelyChasing = false
         sirenManager?.stop()
         publishSnapshot()
