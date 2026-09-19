@@ -1,0 +1,269 @@
+{
+  "levelId": "level_12",
+  "title": "Gridiron Peril",
+  "roadLengthMeters": 125.0,
+  "roadWidthMeters": 5.2,
+  "thiefSpeedMps": 35.0,
+  "initialGapMeters": 23.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 125.0,
+  "isPuzzle": true,
+  "policeStart": {
+    "x": 50.0,
+    "y": 10.0
+  },
+  "thiefStart": {
+    "x": 75.0,
+    "y": 25.0
+  },
+  "destination": {
+    "x": 50.0,
+    "y": 125.0
+  },
+  "thiefRoute": [
+    {
+      "x": 75.0,
+      "y": 25.0
+    },
+    {
+      "x": 75.0,
+      "y": 55.0
+    },
+    {
+      "x": 50.0,
+      "y": 55.0
+    },
+    {
+      "x": 50.0,
+      "y": 85.0
+    },
+    {
+      "x": 25.0,
+      "y": 85.0
+    },
+    {
+      "x": 25.0,
+      "y": 110.0
+    },
+    {
+      "x": 50.0,
+      "y": 110.0
+    },
+    {
+      "x": 50.0,
+      "y": 125.0
+    }
+  ],
+  "corridors": [
+    {
+      "id": "c12_entry",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 10.0
+        },
+        {
+          "x": 50.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r1_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 25.0
+        },
+        {
+          "x": 50.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r1_e",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 25.0
+        },
+        {
+          "x": 75.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c12_col1_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 25.0
+        },
+        {
+          "x": 25.0,
+          "y": 55.0
+        }
+      ]
+    },
+    {
+      "id": "c12_col1_e",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 25.0
+        },
+        {
+          "x": 75.0,
+          "y": 55.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r2_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 55.0
+        },
+        {
+          "x": 50.0,
+          "y": 55.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r2_e",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 55.0
+        },
+        {
+          "x": 75.0,
+          "y": 55.0
+        }
+      ]
+    },
+    {
+      "id": "c12_col2_m",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 55.0
+        },
+        {
+          "x": 50.0,
+          "y": 85.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r3_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 85.0
+        },
+        {
+          "x": 50.0,
+          "y": 85.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r3_e",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 85.0
+        },
+        {
+          "x": 75.0,
+          "y": 85.0
+        }
+      ]
+    },
+    {
+      "id": "c12_col3_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 85.0
+        },
+        {
+          "x": 25.0,
+          "y": 110.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r4_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 110.0
+        },
+        {
+          "x": 50.0,
+          "y": 110.0
+        }
+      ]
+    },
+    {
+      "id": "c12_exit",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 110.0
+        },
+        {
+          "x": 50.0,
+          "y": 125.0
+        }
+      ]
+    },
+    {
+      "id": "c12_trap1",
+      "widthMeters": 5.2,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 85.0
+        },
+        {
+          "x": 88.0,
+          "y": 85.0
+        }
+      ]
+    }
+  ]
+}

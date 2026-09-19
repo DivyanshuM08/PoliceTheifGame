@@ -77,7 +77,8 @@ data class GameViewport(
     companion object {
         /**
          * Creates a static overview viewport that fits the entire road (from start to finish)
-         * onto the screen at once, taking top HUD and bottom insets into account.
+         * onto the screen, with padding so the police car at Y=0m and finish line at Y=100m
+         * are completely visible.
          */
         fun createOverview(
             screenSize: Size,
@@ -86,24 +87,24 @@ data class GameViewport(
             if (screenSize.width <= 0f || screenSize.height <= 0f) {
                 return GameViewport(screenSize = screenSize)
             }
-            val roadHeight = roadGeometry.finishPositionMeters - roadGeometry.startPositionMeters
-            val roadWidth = (roadGeometry.maxX - roadGeometry.minX).coerceAtLeast(20f)
+            val minY = roadGeometry.minY
+            val maxY = roadGeometry.maxY
+            val roadYHeight = (maxY - minY).coerceAtLeast(10f)
 
-            // Leave space for HUD at top (approx 20m) and start padding at bottom (approx 6m)
-            val topPadding = 20f
-            val bottomPadding = 6f
-            val sidePadding = 4f
+            // Padding: 6m at bottom keeps police car (5.6m length, centered at Y=0) fully visible.
+            // 5m at top keeps checkered finish line and cars fully visible below top edge.
+            val bottomPadding = 6.0f
+            val topPadding = 5.0f
+            val totalHeightNeeded = roadYHeight + bottomPadding + topPadding
 
-            val totalHeightNeeded = roadHeight + topPadding + bottomPadding
-            val totalWidthNeeded = roadWidth + (sidePadding * 2f)
-
+            val roadWidthNeeded = (roadGeometry.maxX - roadGeometry.minX + 6.0f).coerceAtLeast(20f)
             val scaleY = screenSize.height / totalHeightNeeded
-            val scaleX = screenSize.width / totalWidthNeeded
+            val scaleX = screenSize.width / roadWidthNeeded
 
             val finalScale = minOf(scaleX, scaleY)
             val visibleHeight = screenSize.height / finalScale
 
-            val centerY = (roadGeometry.startPositionMeters - bottomPadding + roadGeometry.finishPositionMeters + topPadding) / 2f
+            val centerY = ((minY - bottomPadding) + (maxY + topPadding)) / 2f
             val centerX = roadGeometry.centerX
 
             return GameViewport(

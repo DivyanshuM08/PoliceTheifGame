@@ -1,0 +1,30 @@
+{
+  "levelId": "level_2",
+  "title": "Winding Canyon",
+  "roadLengthMeters": 95.0,
+  "roadWidthMeters": 11.2,
+  "thiefSpeedMps": 10.5,
+  "initialGapMeters": 16.0,
+  "startPositionMeters": 0.0,
+  "finishPositionMeters": 95.0,
+  "roadPath": [
+    { "x": 50.0, "y": 0.0 },
+    { "x": 44.0, "y": 15.0 },
+    { "x": 38.0, "y": 30.0 },
+    { "x": 46.0, "y": 45.0 },
+    { "x": 58.0, "y": 60.0 },
+    { "x": 64.0, "y": 75.0 },
+    { "x": 56.0, "y": 85.0 },
+    { "x": 50.0, "y": 95.0 }
+  ],
+  "boundaries": [
+    { "left": { "x": 44.4, "y": 0.0 }, "right": { "x": 55.6, "y": 0.0 } },
+    { "left": { "x": 38.4, "y": 15.0 }, "right": { "x": 49.6, "y": 15.0 } },
+    { "left": { "x": 32.4, "y": 30.0 }, "right": { "x": 43.6, "y": 30.0 } },
+    { "left": { "x": 40.4, "y": 45.0 }, "right": { "x": 51.6, "y": 45.0 } },
+    { "left": { "x": 52.4, "y": 60.0 }, "right": { "x": 63.6, "y": 60.0 } },
+    { "left": { "x": 58.4, "y": 75.0 }, "right": { "x": 69.6, "y": 75.0 } },
+    { "left": { "x": 50.4, "y": 85.0 }, "right": { "x": 61.6, "y": 85.0 } },
+    { "left": { "x": 44.4, "y": 95.0 }, "right": { "x": 55.6, "y": 95.0 } }
+  ]
+}

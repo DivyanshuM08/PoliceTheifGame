@@ -17,6 +17,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -33,6 +35,8 @@ fun GameCanvas(
     gameState: GameState,
     roadGeometry: RoadGeometry,
     onDrag: (Offset, GameViewport) -> Unit,
+    onDragStart: (Offset, GameViewport) -> Unit = { _, _ -> },
+    onDragEnd: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // Pulsing animation for siren and drag ring
@@ -66,7 +70,7 @@ fun GameCanvas(
                             screenSize = Size(size.width.toFloat(), size.height.toFloat()),
                             roadGeometry = roadGeometry
                         )
-                        onDrag(startOffset, viewport)
+                        onDragStart(startOffset, viewport)
                     },
                     onDrag = { change, _ ->
                         change.consume()
@@ -75,6 +79,12 @@ fun GameCanvas(
                             roadGeometry = roadGeometry
                         )
                         onDrag(change.position, viewport)
+                    },
+                    onDragEnd = {
+                        onDragEnd()
+                    },
+                    onDragCancel = {
+                        onDragEnd()
                     }
                 )
             }
@@ -88,17 +98,25 @@ fun GameCanvas(
         // 1. Draw Terrain Background (Lush green grass)
         drawTerrainBackground(viewport)
 
-        // 2. Draw Road Asphalt Surface from RoadGeometry boundaries
-        drawRoadSurface(roadGeometry, viewport)
+        if (roadGeometry.isPuzzle) {
+            // 2. Draw Puzzle Maze Corridors (asphalt ribbons, kerbs, centerlines, dead-ends)
+            drawPuzzleMaze(roadGeometry, viewport)
 
-        // 3. Draw Road Kerbs (Rumble strips) along the boundaries
-        drawRoadKerbs(roadGeometry, viewport)
+            // 3. Draw Puzzle Start and Destination Exit Gate
+            drawPuzzleStartAndDestination(roadGeometry, viewport, pulseAlpha)
+        } else {
+            // 2. Draw Road Asphalt Surface from RoadGeometry boundaries
+            drawRoadSurface(roadGeometry, viewport)
 
-        // 4. Draw Centerline Dashes
-        drawCenterline(roadGeometry, viewport)
+            // 3. Draw Road Kerbs (Rumble strips) along the boundaries
+            drawRoadKerbs(roadGeometry, viewport)
 
-        // 5. Draw Start Line (at 0m) and Finish Line (at 100m)
-        drawStartAndFinishLines(roadGeometry, viewport)
+            // 4. Draw Centerline Dashes
+            drawCenterline(roadGeometry, viewport)
+
+            // 5. Draw Start Line (at 0m) and Finish Line (at 100m)
+            drawStartAndFinishLines(roadGeometry, viewport)
+        }
 
         // 6. Draw Thief Car
         drawThiefCar(gameState.thiefPosition, gameState.thiefHeadingDeg, viewport)
@@ -109,7 +127,8 @@ fun GameCanvas(
             headingDeg = gameState.policeHeadingDeg,
             viewport = viewport,
             pulseAlpha = pulseAlpha,
-            sirenFlip = sirenFlip
+            sirenFlip = sirenFlip,
+            isChasing = gameState.isPoliceChasing
         )
     }
 }
@@ -343,14 +362,15 @@ private fun DrawScope.drawPoliceCar(
     headingDeg: Float,
     viewport: GameViewport,
     pulseAlpha: Float,
-    sirenFlip: Float
+    sirenFlip: Float,
+    isChasing: Boolean
 ) {
     val center = viewport.worldToScreen(position)
     val carWidth = maxOf(viewport.metersToPixels(2.8f), 26f)
     val carLength = maxOf(viewport.metersToPixels(5.6f), 52f)
 
     // Touch Drag Target / Halo Indicator (Generous touch target)
-    val haloRadius = maxOf(carLength * 1.5f, 55f)
+    val haloRadius = maxOf(viewport.metersToPixels(8.5f), 65f)
     drawCircle(
         color = Color(0x332196F3),
         radius = haloRadius,
@@ -403,12 +423,20 @@ private fun DrawScope.drawPoliceCar(
             size = Size(carWidth * 0.7f, carLength * 0.22f)
         )
 
-        // Flashing Siren Bar on Roof
+        // Flashing Siren Bar on Roof (Flashes brightly only during active chase pursuit)
         val sirenW = carWidth * 0.65f
         val sirenH = maxOf(carLength * 0.14f, 7f)
         val sirenY = center.y - carLength * 0.05f
-        val leftSirenColor = if (sirenFlip > 0.5f) Color(0xFFFF1744) else Color(0xFF00E5FF)
-        val rightSirenColor = if (sirenFlip > 0.5f) Color(0xFF00E5FF) else Color(0xFFFF1744)
+        val leftSirenColor = if (isChasing) {
+            if (sirenFlip > 0.5f) Color(0xFFFF1744) else Color(0xFF00E5FF)
+        } else {
+            Color(0xFF7F0000)
+        }
+        val rightSirenColor = if (isChasing) {
+            if (sirenFlip > 0.5f) Color(0xFF00E5FF) else Color(0xFFFF1744)
+        } else {
+            Color(0xFF002244)
+        }
 
         drawRect(
             color = leftSirenColor,
@@ -421,23 +449,172 @@ private fun DrawScope.drawPoliceCar(
             size = Size(sirenW / 2f, sirenH)
         )
 
-        // Siren glow halo
-        drawCircle(
-            color = leftSirenColor.copy(alpha = 0.35f),
-            radius = carWidth * 0.8f,
-            center = Offset(center.x - sirenW * 0.25f, sirenY + sirenH / 2f)
-        )
-        drawCircle(
-            color = rightSirenColor.copy(alpha = 0.35f),
-            radius = carWidth * 0.8f,
-            center = Offset(center.x + sirenW * 0.25f, sirenY + sirenH / 2f)
-        )
+        // Siren glow halo active only during chase
+        if (isChasing) {
+            drawCircle(
+                color = leftSirenColor.copy(alpha = 0.35f),
+                radius = carWidth * 0.8f,
+                center = Offset(center.x - sirenW * 0.25f, sirenY + sirenH / 2f)
+            )
+            drawCircle(
+                color = rightSirenColor.copy(alpha = 0.35f),
+                radius = carWidth * 0.8f,
+                center = Offset(center.x + sirenW * 0.25f, sirenY + sirenH / 2f)
+            )
+        }
 
         // Front Push Bumper
         drawRect(
             color = Color(0xFF37474F),
             topLeft = Offset(center.x - carWidth * 0.35f, center.y - carLength / 2f - 3f),
             size = Size(carWidth * 0.7f, 5f)
+        )
+    }
+}
+
+/**
+ * Draws the Pac-Man style puzzle maze corridors, outer wall kerbs, centerlines, and dead-end barriers.
+ */
+private fun DrawScope.drawPuzzleMaze(roadGeometry: RoadGeometry, viewport: GameViewport) {
+    val corridors = roadGeometry.corridors
+    if (corridors.isEmpty()) return
+
+    // Pass 1: Outer corridor border outline (Pac-Man style rounded wall edges)
+    for (corridor in corridors) {
+        val path = Path()
+        val pts = corridor.path
+        if (pts.size < 2) continue
+        val start = viewport.worldToScreen(pts.first())
+        path.moveTo(start.x, start.y)
+        for (i in 1 until pts.size) {
+            val s = viewport.worldToScreen(pts[i])
+            path.lineTo(s.x, s.y)
+        }
+        val outerWidth = viewport.metersToPixels(corridor.widthMeters) + 6f
+        drawPath(
+            path = path,
+            color = Color(0xFF1A384F), // Neon navy border outline like Pac-Man maze walls
+            style = Stroke(width = outerWidth, cap = StrokeCap.Round, join = StrokeJoin.Round)
+        )
+    }
+
+    // Pass 2: Drivable asphalt surface
+    for (corridor in corridors) {
+        val path = Path()
+        val pts = corridor.path
+        if (pts.size < 2) continue
+        val start = viewport.worldToScreen(pts.first())
+        path.moveTo(start.x, start.y)
+        for (i in 1 until pts.size) {
+            val s = viewport.worldToScreen(pts[i])
+            path.lineTo(s.x, s.y)
+        }
+        val laneWidth = viewport.metersToPixels(corridor.widthMeters)
+        drawPath(
+            path = path,
+            color = Color(0xFF26282B), // Dark asphalt
+            style = Stroke(width = laneWidth, cap = StrokeCap.Round, join = StrokeJoin.Round)
+        )
+    }
+
+    // Pass 3: Centerline dashes & dead-end barricades
+    val dashLengthPx = maxOf(viewport.metersToPixels(2.5f), 10f)
+    val dashGapPx = maxOf(viewport.metersToPixels(2.0f), 8f)
+    val strokeWidth = maxOf(viewport.metersToPixels(0.4f), 2.5f)
+
+    for (corridor in corridors) {
+        val path = Path()
+        val pts = corridor.path
+        if (pts.size < 2) continue
+        val start = viewport.worldToScreen(pts.first())
+        path.moveTo(start.x, start.y)
+        for (i in 1 until pts.size) {
+            val s = viewport.worldToScreen(pts[i])
+            path.lineTo(s.x, s.y)
+        }
+        drawPath(
+            path = path,
+            color = Color(0xFFFDD835),
+            style = Stroke(
+                width = strokeWidth,
+                cap = StrokeCap.Round,
+                join = StrokeJoin.Round,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashLengthPx, dashGapPx), 0f)
+            )
+        )
+
+        // Draw dead-end red-striped warning barrier if marked dead-end
+        if (corridor.isDeadEnd && pts.size >= 2) {
+            val endPt = viewport.worldToScreen(pts.last())
+            val prevPt = viewport.worldToScreen(pts[pts.size - 2])
+            val dx = endPt.x - prevPt.x
+            val dy = endPt.y - prevPt.y
+            val len = kotlin.math.sqrt(dx * dx + dy * dy).coerceAtLeast(1f)
+            val nx = -dy / len
+            val ny = dx / len
+            val halfBar = viewport.metersToPixels(corridor.widthMeters * 0.45f)
+            val p1 = Offset(endPt.x - nx * halfBar, endPt.y - ny * halfBar)
+            val p2 = Offset(endPt.x + nx * halfBar, endPt.y + ny * halfBar)
+            drawLine(
+                color = Color(0xFFFF1744),
+                start = p1,
+                end = p2,
+                strokeWidth = maxOf(viewport.metersToPixels(1.0f), 6f)
+            )
+        }
+    }
+}
+
+/**
+ * Draws the Police Start Zone and the Checkered Destination Escape Gate.
+ */
+private fun DrawScope.drawPuzzleStartAndDestination(
+    roadGeometry: RoadGeometry,
+    viewport: GameViewport,
+    pulseAlpha: Float
+) {
+    // 1. Police Start Zone
+    val startCenter = viewport.worldToScreen(roadGeometry.policeStartPosition)
+    val startRadius = maxOf(viewport.metersToPixels(3.2f), 22f)
+    drawCircle(
+        color = Color(0x332196F3),
+        radius = startRadius,
+        center = startCenter
+    )
+    drawCircle(
+        color = Color(0xFF2196F3).copy(alpha = pulseAlpha),
+        radius = startRadius,
+        center = startCenter,
+        style = Stroke(width = 3f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 8f), 0f))
+    )
+
+    // 2. Destination Escape Gate
+    val destCenter = viewport.worldToScreen(roadGeometry.destinationPosition)
+    val destRadius = maxOf(viewport.metersToPixels(4.2f), 30f)
+
+    // Glowing checkered portal ring
+    drawCircle(
+        color = Color(0x4400E676),
+        radius = destRadius * 1.25f,
+        center = destCenter
+    )
+    drawCircle(
+        color = Color(0xFF00E676).copy(alpha = pulseAlpha),
+        radius = destRadius,
+        center = destCenter,
+        style = Stroke(width = 4f)
+    )
+
+    // Checkered pattern inside destination
+    val numBlocks = 6
+    val step = destRadius * 1.6f / numBlocks
+    for (i in 0 until numBlocks) {
+        val c = if (i % 2 == 0) Color.White else Color.Black
+        drawLine(
+            color = c,
+            start = Offset(destCenter.x - destRadius * 0.8f + i * step, destCenter.y - destRadius * 0.45f),
+            end = Offset(destCenter.x - destRadius * 0.8f + (i + 1) * step, destCenter.y + destRadius * 0.45f),
+            strokeWidth = 6f
         )
     }
 }
