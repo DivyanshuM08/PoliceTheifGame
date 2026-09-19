@@ -64,7 +64,7 @@ fun OnboardingTooltip(
             TutorialStep(
                 icon = "🚨",
                 title = "Catch the Escaping Thief!",
-                description = "A suspect vehicle is fleeing up the road. Your mission is to pursue and intercept them before they cross the 100m finish line!",
+                description = "A suspect vehicle is fleeing up the road. Your mission is to pursue and intercept them before they cross the finish line!",
                 tip = "Track your live distance and gap in the top telemetry HUD.",
                 accentColor = Color(0xFF2979FF)
             ),

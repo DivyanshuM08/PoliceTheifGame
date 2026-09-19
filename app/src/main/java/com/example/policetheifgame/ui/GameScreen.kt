@@ -65,8 +65,14 @@ fun GameScreen(
         GameCanvas(
             gameState = gameState,
             roadGeometry = viewModel.gameEngine.roadGeometry,
+            onDragStart = { screenOffset, viewport ->
+                viewModel.onPoliceDragStart(screenOffset, viewport)
+            },
             onDrag = { screenOffset, viewport ->
                 viewModel.onPoliceDrag(screenOffset, viewport)
+            },
+            onDragEnd = {
+                viewModel.onPoliceDragEnd()
             },
             modifier = Modifier.fillMaxSize()
         )
@@ -136,7 +142,7 @@ fun GameScreen(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         Text(
-                            text = "The suspect is fleeing at ${String.format(Locale.US, "%.1f", gameState.thiefSpeedMps)} m/s!\n\nDrag your police cruiser along the road to chase and intercept them before the 100m finish line.\n\n⚠️ Stay within road boundaries — driving off the road ends the pursuit!",
+                            text = "The suspect is fleeing at ${String.format(Locale.US, "%.1f", gameState.thiefSpeedMps)} m/s!\n\nDrag your police cruiser along the road to chase and intercept them before the ${gameState.roadLengthMeters.toInt()}m finish line.\n\n⚠️ Stay within road boundaries — driving off the road ends the pursuit!",
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
                             color = Color(0xFFCFD8DC),

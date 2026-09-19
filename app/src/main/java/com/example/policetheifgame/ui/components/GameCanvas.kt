@@ -33,6 +33,8 @@ fun GameCanvas(
     gameState: GameState,
     roadGeometry: RoadGeometry,
     onDrag: (Offset, GameViewport) -> Unit,
+    onDragStart: (Offset, GameViewport) -> Unit = { _, _ -> },
+    onDragEnd: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // Pulsing animation for siren and drag ring
@@ -66,7 +68,7 @@ fun GameCanvas(
                             screenSize = Size(size.width.toFloat(), size.height.toFloat()),
                             roadGeometry = roadGeometry
                         )
-                        onDrag(startOffset, viewport)
+                        onDragStart(startOffset, viewport)
                     },
                     onDrag = { change, _ ->
                         change.consume()
@@ -75,6 +77,12 @@ fun GameCanvas(
                             roadGeometry = roadGeometry
                         )
                         onDrag(change.position, viewport)
+                    },
+                    onDragEnd = {
+                        onDragEnd()
+                    },
+                    onDragCancel = {
+                        onDragEnd()
                     }
                 )
             }
@@ -109,7 +117,8 @@ fun GameCanvas(
             headingDeg = gameState.policeHeadingDeg,
             viewport = viewport,
             pulseAlpha = pulseAlpha,
-            sirenFlip = sirenFlip
+            sirenFlip = sirenFlip,
+            isChasing = gameState.isPoliceChasing
         )
     }
 }
@@ -343,7 +352,8 @@ private fun DrawScope.drawPoliceCar(
     headingDeg: Float,
     viewport: GameViewport,
     pulseAlpha: Float,
-    sirenFlip: Float
+    sirenFlip: Float,
+    isChasing: Boolean
 ) {
     val center = viewport.worldToScreen(position)
     val carWidth = maxOf(viewport.metersToPixels(2.8f), 26f)
@@ -403,12 +413,20 @@ private fun DrawScope.drawPoliceCar(
             size = Size(carWidth * 0.7f, carLength * 0.22f)
         )
 
-        // Flashing Siren Bar on Roof
+        // Flashing Siren Bar on Roof (Flashes brightly only during active chase pursuit)
         val sirenW = carWidth * 0.65f
         val sirenH = maxOf(carLength * 0.14f, 7f)
         val sirenY = center.y - carLength * 0.05f
-        val leftSirenColor = if (sirenFlip > 0.5f) Color(0xFFFF1744) else Color(0xFF00E5FF)
-        val rightSirenColor = if (sirenFlip > 0.5f) Color(0xFF00E5FF) else Color(0xFFFF1744)
+        val leftSirenColor = if (isChasing) {
+            if (sirenFlip > 0.5f) Color(0xFFFF1744) else Color(0xFF00E5FF)
+        } else {
+            Color(0xFF7F0000)
+        }
+        val rightSirenColor = if (isChasing) {
+            if (sirenFlip > 0.5f) Color(0xFF00E5FF) else Color(0xFFFF1744)
+        } else {
+            Color(0xFF002244)
+        }
 
         drawRect(
             color = leftSirenColor,
@@ -421,17 +439,19 @@ private fun DrawScope.drawPoliceCar(
             size = Size(sirenW / 2f, sirenH)
         )
 
-        // Siren glow halo
-        drawCircle(
-            color = leftSirenColor.copy(alpha = 0.35f),
-            radius = carWidth * 0.8f,
-            center = Offset(center.x - sirenW * 0.25f, sirenY + sirenH / 2f)
-        )
-        drawCircle(
-            color = rightSirenColor.copy(alpha = 0.35f),
-            radius = carWidth * 0.8f,
-            center = Offset(center.x + sirenW * 0.25f, sirenY + sirenH / 2f)
-        )
+        // Siren glow halo active only during chase
+        if (isChasing) {
+            drawCircle(
+                color = leftSirenColor.copy(alpha = 0.35f),
+                radius = carWidth * 0.8f,
+                center = Offset(center.x - sirenW * 0.25f, sirenY + sirenH / 2f)
+            )
+            drawCircle(
+                color = rightSirenColor.copy(alpha = 0.35f),
+                radius = carWidth * 0.8f,
+                center = Offset(center.x + sirenW * 0.25f, sirenY + sirenH / 2f)
+            )
+        }
 
         // Front Push Bumper
         drawRect(

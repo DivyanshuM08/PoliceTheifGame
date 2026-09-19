@@ -43,7 +43,8 @@ data class GameState(
     val roadLengthMeters: Float = 100f,
     val cameraCenter: Point2D = Point2D(50f, 15f),
     val isSirenMuted: Boolean = false,
-    val policeSpeedMultiplier: Float = 1.0f
+    val policeSpeedMultiplier: Float = 1.0f,
+    val isPoliceChasing: Boolean = false
 ) {
     val isFinalLevel: Boolean get() = levelIndex >= totalLevels - 1
     val displayLevelNumber: Int get() = levelIndex + 1

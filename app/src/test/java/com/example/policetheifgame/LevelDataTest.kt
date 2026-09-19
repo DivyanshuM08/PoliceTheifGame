@@ -40,6 +40,10 @@ class LevelDataTest {
 
     @Test
     fun testAssetLevelFilesExistAndParse() {
+        var prevLength = 0f
+        var prevSpeed = 0f
+        var prevWidth = 999f
+
         for (i in 1..10) {
             val file = java.io.File("src/main/assets/levels/level_$i.json")
             val altFile = java.io.File("app/src/main/assets/levels/level_$i.json")
@@ -50,10 +54,48 @@ class LevelDataTest {
             val level = LevelData.fromJson(json)
             assertEquals("level_$i", level.levelId)
             org.junit.Assert.assertTrue("Title for level $i should not be blank", level.title.isNotBlank())
-            assertEquals(100.0f, level.roadLengthMeters, 0.001f)
             org.junit.Assert.assertTrue("Path for level $i must have points", level.roadPath.size >= 7)
             org.junit.Assert.assertTrue("Boundaries for level $i must have points", level.boundaries.size >= 7)
+
+            // Progression asserts across levels 1 to 10
+            org.junit.Assert.assertTrue(
+                "Level $i road length (${level.roadLengthMeters}m) must be greater than previous (${prevLength}m)",
+                level.roadLengthMeters > prevLength
+            )
+            org.junit.Assert.assertTrue(
+                "Level $i thief speed (${level.thiefSpeedMps}m/s) must be greater than previous (${prevSpeed}m/s)",
+                level.thiefSpeedMps > prevSpeed
+            )
+            org.junit.Assert.assertTrue(
+                "Level $i road width (${level.roadWidthMeters}m) must be narrower than previous (${prevWidth}m)",
+                level.roadWidthMeters < prevWidth
+            )
+
+            prevLength = level.roadLengthMeters
+            prevSpeed = level.thiefSpeedMps
+            prevWidth = level.roadWidthMeters
         }
+
+        // Specific checks for Level 1 and Level 10 extremes
+        val level1 = LevelData.fromJson(
+            (if (java.io.File("src/main/assets/levels/level_1.json").exists())
+                java.io.File("src/main/assets/levels/level_1.json")
+            else java.io.File("app/src/main/assets/levels/level_1.json")).readText()
+        )
+        val level10 = LevelData.fromJson(
+            (if (java.io.File("src/main/assets/levels/level_10.json").exists())
+                java.io.File("src/main/assets/levels/level_10.json")
+            else java.io.File("app/src/main/assets/levels/level_10.json")).readText()
+        )
+
+        assertEquals(80.0f, level1.roadLengthMeters, 0.001f)
+        assertEquals(8.0f, level1.thiefSpeedMps, 0.001f)
+        assertEquals(12.0f, level1.roadWidthMeters, 0.001f)
+
+        assertEquals(220.0f, level10.roadLengthMeters, 0.001f)
+        assertEquals(31.0f, level10.thiefSpeedMps, 0.001f)
+        assertEquals(6.0f, level10.roadWidthMeters, 0.001f)
+        org.junit.Assert.assertTrue("Level 10 has more curves/waypoints than Level 1", level10.roadPath.size > level1.roadPath.size)
     }
 }
 

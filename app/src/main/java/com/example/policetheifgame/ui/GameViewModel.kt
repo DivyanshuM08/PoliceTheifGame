@@ -13,6 +13,7 @@ import com.example.policetheifgame.game.geometry.LevelRepository
 import com.example.policetheifgame.game.geometry.RoadGeometry
 import com.example.policetheifgame.game.model.GameState
 import com.example.policetheifgame.game.model.GameStatus
+import com.example.policetheifgame.game.model.Point2D
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -57,6 +58,9 @@ class GameViewModel @JvmOverloads constructor(
     val uiState: StateFlow<GameState> = _uiState.asStateFlow()
 
     private var gameLoopJob: Job? = null
+    var isActivelyChasing: Boolean = false
+        private set
+    private var lastDragTimestampMs: Long = 0L
 
     init {
         gameEngine.loadLevel(currentLevel, currentLevelIndex)
@@ -110,38 +114,47 @@ class GameViewModel @JvmOverloads constructor(
         val newMuted = sirenManager?.toggleMute() ?: !_isSirenMuted.value
         _isSirenMuted.value = newMuted
         preferences?.isSirenMuted = newMuted
+        if (newMuted || !isActivelyChasing || gameEngine.status != GameStatus.PLAYING) {
+            sirenManager?.stop()
+        } else {
+            sirenManager?.play()
+        }
         publishSnapshot()
     }
 
     /**
-     * Starts the chase and begins the coroutine update loop and siren audio.
+     * Starts the chase and begins the coroutine update loop.
+     * Siren remains stopped until the player actively drags the police car in pursuit.
      */
     fun startGame() {
         gameEngine.start()
-        sirenManager?.play()
+        isActivelyChasing = false
+        sirenManager?.stop()
         publishSnapshot()
         startGameLoop()
     }
 
     /**
-     * Pauses the active game and siren sound.
+     * Pauses the active game and stops siren sound.
      */
     fun pauseGame() {
         if (gameEngine.status == GameStatus.PLAYING) {
             gameEngine.pause()
-            sirenManager?.pause()
+            isActivelyChasing = false
+            sirenManager?.stop()
             gameLoopJob?.cancel()
             publishSnapshot()
         }
     }
 
     /**
-     * Resumes a paused game and restores siren sound.
+     * Resumes a paused game. Siren resumes only when user drags in pursuit.
      */
     fun resumeGame() {
         if (gameEngine.status == GameStatus.PAUSED) {
             gameEngine.resume()
-            sirenManager?.play()
+            isActivelyChasing = false
+            sirenManager?.stop()
             publishSnapshot()
             startGameLoop()
         }
@@ -152,8 +165,9 @@ class GameViewModel @JvmOverloads constructor(
      */
     fun restartGame() {
         gameLoopJob?.cancel()
+        isActivelyChasing = false
+        sirenManager?.stop()
         gameEngine.restart()
-        sirenManager?.play()
         publishSnapshot()
         startGameLoop()
     }
@@ -175,6 +189,7 @@ class GameViewModel @JvmOverloads constructor(
      */
     fun selectLevel(index: Int) {
         gameLoopJob?.cancel()
+        isActivelyChasing = false
         sirenManager?.stop()
         currentLevelIndex = index.coerceIn(0, LevelRepository.totalLevels - 1)
         preferences?.currentLevelIndex = currentLevelIndex
@@ -184,17 +199,36 @@ class GameViewModel @JvmOverloads constructor(
     }
 
     /**
-     * Handles user dragging the police car on the screen.
+     * Handles user starting a drag on the police car.
+     */
+    fun onPoliceDragStart(screenOffset: Offset, viewport: GameViewport) {
+        if (gameEngine.status == GameStatus.PAUSED) return
+        val worldPoint = viewport.screenToWorld(screenOffset)
+        handlePoliceDrag(worldPoint)
+    }
+
+    /**
+     * Handles user actively dragging the police car on the screen.
      */
     fun onPoliceDrag(screenOffset: Offset, viewport: GameViewport) {
         if (gameEngine.status == GameStatus.PAUSED) return
-
-        val wasReady = gameEngine.status == GameStatus.READY
         val worldPoint = viewport.screenToWorld(screenOffset)
+        handlePoliceDrag(worldPoint)
+    }
+
+    private fun handlePoliceDrag(worldPoint: Point2D) {
         gameEngine.onPoliceDragged(worldPoint)
 
-        if (wasReady && gameEngine.status == GameStatus.PLAYING) {
-            sirenManager?.play()
+        if (gameEngine.status == GameStatus.PLAYING) {
+            isActivelyChasing = true
+            lastDragTimestampMs = System.currentTimeMillis()
+            if (!_isSirenMuted.value) {
+                sirenManager?.play()
+            }
+        } else {
+            // e.g. Crashed off-road or caught thief immediately
+            isActivelyChasing = false
+            sirenManager?.stop()
         }
 
         publishSnapshot()
@@ -202,6 +236,15 @@ class GameViewModel @JvmOverloads constructor(
         if (gameEngine.status == GameStatus.PLAYING && (gameLoopJob == null || gameLoopJob?.isActive == false)) {
             startGameLoop()
         }
+    }
+
+    /**
+     * Handles finger release or drag cancellation: immediately stops pursuit siren.
+     */
+    fun onPoliceDragEnd() {
+        isActivelyChasing = false
+        sirenManager?.stop()
+        publishSnapshot()
     }
 
     private fun startGameLoop() {
@@ -217,13 +260,22 @@ class GameViewModel @JvmOverloads constructor(
 
                 gameEngine.tick(deltaSeconds)
 
+                // Drag idle detection: if user hasn't dragged for >350ms, the car is idle -> stop siren
+                if (isActivelyChasing && (System.currentTimeMillis() - lastDragTimestampMs > 350L)) {
+                    isActivelyChasing = false
+                    sirenManager?.stop()
+                }
+
                 if (gameEngine.status == GameStatus.POLICE_WON || gameEngine.status == GameStatus.THIEF_WON) {
+                    isActivelyChasing = false
                     sirenManager?.stop()
                 }
 
                 publishSnapshot()
                 delay(targetFrameTimeMs)
             }
+            isActivelyChasing = false
+            sirenManager?.stop()
             publishSnapshot()
         }
     }
@@ -243,7 +295,8 @@ class GameViewModel @JvmOverloads constructor(
             totalLevels = LevelRepository.totalLevels,
             unlockedLevelIndex = unlockedLevelIndex,
             isSirenMuted = _isSirenMuted.value,
-            policeSpeedMultiplier = gameEngine.policeSpeedMultiplier
+            policeSpeedMultiplier = gameEngine.policeSpeedMultiplier,
+            isPoliceChasing = isActivelyChasing
         )
     }
 

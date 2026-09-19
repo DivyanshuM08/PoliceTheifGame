@@ -34,41 +34,33 @@ data class LevelData(
         fun createDefaultLevel1(): LevelData {
             val path = listOf(
                 Point2D(50.0f, 0.0f),
-                Point2D(50.0f, 10.0f),
-                Point2D(52.0f, 20.0f),
+                Point2D(50.0f, 15.0f),
                 Point2D(56.0f, 30.0f),
-                Point2D(62.0f, 40.0f),
-                Point2D(68.0f, 50.0f),
-                Point2D(74.0f, 60.0f),
-                Point2D(78.0f, 70.0f),
-                Point2D(76.0f, 80.0f),
-                Point2D(70.0f, 90.0f),
-                Point2D(60.0f, 100.0f)
+                Point2D(62.0f, 45.0f),
+                Point2D(58.0f, 60.0f),
+                Point2D(52.0f, 70.0f),
+                Point2D(50.0f, 80.0f)
             )
 
             val bounds = listOf(
                 RoadBoundary(Point2D(44.0f, 0.0f), Point2D(56.0f, 0.0f)),
-                RoadBoundary(Point2D(44.0f, 10.0f), Point2D(56.0f, 10.0f)),
-                RoadBoundary(Point2D(46.0f, 20.0f), Point2D(58.0f, 20.0f)),
+                RoadBoundary(Point2D(44.0f, 15.0f), Point2D(56.0f, 15.0f)),
                 RoadBoundary(Point2D(50.0f, 30.0f), Point2D(62.0f, 30.0f)),
-                RoadBoundary(Point2D(56.0f, 40.0f), Point2D(68.0f, 40.0f)),
-                RoadBoundary(Point2D(62.0f, 50.0f), Point2D(74.0f, 50.0f)),
-                RoadBoundary(Point2D(68.0f, 60.0f), Point2D(80.0f, 60.0f)),
-                RoadBoundary(Point2D(72.0f, 70.0f), Point2D(84.0f, 70.0f)),
-                RoadBoundary(Point2D(70.0f, 80.0f), Point2D(82.0f, 80.0f)),
-                RoadBoundary(Point2D(64.0f, 90.0f), Point2D(76.0f, 90.0f)),
-                RoadBoundary(Point2D(54.0f, 100.0f), Point2D(66.0f, 100.0f))
+                RoadBoundary(Point2D(56.0f, 45.0f), Point2D(68.0f, 45.0f)),
+                RoadBoundary(Point2D(52.0f, 60.0f), Point2D(64.0f, 60.0f)),
+                RoadBoundary(Point2D(46.0f, 70.0f), Point2D(58.0f, 70.0f)),
+                RoadBoundary(Point2D(44.0f, 80.0f), Point2D(56.0f, 80.0f))
             )
 
             return LevelData(
                 levelId = "level_1",
                 title = "Sunny Highway",
-                roadLengthMeters = 100.0f,
+                roadLengthMeters = 80.0f,
                 roadWidthMeters = 12.0f,
-                thiefSpeedMps = 9.0f,
-                initialGapMeters = 16.0f,
+                thiefSpeedMps = 8.0f,
+                initialGapMeters = 14.0f,
                 startPositionMeters = 0.0f,
-                finishPositionMeters = 100.0f,
+                finishPositionMeters = 80.0f,
                 roadPath = path,
                 boundaries = bounds
             )

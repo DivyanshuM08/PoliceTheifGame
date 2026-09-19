@@ -257,13 +257,13 @@ class GameEngineTest {
         val startScreen = viewport.worldToScreen(Point2D(roadGeometry.centerX, 0f))
         assertTrue("Start line must be near bottom of screen", startScreen.y in (screenSize.height * 0.9f)..screenSize.height)
 
-        // Verify Finish line (Y=100m) leaves margin below screen top so finish banner is fully visible
-        val finishScreen = viewport.worldToScreen(Point2D(roadGeometry.centerX, 100f))
+        // Verify Finish line leaves margin below screen top so finish banner is fully visible
+        val finishScreen = viewport.worldToScreen(Point2D(roadGeometry.centerX, roadGeometry.finishPositionMeters))
         assertTrue("Finish line must be near top of screen", finishScreen.y in 0f..(screenSize.height * 0.1f))
 
         // Verify road boundaries are within screen bounds
-        val leftScreen = viewport.worldToScreen(Point2D(roadGeometry.minX, 50f))
-        val rightScreen = viewport.worldToScreen(Point2D(roadGeometry.maxX, 50f))
+        val leftScreen = viewport.worldToScreen(Point2D(roadGeometry.minX, 40f))
+        val rightScreen = viewport.worldToScreen(Point2D(roadGeometry.maxX, 40f))
         assertTrue("Left road edge must be on screen", leftScreen.x >= -10f)
         assertTrue("Right road edge must be on screen", rightScreen.x <= screenSize.width + 10f)
     }
@@ -276,6 +276,7 @@ class GameEngineTest {
         val totalLevels = com.example.policetheifgame.game.geometry.LevelRepository.totalLevels
         assertEquals(10, totalLevels)
 
+        var previousLength = 0f
         var previousSpeed = 0f
         var previousWidth = 100f
 
@@ -284,14 +285,17 @@ class GameEngineTest {
             assertTrue("Level title must not be blank", level.title.isNotBlank())
             assertTrue("Road path must have at least 7 waypoints", level.roadPath.size >= 7)
             assertTrue("Boundaries must match path size", level.boundaries.size == level.roadPath.size)
-            assertEquals(100.0f, level.roadLengthMeters, 0.001f)
+
+            // Length must increase with level
+            assertTrue("Road length should increase: ${level.roadLengthMeters} > $previousLength", level.roadLengthMeters > previousLength)
+            previousLength = level.roadLengthMeters
 
             // Speed must increase with level
             assertTrue("Thief speed should increase with level: ${level.thiefSpeedMps} > $previousSpeed", level.thiefSpeedMps > previousSpeed)
             previousSpeed = level.thiefSpeedMps
 
-            // Road width should decrease or stay challenging
-            assertTrue("Road width should narrow or remain tight: ${level.roadWidthMeters} <= $previousWidth", level.roadWidthMeters <= previousWidth)
+            // Road width should narrow or remain tight
+            assertTrue("Road width should narrow: ${level.roadWidthMeters} < $previousWidth", level.roadWidthMeters < previousWidth)
             previousWidth = level.roadWidthMeters
         }
     }
@@ -303,18 +307,18 @@ class GameEngineTest {
     fun test12_engineReconfiguresPerLevel() {
         val level5 = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(4)
         assertEquals("Coastal Serpent", level5.title)
-        assertEquals(15.0f, level5.thiefSpeedMps, 0.001f)
-        assertEquals(16.0f, level5.initialGapMeters, 0.001f)
+        assertEquals(18.0f, level5.thiefSpeedMps, 0.001f)
+        assertEquals(22.0f, level5.initialGapMeters, 0.001f)
 
         gameEngine.loadLevel(level5, 4)
-        assertEquals(16.0f, gameEngine.thiefDistanceMeters, 0.001f)
+        assertEquals(22.0f, gameEngine.thiefDistanceMeters, 0.001f)
         assertEquals(0.0f, gameEngine.policeDistanceMeters, 0.001f)
 
         gameEngine.start()
         gameEngine.tick(1.0f)
 
-        // Moves at 15.0 m/s from 16.0m = 31.0m
-        assertEquals(31.0f, gameEngine.thiefDistanceMeters, 0.001f)
+        // Moves at 18.0 m/s from 22.0m = 40.0m
+        assertEquals(40.0f, gameEngine.thiefDistanceMeters, 0.001f)
     }
 
     /**
@@ -352,18 +356,18 @@ class GameEngineTest {
     }
 
     /**
-     * Requirement 14: Thief speed scales noticeably from level 1 (9.0 m/s) to level 10 (22.5 m/s).
+     * Requirement 14: Thief speed scales noticeably from level 1 (8.0 m/s) to level 10 (31.0 m/s).
      */
     @Test
     fun test14_thiefSpeedScalesNoticeablyAcrossAllLevels() {
         val level1 = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(0)
-        assertEquals(9.0f, level1.thiefSpeedMps, 0.001f)
+        assertEquals(8.0f, level1.thiefSpeedMps, 0.001f)
 
         val level10 = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(9)
-        assertEquals(22.5f, level10.thiefSpeedMps, 0.001f)
+        assertEquals(31.0f, level10.thiefSpeedMps, 0.001f)
 
-        // Substantial increase: level 10 is more than double level 1 speed
-        assertTrue("Level 10 thief must be much faster than Level 1", level10.thiefSpeedMps > level1.thiefSpeedMps * 2f)
+        // Substantial increase: level 10 is almost 4x level 1 speed
+        assertTrue("Level 10 thief must be more than 3x faster than Level 1", level10.thiefSpeedMps > level1.thiefSpeedMps * 3f)
     }
 
     /**
@@ -391,14 +395,17 @@ class GameEngineTest {
         // Pause and resume
         viewModel.startGame()
         assertEquals(GameStatus.PLAYING, viewModel.uiState.value.status)
+        assertFalse("Siren must NOT play until player actively drags", viewModel.isActivelyChasing)
         viewModel.pauseGame()
         assertEquals(GameStatus.PAUSED, viewModel.uiState.value.status)
+        assertFalse(viewModel.isActivelyChasing)
         viewModel.resumeGame()
         assertEquals(GameStatus.PLAYING, viewModel.uiState.value.status)
+        assertFalse(viewModel.isActivelyChasing)
     }
 
     /**
-     * Requirement 16: In winding levels (like Level 8), the finish barrier is at the end of the road (Y=100m)
+     * Requirement 16: In winding levels (like Level 8), the finish barrier is at the end of the road (Y=185m)
      * and the game does not end midway.
      */
     @Test
@@ -410,10 +417,10 @@ class GameEngineTest {
         // Finish position must match the actual total path length to the end of the road
         assertEquals(geom.totalPathLengthMeters, geom.finishPositionMeters, 0.001f)
 
-        // The finish boundary must be at Y = 100m (the very end of the road, not midway)
+        // The finish boundary must be at Y = 185m (the very end of the road, not midway)
         val (finishLeft, finishRight) = geom.getRoadBoundariesAtDistance(geom.finishPositionMeters)
-        assertEquals(100.0f, finishLeft.y, 0.1f)
-        assertEquals(100.0f, finishRight.y, 0.1f)
+        assertEquals(185.0f, finishLeft.y, 0.1f)
+        assertEquals(185.0f, finishRight.y, 0.1f)
 
         // Verify game engine does NOT end when thief reaches Y=50m or midway
         gameEngine.loadLevel(level8, 7)
@@ -431,6 +438,76 @@ class GameEngineTest {
         gameEngine.tick(timeToEnd)
         assertEquals(GameStatus.THIEF_WON, gameEngine.status)
         assertEquals(GameOverReason.THIEF_ESCAPED, gameEngine.reason)
+    }
+
+    /**
+     * Requirement 17: Siren triggers strictly when the chase is actively on its way (dragging),
+     * and stops immediately when drag ends or game pauses.
+     */
+    @Test
+    fun test17_sirenOnlyPlaysDuringActiveChaseDragAndStopsOnRelease() {
+        val viewModel = com.example.policetheifgame.ui.GameViewModel(initialLevelIndex = 0)
+        viewModel.startGame()
+
+        // 1. Ready/Playing without drag: Chase is NOT active, siren must not be active
+        assertFalse(viewModel.isActivelyChasing)
+        assertFalse(viewModel.uiState.value.isPoliceChasing)
+
+        // 2. Player drags police car on screen
+        val viewport = GameViewport.createOverview(
+            screenSize = Size(1080f, 2400f),
+            roadGeometry = viewModel.gameEngine.roadGeometry
+        )
+        val dragScreenOffset = viewport.worldToScreen(Point2D(50f, 5f))
+        viewModel.onPoliceDragStart(dragScreenOffset, viewport)
+
+        assertTrue("Chase must be active during drag", viewModel.isActivelyChasing)
+        assertTrue("GameState reflects active chase", viewModel.uiState.value.isPoliceChasing)
+
+        // 3. Player lifts finger (drag end)
+        viewModel.onPoliceDragEnd()
+        assertFalse("Chase must stop when finger is released", viewModel.isActivelyChasing)
+        assertFalse(viewModel.uiState.value.isPoliceChasing)
+
+        // 4. Drag again and pause
+        viewModel.onPoliceDrag(dragScreenOffset, viewport)
+        assertTrue(viewModel.isActivelyChasing)
+        viewModel.pauseGame()
+        assertFalse("Chase must stop immediately on pause", viewModel.isActivelyChasing)
+        assertFalse(viewModel.uiState.value.isPoliceChasing)
+    }
+
+    /**
+     * Requirement 18: Progressive difficulty across all 10 levels in LevelRepository.
+     * Road length strictly increases (80m to 220m), thief speed increases (8m/s to 31m/s),
+     * road width strictly narrows (12m down to 6m).
+     */
+    @Test
+    fun test18_levelsProgressiveDifficultyMatrix() {
+        var prevLength = 0f
+        var prevSpeed = 0f
+        var prevWidth = 999f
+
+        for (i in 0 until com.example.policetheifgame.game.geometry.LevelRepository.totalLevels) {
+            val level = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(i)
+
+            assertTrue(
+                "Level ${i + 1} length (${level.roadLengthMeters}) must be > prev ($prevLength)",
+                level.roadLengthMeters > prevLength
+            )
+            assertTrue(
+                "Level ${i + 1} thief speed (${level.thiefSpeedMps}) must be > prev ($prevSpeed)",
+                level.thiefSpeedMps > prevSpeed
+            )
+            assertTrue(
+                "Level ${i + 1} road width (${level.roadWidthMeters}) must be < prev ($prevWidth)",
+                level.roadWidthMeters < prevWidth
+            )
+
+            prevLength = level.roadLengthMeters
+            prevSpeed = level.thiefSpeedMps
+            prevWidth = level.roadWidthMeters
+        }
     }
 }
 

@@ -18,307 +18,359 @@ object LevelRepository {
         // Level 1: Sunny Highway (9.0 m/s)
         LevelData.createDefaultLevel1(),
 
-        // Level 2: Winding Canyon (10.5 m/s)
+        // Level 2: Winding Canyon (95m, 11.2m width, 10.5 m/s)
         LevelData(
             levelId = "level_2",
             title = "Winding Canyon",
-            roadLengthMeters = 100.0f,
-            roadWidthMeters = 11.5f,
+            roadLengthMeters = 95.0f,
+            roadWidthMeters = 11.2f,
             thiefSpeedMps = 10.5f,
             initialGapMeters = 16.0f,
             startPositionMeters = 0.0f,
-            finishPositionMeters = 100.0f,
+            finishPositionMeters = 95.0f,
             roadPath = listOf(
                 Point2D(50.0f, 0.0f),
-                Point2D(46.0f, 10.0f),
-                Point2D(40.0f, 22.0f),
-                Point2D(38.0f, 32.0f),
-                Point2D(45.0f, 45.0f),
-                Point2D(56.0f, 58.0f),
-                Point2D(64.0f, 70.0f),
-                Point2D(62.0f, 82.0f),
-                Point2D(55.0f, 92.0f),
-                Point2D(50.0f, 100.0f)
+                Point2D(44.0f, 15.0f),
+                Point2D(38.0f, 30.0f),
+                Point2D(46.0f, 45.0f),
+                Point2D(58.0f, 60.0f),
+                Point2D(64.0f, 75.0f),
+                Point2D(56.0f, 85.0f),
+                Point2D(50.0f, 95.0f)
             ),
             boundaries = listOf(
-                RoadBoundary(Point2D(44.25f, 0.0f), Point2D(55.75f, 0.0f)),
-                RoadBoundary(Point2D(40.25f, 10.0f), Point2D(51.75f, 10.0f)),
-                RoadBoundary(Point2D(34.25f, 22.0f), Point2D(45.75f, 22.0f)),
-                RoadBoundary(Point2D(32.25f, 32.0f), Point2D(43.75f, 32.0f)),
-                RoadBoundary(Point2D(39.25f, 45.0f), Point2D(50.75f, 45.0f)),
-                RoadBoundary(Point2D(50.25f, 58.0f), Point2D(61.75f, 58.0f)),
-                RoadBoundary(Point2D(58.25f, 70.0f), Point2D(69.75f, 70.0f)),
-                RoadBoundary(Point2D(56.25f, 82.0f), Point2D(67.75f, 82.0f)),
-                RoadBoundary(Point2D(49.25f, 92.0f), Point2D(60.75f, 92.0f)),
-                RoadBoundary(Point2D(44.25f, 100.0f), Point2D(55.75f, 100.0f))
+                RoadBoundary(Point2D(44.4f, 0.0f), Point2D(55.6f, 0.0f)),
+                RoadBoundary(Point2D(38.4f, 15.0f), Point2D(49.6f, 15.0f)),
+                RoadBoundary(Point2D(32.4f, 30.0f), Point2D(43.6f, 30.0f)),
+                RoadBoundary(Point2D(40.4f, 45.0f), Point2D(51.6f, 45.0f)),
+                RoadBoundary(Point2D(52.4f, 60.0f), Point2D(63.6f, 60.0f)),
+                RoadBoundary(Point2D(58.4f, 75.0f), Point2D(69.6f, 75.0f)),
+                RoadBoundary(Point2D(50.4f, 85.0f), Point2D(61.6f, 85.0f)),
+                RoadBoundary(Point2D(44.4f, 95.0f), Point2D(55.6f, 95.0f))
             )
         ),
 
-        // Level 3: Hairpin Ridge (12.0 m/s)
+        // Level 3: Hairpin Ridge (110m, 10.4m width, 13.0 m/s)
         LevelData(
             levelId = "level_3",
             title = "Hairpin Ridge",
-            roadLengthMeters = 100.0f,
-            roadWidthMeters = 11.0f,
-            thiefSpeedMps = 12.0f,
-            initialGapMeters = 16.0f,
+            roadLengthMeters = 110.0f,
+            roadWidthMeters = 10.4f,
+            thiefSpeedMps = 13.0f,
+            initialGapMeters = 18.0f,
             startPositionMeters = 0.0f,
-            finishPositionMeters = 100.0f,
+            finishPositionMeters = 110.0f,
             roadPath = listOf(
                 Point2D(50.0f, 0.0f),
-                Point2D(50.0f, 12.0f),
-                Point2D(35.0f, 26.0f),
-                Point2D(34.0f, 38.0f),
-                Point2D(65.0f, 56.0f),
-                Point2D(67.0f, 68.0f),
-                Point2D(38.0f, 84.0f),
-                Point2D(48.0f, 92.0f),
-                Point2D(50.0f, 100.0f)
+                Point2D(52.0f, 14.0f),
+                Point2D(34.0f, 28.0f),
+                Point2D(32.0f, 42.0f),
+                Point2D(66.0f, 58.0f),
+                Point2D(68.0f, 72.0f),
+                Point2D(36.0f, 88.0f),
+                Point2D(46.0f, 100.0f),
+                Point2D(50.0f, 110.0f)
             ),
             boundaries = listOf(
-                RoadBoundary(Point2D(44.5f, 0.0f), Point2D(55.5f, 0.0f)),
-                RoadBoundary(Point2D(44.5f, 12.0f), Point2D(55.5f, 12.0f)),
-                RoadBoundary(Point2D(29.5f, 26.0f), Point2D(40.5f, 26.0f)),
-                RoadBoundary(Point2D(28.5f, 38.0f), Point2D(39.5f, 38.0f)),
-                RoadBoundary(Point2D(59.5f, 56.0f), Point2D(70.5f, 56.0f)),
-                RoadBoundary(Point2D(61.5f, 68.0f), Point2D(72.5f, 68.0f)),
-                RoadBoundary(Point2D(32.5f, 84.0f), Point2D(43.5f, 84.0f)),
-                RoadBoundary(Point2D(42.5f, 92.0f), Point2D(53.5f, 92.0f)),
-                RoadBoundary(Point2D(44.5f, 100.0f), Point2D(55.5f, 100.0f))
+                RoadBoundary(Point2D(44.8f, 0.0f), Point2D(55.2f, 0.0f)),
+                RoadBoundary(Point2D(46.8f, 14.0f), Point2D(57.2f, 14.0f)),
+                RoadBoundary(Point2D(28.8f, 28.0f), Point2D(39.2f, 28.0f)),
+                RoadBoundary(Point2D(26.8f, 42.0f), Point2D(37.2f, 42.0f)),
+                RoadBoundary(Point2D(60.8f, 58.0f), Point2D(71.2f, 58.0f)),
+                RoadBoundary(Point2D(62.8f, 72.0f), Point2D(73.2f, 72.0f)),
+                RoadBoundary(Point2D(30.8f, 88.0f), Point2D(41.2f, 88.0f)),
+                RoadBoundary(Point2D(40.8f, 100.0f), Point2D(51.2f, 100.0f)),
+                RoadBoundary(Point2D(44.8f, 110.0f), Point2D(55.2f, 110.0f))
             )
         ),
 
-        // Level 4: Mountain Pass (13.5 m/s)
+        // Level 4: Mountain Pass (125m, 9.6m width, 15.5 m/s)
         LevelData(
             levelId = "level_4",
             title = "Mountain Pass",
-            roadLengthMeters = 100.0f,
-            roadWidthMeters = 11.0f,
-            thiefSpeedMps = 13.5f,
-            initialGapMeters = 16.0f,
+            roadLengthMeters = 125.0f,
+            roadWidthMeters = 9.6f,
+            thiefSpeedMps = 15.5f,
+            initialGapMeters = 20.0f,
             startPositionMeters = 0.0f,
-            finishPositionMeters = 100.0f,
+            finishPositionMeters = 125.0f,
             roadPath = listOf(
                 Point2D(50.0f, 0.0f),
-                Point2D(58.0f, 14.0f),
-                Point2D(68.0f, 28.0f),
-                Point2D(72.0f, 42.0f),
-                Point2D(64.0f, 58.0f),
-                Point2D(42.0f, 74.0f),
-                Point2D(38.0f, 86.0f),
-                Point2D(48.0f, 100.0f)
+                Point2D(62.0f, 15.0f),
+                Point2D(70.0f, 32.0f),
+                Point2D(50.0f, 50.0f),
+                Point2D(32.0f, 68.0f),
+                Point2D(40.0f, 84.0f),
+                Point2D(66.0f, 100.0f),
+                Point2D(58.0f, 114.0f),
+                Point2D(50.0f, 125.0f)
             ),
             boundaries = listOf(
-                RoadBoundary(Point2D(44.5f, 0.0f), Point2D(55.5f, 0.0f)),
-                RoadBoundary(Point2D(52.5f, 14.0f), Point2D(63.5f, 14.0f)),
-                RoadBoundary(Point2D(62.5f, 28.0f), Point2D(73.5f, 28.0f)),
-                RoadBoundary(Point2D(66.5f, 42.0f), Point2D(77.5f, 42.0f)),
-                RoadBoundary(Point2D(58.5f, 58.0f), Point2D(69.5f, 58.0f)),
-                RoadBoundary(Point2D(36.5f, 74.0f), Point2D(47.5f, 74.0f)),
-                RoadBoundary(Point2D(32.5f, 86.0f), Point2D(43.5f, 86.0f)),
-                RoadBoundary(Point2D(42.5f, 100.0f), Point2D(53.5f, 100.0f))
+                RoadBoundary(Point2D(45.2f, 0.0f), Point2D(54.8f, 0.0f)),
+                RoadBoundary(Point2D(57.2f, 15.0f), Point2D(66.8f, 15.0f)),
+                RoadBoundary(Point2D(65.2f, 32.0f), Point2D(74.8f, 32.0f)),
+                RoadBoundary(Point2D(45.2f, 50.0f), Point2D(54.8f, 50.0f)),
+                RoadBoundary(Point2D(27.2f, 68.0f), Point2D(36.8f, 68.0f)),
+                RoadBoundary(Point2D(35.2f, 84.0f), Point2D(44.8f, 84.0f)),
+                RoadBoundary(Point2D(61.2f, 100.0f), Point2D(70.8f, 100.0f)),
+                RoadBoundary(Point2D(53.2f, 114.0f), Point2D(62.8f, 114.0f)),
+                RoadBoundary(Point2D(45.2f, 125.0f), Point2D(54.8f, 125.0f))
             )
         ),
 
-        // Level 5: Coastal Serpent (15.0 m/s)
+        // Level 5: Coastal Serpent (140m, 9.0m width, 18.0 m/s)
         LevelData(
             levelId = "level_5",
             title = "Coastal Serpent",
-            roadLengthMeters = 100.0f,
-            roadWidthMeters = 10.5f,
-            thiefSpeedMps = 15.0f,
-            initialGapMeters = 16.0f,
-            startPositionMeters = 0.0f,
-            finishPositionMeters = 100.0f,
-            roadPath = listOf(
-                Point2D(50.0f, 0.0f),
-                Point2D(38.0f, 14.0f),
-                Point2D(42.0f, 26.0f),
-                Point2D(62.0f, 40.0f),
-                Point2D(66.0f, 52.0f),
-                Point2D(42.0f, 66.0f),
-                Point2D(36.0f, 78.0f),
-                Point2D(56.0f, 90.0f),
-                Point2D(50.0f, 100.0f)
-            ),
-            boundaries = listOf(
-                RoadBoundary(Point2D(44.75f, 0.0f), Point2D(55.25f, 0.0f)),
-                RoadBoundary(Point2D(32.75f, 14.0f), Point2D(43.25f, 14.0f)),
-                RoadBoundary(Point2D(36.75f, 26.0f), Point2D(47.25f, 26.0f)),
-                RoadBoundary(Point2D(56.75f, 40.0f), Point2D(67.25f, 40.0f)),
-                RoadBoundary(Point2D(60.75f, 52.0f), Point2D(71.25f, 52.0f)),
-                RoadBoundary(Point2D(36.75f, 66.0f), Point2D(47.25f, 66.0f)),
-                RoadBoundary(Point2D(30.75f, 78.0f), Point2D(41.25f, 78.0f)),
-                RoadBoundary(Point2D(50.75f, 90.0f), Point2D(61.25f, 90.0f)),
-                RoadBoundary(Point2D(44.75f, 100.0f), Point2D(55.25f, 100.0f))
-            )
-        ),
-
-        // Level 6: Midnight Expressway (16.5 m/s)
-        LevelData(
-            levelId = "level_6",
-            title = "Midnight Expressway",
-            roadLengthMeters = 100.0f,
-            roadWidthMeters = 10.5f,
-            thiefSpeedMps = 16.5f,
-            initialGapMeters = 16.0f,
-            startPositionMeters = 0.0f,
-            finishPositionMeters = 100.0f,
-            roadPath = listOf(
-                Point2D(50.0f, 0.0f),
-                Point2D(62.0f, 10.0f),
-                Point2D(70.0f, 22.0f),
-                Point2D(54.0f, 36.0f),
-                Point2D(36.0f, 48.0f),
-                Point2D(42.0f, 60.0f),
-                Point2D(66.0f, 72.0f),
-                Point2D(68.0f, 84.0f),
-                Point2D(52.0f, 92.0f),
-                Point2D(50.0f, 100.0f)
-            ),
-            boundaries = listOf(
-                RoadBoundary(Point2D(44.75f, 0.0f), Point2D(55.25f, 0.0f)),
-                RoadBoundary(Point2D(56.75f, 10.0f), Point2D(67.25f, 10.0f)),
-                RoadBoundary(Point2D(64.75f, 22.0f), Point2D(75.25f, 22.0f)),
-                RoadBoundary(Point2D(48.75f, 36.0f), Point2D(59.25f, 36.0f)),
-                RoadBoundary(Point2D(30.75f, 48.0f), Point2D(41.25f, 48.0f)),
-                RoadBoundary(Point2D(36.75f, 60.0f), Point2D(47.25f, 60.0f)),
-                RoadBoundary(Point2D(60.75f, 72.0f), Point2D(71.25f, 72.0f)),
-                RoadBoundary(Point2D(62.75f, 84.0f), Point2D(73.25f, 84.0f)),
-                RoadBoundary(Point2D(46.75f, 92.0f), Point2D(57.25f, 92.0f)),
-                RoadBoundary(Point2D(44.75f, 100.0f), Point2D(55.25f, 100.0f))
-            )
-        ),
-
-        // Level 7: Neon Metropolis (18.0 m/s)
-        LevelData(
-            levelId = "level_7",
-            title = "Neon Metropolis",
-            roadLengthMeters = 100.0f,
-            roadWidthMeters = 10.0f,
-            thiefSpeedMps = 18.0f,
-            initialGapMeters = 16.0f,
-            startPositionMeters = 0.0f,
-            finishPositionMeters = 100.0f,
-            roadPath = listOf(
-                Point2D(50.0f, 0.0f),
-                Point2D(42.0f, 12.0f),
-                Point2D(38.0f, 24.0f),
-                Point2D(55.0f, 38.0f),
-                Point2D(68.0f, 50.0f),
-                Point2D(65.0f, 62.0f),
-                Point2D(42.0f, 74.0f),
-                Point2D(36.0f, 86.0f),
-                Point2D(48.0f, 94.0f),
-                Point2D(50.0f, 100.0f)
-            ),
-            boundaries = listOf(
-                RoadBoundary(Point2D(45.0f, 0.0f), Point2D(55.0f, 0.0f)),
-                RoadBoundary(Point2D(37.0f, 12.0f), Point2D(47.0f, 12.0f)),
-                RoadBoundary(Point2D(33.0f, 24.0f), Point2D(43.0f, 24.0f)),
-                RoadBoundary(Point2D(50.0f, 38.0f), Point2D(60.0f, 38.0f)),
-                RoadBoundary(Point2D(63.0f, 50.0f), Point2D(73.0f, 50.0f)),
-                RoadBoundary(Point2D(60.0f, 62.0f), Point2D(70.0f, 62.0f)),
-                RoadBoundary(Point2D(37.0f, 74.0f), Point2D(47.0f, 74.0f)),
-                RoadBoundary(Point2D(31.0f, 86.0f), Point2D(41.0f, 86.0f)),
-                RoadBoundary(Point2D(43.0f, 94.0f), Point2D(53.0f, 94.0f)),
-                RoadBoundary(Point2D(45.0f, 100.0f), Point2D(55.0f, 100.0f))
-            )
-        ),
-
-        // Level 8: Thunder Valley (19.5 m/s)
-        LevelData(
-            levelId = "level_8",
-            title = "Thunder Valley",
-            roadLengthMeters = 100.0f,
-            roadWidthMeters = 10.0f,
-            thiefSpeedMps = 19.5f,
-            initialGapMeters = 16.0f,
-            startPositionMeters = 0.0f,
-            finishPositionMeters = 100.0f,
-            roadPath = listOf(
-                Point2D(50.0f, 0.0f),
-                Point2D(65.0f, 15.0f),
-                Point2D(34.0f, 32.0f),
-                Point2D(68.0f, 52.0f),
-                Point2D(32.0f, 72.0f),
-                Point2D(60.0f, 88.0f),
-                Point2D(50.0f, 100.0f)
-            ),
-            boundaries = listOf(
-                RoadBoundary(Point2D(45.0f, 0.0f), Point2D(55.0f, 0.0f)),
-                RoadBoundary(Point2D(60.0f, 15.0f), Point2D(70.0f, 15.0f)),
-                RoadBoundary(Point2D(29.0f, 32.0f), Point2D(39.0f, 32.0f)),
-                RoadBoundary(Point2D(63.0f, 52.0f), Point2D(73.0f, 52.0f)),
-                RoadBoundary(Point2D(27.0f, 72.0f), Point2D(37.0f, 72.0f)),
-                RoadBoundary(Point2D(55.0f, 88.0f), Point2D(65.0f, 88.0f)),
-                RoadBoundary(Point2D(45.0f, 100.0f), Point2D(55.0f, 100.0f))
-            )
-        ),
-
-        // Level 9: Inferno Ridge (21.0 m/s)
-        LevelData(
-            levelId = "level_9",
-            title = "Inferno Ridge",
-            roadLengthMeters = 100.0f,
-            roadWidthMeters = 9.5f,
-            thiefSpeedMps = 21.0f,
-            initialGapMeters = 16.0f,
-            startPositionMeters = 0.0f,
-            finishPositionMeters = 100.0f,
-            roadPath = listOf(
-                Point2D(50.0f, 0.0f),
-                Point2D(32.0f, 14.0f),
-                Point2D(68.0f, 28.0f),
-                Point2D(28.0f, 44.0f),
-                Point2D(72.0f, 60.0f),
-                Point2D(35.0f, 75.0f),
-                Point2D(62.0f, 88.0f),
-                Point2D(50.0f, 100.0f)
-            ),
-            boundaries = listOf(
-                RoadBoundary(Point2D(45.25f, 0.0f), Point2D(54.75f, 0.0f)),
-                RoadBoundary(Point2D(27.25f, 14.0f), Point2D(36.75f, 14.0f)),
-                RoadBoundary(Point2D(63.25f, 28.0f), Point2D(72.75f, 28.0f)),
-                RoadBoundary(Point2D(23.25f, 44.0f), Point2D(32.75f, 44.0f)),
-                RoadBoundary(Point2D(67.25f, 60.0f), Point2D(76.75f, 60.0f)),
-                RoadBoundary(Point2D(30.25f, 75.0f), Point2D(39.75f, 75.0f)),
-                RoadBoundary(Point2D(57.25f, 88.0f), Point2D(66.75f, 88.0f)),
-                RoadBoundary(Point2D(45.25f, 100.0f), Point2D(54.75f, 100.0f))
-            )
-        ),
-
-        // Level 10: The Final Gauntlet (22.5 m/s)
-        LevelData(
-            levelId = "level_10",
-            title = "The Final Gauntlet",
-            roadLengthMeters = 100.0f,
+            roadLengthMeters = 140.0f,
             roadWidthMeters = 9.0f,
-            thiefSpeedMps = 22.5f,
-            initialGapMeters = 16.0f,
+            thiefSpeedMps = 18.0f,
+            initialGapMeters = 22.0f,
             startPositionMeters = 0.0f,
-            finishPositionMeters = 100.0f,
+            finishPositionMeters = 140.0f,
             roadPath = listOf(
                 Point2D(50.0f, 0.0f),
-                Point2D(66.0f, 12.0f),
-                Point2D(30.0f, 25.0f),
-                Point2D(72.0f, 38.0f),
-                Point2D(26.0f, 50.0f),
-                Point2D(70.0f, 64.0f),
-                Point2D(28.0f, 78.0f),
-                Point2D(64.0f, 90.0f),
-                Point2D(50.0f, 100.0f)
+                Point2D(36.0f, 14.0f),
+                Point2D(34.0f, 28.0f),
+                Point2D(54.0f, 44.0f),
+                Point2D(68.0f, 58.0f),
+                Point2D(44.0f, 74.0f),
+                Point2D(32.0f, 90.0f),
+                Point2D(62.0f, 106.0f),
+                Point2D(66.0f, 118.0f),
+                Point2D(56.0f, 130.0f),
+                Point2D(50.0f, 140.0f)
             ),
             boundaries = listOf(
                 RoadBoundary(Point2D(45.5f, 0.0f), Point2D(54.5f, 0.0f)),
-                RoadBoundary(Point2D(61.5f, 12.0f), Point2D(70.5f, 12.0f)),
-                RoadBoundary(Point2D(25.5f, 25.0f), Point2D(34.5f, 25.0f)),
-                RoadBoundary(Point2D(67.5f, 38.0f), Point2D(76.5f, 38.0f)),
-                RoadBoundary(Point2D(21.5f, 50.0f), Point2D(30.5f, 50.0f)),
-                RoadBoundary(Point2D(65.5f, 64.0f), Point2D(74.5f, 64.0f)),
-                RoadBoundary(Point2D(23.5f, 78.0f), Point2D(32.5f, 78.0f)),
-                RoadBoundary(Point2D(59.5f, 90.0f), Point2D(68.5f, 90.0f)),
-                RoadBoundary(Point2D(45.5f, 100.0f), Point2D(54.5f, 100.0f))
+                RoadBoundary(Point2D(31.5f, 14.0f), Point2D(40.5f, 14.0f)),
+                RoadBoundary(Point2D(29.5f, 28.0f), Point2D(38.5f, 28.0f)),
+                RoadBoundary(Point2D(49.5f, 44.0f), Point2D(58.5f, 44.0f)),
+                RoadBoundary(Point2D(63.5f, 58.0f), Point2D(72.5f, 58.0f)),
+                RoadBoundary(Point2D(39.5f, 74.0f), Point2D(48.5f, 74.0f)),
+                RoadBoundary(Point2D(27.5f, 90.0f), Point2D(36.5f, 90.0f)),
+                RoadBoundary(Point2D(57.5f, 106.0f), Point2D(66.5f, 106.0f)),
+                RoadBoundary(Point2D(61.5f, 118.0f), Point2D(70.5f, 118.0f)),
+                RoadBoundary(Point2D(51.5f, 130.0f), Point2D(60.5f, 130.0f)),
+                RoadBoundary(Point2D(45.5f, 140.0f), Point2D(54.5f, 140.0f))
+            )
+        ),
+
+        // Level 6: Midnight Expressway (155m, 8.4m width, 20.5 m/s)
+        LevelData(
+            levelId = "level_6",
+            title = "Midnight Expressway",
+            roadLengthMeters = 155.0f,
+            roadWidthMeters = 8.4f,
+            thiefSpeedMps = 20.5f,
+            initialGapMeters = 24.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 155.0f,
+            roadPath = listOf(
+                Point2D(50.0f, 0.0f),
+                Point2D(65.0f, 14.0f),
+                Point2D(68.0f, 28.0f),
+                Point2D(48.0f, 42.0f),
+                Point2D(30.0f, 56.0f),
+                Point2D(36.0f, 70.0f),
+                Point2D(64.0f, 84.0f),
+                Point2D(66.0f, 98.0f),
+                Point2D(38.0f, 114.0f),
+                Point2D(32.0f, 128.0f),
+                Point2D(58.0f, 142.0f),
+                Point2D(50.0f, 155.0f)
+            ),
+            boundaries = listOf(
+                RoadBoundary(Point2D(45.8f, 0.0f), Point2D(54.2f, 0.0f)),
+                RoadBoundary(Point2D(60.8f, 14.0f), Point2D(69.2f, 14.0f)),
+                RoadBoundary(Point2D(63.8f, 28.0f), Point2D(72.2f, 28.0f)),
+                RoadBoundary(Point2D(43.8f, 42.0f), Point2D(52.2f, 42.0f)),
+                RoadBoundary(Point2D(25.8f, 56.0f), Point2D(34.2f, 56.0f)),
+                RoadBoundary(Point2D(31.8f, 70.0f), Point2D(40.2f, 70.0f)),
+                RoadBoundary(Point2D(59.8f, 84.0f), Point2D(68.2f, 84.0f)),
+                RoadBoundary(Point2D(61.8f, 98.0f), Point2D(70.2f, 98.0f)),
+                RoadBoundary(Point2D(33.8f, 114.0f), Point2D(42.2f, 114.0f)),
+                RoadBoundary(Point2D(27.8f, 128.0f), Point2D(36.2f, 128.0f)),
+                RoadBoundary(Point2D(53.8f, 142.0f), Point2D(62.2f, 142.0f)),
+                RoadBoundary(Point2D(45.8f, 155.0f), Point2D(54.2f, 155.0f))
+            )
+        ),
+
+        // Level 7: Neon Metropolis (170m, 7.8m width, 23.0 m/s)
+        LevelData(
+            levelId = "level_7",
+            title = "Neon Metropolis",
+            roadLengthMeters = 170.0f,
+            roadWidthMeters = 7.8f,
+            thiefSpeedMps = 23.0f,
+            initialGapMeters = 26.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 170.0f,
+            roadPath = listOf(
+                Point2D(50.0f, 0.0f),
+                Point2D(38.0f, 14.0f),
+                Point2D(32.0f, 28.0f),
+                Point2D(56.0f, 44.0f),
+                Point2D(70.0f, 60.0f),
+                Point2D(42.0f, 76.0f),
+                Point2D(30.0f, 92.0f),
+                Point2D(60.0f, 108.0f),
+                Point2D(70.0f, 124.0f),
+                Point2D(35.0f, 140.0f),
+                Point2D(40.0f, 152.0f),
+                Point2D(56.0f, 162.0f),
+                Point2D(50.0f, 170.0f)
+            ),
+            boundaries = listOf(
+                RoadBoundary(Point2D(46.1f, 0.0f), Point2D(53.9f, 0.0f)),
+                RoadBoundary(Point2D(34.1f, 14.0f), Point2D(41.9f, 14.0f)),
+                RoadBoundary(Point2D(28.1f, 28.0f), Point2D(35.9f, 28.0f)),
+                RoadBoundary(Point2D(52.1f, 44.0f), Point2D(59.9f, 44.0f)),
+                RoadBoundary(Point2D(66.1f, 60.0f), Point2D(73.9f, 60.0f)),
+                RoadBoundary(Point2D(38.1f, 76.0f), Point2D(45.9f, 76.0f)),
+                RoadBoundary(Point2D(26.1f, 92.0f), Point2D(33.9f, 92.0f)),
+                RoadBoundary(Point2D(56.1f, 108.0f), Point2D(63.9f, 108.0f)),
+                RoadBoundary(Point2D(66.1f, 124.0f), Point2D(73.9f, 124.0f)),
+                RoadBoundary(Point2D(31.1f, 140.0f), Point2D(38.9f, 140.0f)),
+                RoadBoundary(Point2D(36.1f, 152.0f), Point2D(43.9f, 152.0f)),
+                RoadBoundary(Point2D(52.1f, 162.0f), Point2D(59.9f, 162.0f)),
+                RoadBoundary(Point2D(46.1f, 170.0f), Point2D(53.9f, 170.0f))
+            )
+        ),
+
+        // Level 8: Thunder Valley (185m, 7.2m width, 25.5 m/s)
+        LevelData(
+            levelId = "level_8",
+            title = "Thunder Valley",
+            roadLengthMeters = 185.0f,
+            roadWidthMeters = 7.2f,
+            thiefSpeedMps = 25.5f,
+            initialGapMeters = 28.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 185.0f,
+            roadPath = listOf(
+                Point2D(50.0f, 0.0f),
+                Point2D(68.0f, 15.0f),
+                Point2D(70.0f, 30.0f),
+                Point2D(34.0f, 48.0f),
+                Point2D(30.0f, 64.0f),
+                Point2D(66.0f, 80.0f),
+                Point2D(70.0f, 96.0f),
+                Point2D(32.0f, 114.0f),
+                Point2D(30.0f, 130.0f),
+                Point2D(65.0f, 146.0f),
+                Point2D(68.0f, 160.0f),
+                Point2D(38.0f, 174.0f),
+                Point2D(50.0f, 185.0f)
+            ),
+            boundaries = listOf(
+                RoadBoundary(Point2D(46.4f, 0.0f), Point2D(53.6f, 0.0f)),
+                RoadBoundary(Point2D(64.4f, 15.0f), Point2D(71.6f, 15.0f)),
+                RoadBoundary(Point2D(66.4f, 30.0f), Point2D(73.6f, 30.0f)),
+                RoadBoundary(Point2D(30.4f, 48.0f), Point2D(37.6f, 48.0f)),
+                RoadBoundary(Point2D(26.4f, 64.0f), Point2D(33.6f, 64.0f)),
+                RoadBoundary(Point2D(62.4f, 80.0f), Point2D(69.6f, 80.0f)),
+                RoadBoundary(Point2D(66.4f, 96.0f), Point2D(73.6f, 96.0f)),
+                RoadBoundary(Point2D(28.4f, 114.0f), Point2D(35.6f, 114.0f)),
+                RoadBoundary(Point2D(26.4f, 130.0f), Point2D(33.6f, 130.0f)),
+                RoadBoundary(Point2D(61.4f, 146.0f), Point2D(68.6f, 146.0f)),
+                RoadBoundary(Point2D(64.4f, 160.0f), Point2D(71.6f, 160.0f)),
+                RoadBoundary(Point2D(34.4f, 174.0f), Point2D(41.6f, 174.0f)),
+                RoadBoundary(Point2D(46.4f, 185.0f), Point2D(53.6f, 185.0f))
+            )
+        ),
+
+        // Level 9: Inferno Ridge (200m, 6.6m width, 28.0 m/s)
+        LevelData(
+            levelId = "level_9",
+            title = "Inferno Ridge",
+            roadLengthMeters = 200.0f,
+            roadWidthMeters = 6.6f,
+            thiefSpeedMps = 28.0f,
+            initialGapMeters = 30.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 200.0f,
+            roadPath = listOf(
+                Point2D(50.0f, 0.0f),
+                Point2D(30.0f, 14.0f),
+                Point2D(28.0f, 28.0f),
+                Point2D(70.0f, 44.0f),
+                Point2D(72.0f, 58.0f),
+                Point2D(26.0f, 74.0f),
+                Point2D(24.0f, 88.0f),
+                Point2D(72.0f, 104.0f),
+                Point2D(74.0f, 118.0f),
+                Point2D(30.0f, 134.0f),
+                Point2D(28.0f, 148.0f),
+                Point2D(68.0f, 164.0f),
+                Point2D(66.0f, 178.0f),
+                Point2D(38.0f, 190.0f),
+                Point2D(50.0f, 200.0f)
+            ),
+            boundaries = listOf(
+                RoadBoundary(Point2D(46.7f, 0.0f), Point2D(53.3f, 0.0f)),
+                RoadBoundary(Point2D(26.7f, 14.0f), Point2D(33.3f, 14.0f)),
+                RoadBoundary(Point2D(24.7f, 28.0f), Point2D(31.3f, 28.0f)),
+                RoadBoundary(Point2D(66.7f, 44.0f), Point2D(73.3f, 44.0f)),
+                RoadBoundary(Point2D(68.7f, 58.0f), Point2D(75.3f, 58.0f)),
+                RoadBoundary(Point2D(22.7f, 74.0f), Point2D(29.3f, 74.0f)),
+                RoadBoundary(Point2D(20.7f, 88.0f), Point2D(27.3f, 88.0f)),
+                RoadBoundary(Point2D(68.7f, 104.0f), Point2D(75.3f, 104.0f)),
+                RoadBoundary(Point2D(70.7f, 118.0f), Point2D(77.3f, 118.0f)),
+                RoadBoundary(Point2D(26.7f, 134.0f), Point2D(33.3f, 134.0f)),
+                RoadBoundary(Point2D(24.7f, 148.0f), Point2D(31.3f, 148.0f)),
+                RoadBoundary(Point2D(64.7f, 164.0f), Point2D(71.3f, 164.0f)),
+                RoadBoundary(Point2D(62.7f, 178.0f), Point2D(69.3f, 178.0f)),
+                RoadBoundary(Point2D(34.7f, 190.0f), Point2D(41.3f, 190.0f)),
+                RoadBoundary(Point2D(46.7f, 200.0f), Point2D(53.3f, 200.0f))
+            )
+        ),
+
+        // Level 10: The Final Gauntlet (220m, 6.0m width, 31.0 m/s)
+        LevelData(
+            levelId = "level_10",
+            title = "The Final Gauntlet",
+            roadLengthMeters = 220.0f,
+            roadWidthMeters = 6.0f,
+            thiefSpeedMps = 31.0f,
+            initialGapMeters = 32.0f,
+            startPositionMeters = 0.0f,
+            finishPositionMeters = 220.0f,
+            roadPath = listOf(
+                Point2D(50.0f, 0.0f),
+                Point2D(70.0f, 14.0f),
+                Point2D(74.0f, 28.0f),
+                Point2D(26.0f, 44.0f),
+                Point2D(22.0f, 58.0f),
+                Point2D(74.0f, 74.0f),
+                Point2D(78.0f, 90.0f),
+                Point2D(24.0f, 106.0f),
+                Point2D(20.0f, 122.0f),
+                Point2D(76.0f, 138.0f),
+                Point2D(78.0f, 154.0f),
+                Point2D(24.0f, 170.0f),
+                Point2D(26.0f, 184.0f),
+                Point2D(72.0f, 198.0f),
+                Point2D(64.0f, 210.0f),
+                Point2D(50.0f, 220.0f)
+            ),
+            boundaries = listOf(
+                RoadBoundary(Point2D(47.0f, 0.0f), Point2D(53.0f, 0.0f)),
+                RoadBoundary(Point2D(67.0f, 14.0f), Point2D(73.0f, 14.0f)),
+                RoadBoundary(Point2D(71.0f, 28.0f), Point2D(77.0f, 28.0f)),
+                RoadBoundary(Point2D(23.0f, 44.0f), Point2D(29.0f, 44.0f)),
+                RoadBoundary(Point2D(19.0f, 58.0f), Point2D(25.0f, 58.0f)),
+                RoadBoundary(Point2D(71.0f, 74.0f), Point2D(77.0f, 74.0f)),
+                RoadBoundary(Point2D(75.0f, 90.0f), Point2D(81.0f, 90.0f)),
+                RoadBoundary(Point2D(21.0f, 106.0f), Point2D(27.0f, 106.0f)),
+                RoadBoundary(Point2D(17.0f, 122.0f), Point2D(23.0f, 122.0f)),
+                RoadBoundary(Point2D(73.0f, 138.0f), Point2D(79.0f, 138.0f)),
+                RoadBoundary(Point2D(75.0f, 154.0f), Point2D(81.0f, 154.0f)),
+                RoadBoundary(Point2D(21.0f, 170.0f), Point2D(27.0f, 170.0f)),
+                RoadBoundary(Point2D(23.0f, 184.0f), Point2D(29.0f, 184.0f)),
+                RoadBoundary(Point2D(69.0f, 198.0f), Point2D(75.0f, 198.0f)),
+                RoadBoundary(Point2D(61.0f, 210.0f), Point2D(67.0f, 210.0f)),
+                RoadBoundary(Point2D(47.0f, 220.0f), Point2D(53.0f, 220.0f))
             )
         )
     )
