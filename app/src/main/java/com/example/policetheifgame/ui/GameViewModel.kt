@@ -27,7 +27,8 @@ import kotlinx.coroutines.launch
  * ViewModel managing game lifecycle, multi-level progression, persistence, siren audio, and onboarding tutorial.
  */
 class GameViewModel @JvmOverloads constructor(
-    initialLevelIndex: Int = 0,
+    // Testing Level 15: Set to 14 (change back to 0 for production Level 1)
+    initialLevelIndex: Int = 14,
     private var preferences: GamePreferences? = null,
     private var sirenManager: SirenSoundManager? = null
 ) : ViewModel() {
@@ -82,7 +83,8 @@ class GameViewModel @JvmOverloads constructor(
             _showTutorial.value = !prefs.hasSeenOnboarding
             _isSirenMuted.value = prefs.isSirenMuted
 
-            val savedLevel = prefs.currentLevelIndex.coerceIn(0, LevelRepository.totalLevels - 1)
+            // Testing Level 15: Set to 14 (revert back to prefs.currentLevelIndex.coerceIn(0, LevelRepository.totalLevels - 1))
+            val savedLevel = 19
             if (savedLevel != currentLevelIndex && gameEngine.status == GameStatus.READY) {
                 currentLevelIndex = savedLevel
                 currentLevel = LevelRepository.getLevel(currentLevelIndex)

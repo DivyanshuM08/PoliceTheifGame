@@ -1,28 +1,227 @@
 {
   "levelId": "level_11",
-  "title": "The Clover Fork",
-  "roadLengthMeters": 95.0,
-  "roadWidthMeters": 10.0,
-  "thiefSpeedMps": 12.0,
-  "initialGapMeters": 20.0,
+  "title": "The Clover Labyrinth",
+  "roadLengthMeters": 120.0,
+  "roadWidthMeters": 5.5,
+  "thiefSpeedMps": 33.0,
+  "initialGapMeters": 22.0,
   "startPositionMeters": 0.0,
-  "finishPositionMeters": 95.0,
+  "finishPositionMeters": 120.0,
   "isPuzzle": true,
-  "policeStart": {"x": 50.0, "y": 12.0},
-  "thiefStart": {"x": 50.0, "y": 35.0},
-  "destination": {"x": 50.0, "y": 95.0},
+  "policeStart": {
+    "x": 50.0,
+    "y": 10.0
+  },
+  "thiefStart": {
+    "x": 80.0,
+    "y": 30.0
+  },
+  "destination": {
+    "x": 50.0,
+    "y": 115.0
+  },
   "thiefRoute": [
-    {"x": 50.0, "y": 35.0},
-    {"x": 70.0, "y": 35.0},
-    {"x": 70.0, "y": 75.0},
-    {"x": 50.0, "y": 75.0},
-    {"x": 50.0, "y": 95.0}
+    {
+      "x": 80.0,
+      "y": 30.0
+    },
+    {
+      "x": 80.0,
+      "y": 55.0
+    },
+    {
+      "x": 80.0,
+      "y": 80.0
+    },
+    {
+      "x": 50.0,
+      "y": 80.0
+    },
+    {
+      "x": 50.0,
+      "y": 115.0
+    }
   ],
   "corridors": [
-    {"id": "c_south", "widthMeters": 10.0, "path": [{"x": 50.0, "y": 10.0}, {"x": 50.0, "y": 35.0}]},
-    {"id": "c_left_loop", "widthMeters": 10.0, "path": [{"x": 50.0, "y": 35.0}, {"x": 30.0, "y": 35.0}, {"x": 30.0, "y": 75.0}, {"x": 50.0, "y": 75.0}]},
-    {"id": "c_right_loop", "widthMeters": 10.0, "path": [{"x": 50.0, "y": 35.0}, {"x": 70.0, "y": 35.0}, {"x": 70.0, "y": 75.0}, {"x": 50.0, "y": 75.0}]},
-    {"id": "c_crosswalk", "widthMeters": 10.0, "path": [{"x": 30.0, "y": 55.0}, {"x": 70.0, "y": 55.0}]},
-    {"id": "c_north_exit", "widthMeters": 10.0, "path": [{"x": 50.0, "y": 75.0}, {"x": 50.0, "y": 95.0}]}
+    {
+      "id": "c11_entry",
+      "widthMeters": 5.5,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 10.0
+        },
+        {
+          "x": 50.0,
+          "y": 30.0
+        }
+      ]
+    },
+    {
+      "id": "c11_r1_w",
+      "widthMeters": 5.5,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 30.0
+        },
+        {
+          "x": 50.0,
+          "y": 30.0
+        }
+      ]
+    },
+    {
+      "id": "c11_r1_e",
+      "widthMeters": 5.5,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 30.0
+        },
+        {
+          "x": 80.0,
+          "y": 30.0
+        }
+      ]
+    },
+    {
+      "id": "c11_col1_w",
+      "widthMeters": 5.5,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 30.0
+        },
+        {
+          "x": 20.0,
+          "y": 55.0
+        }
+      ]
+    },
+    {
+      "id": "c11_col1_e",
+      "widthMeters": 5.5,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 80.0,
+          "y": 30.0
+        },
+        {
+          "x": 80.0,
+          "y": 55.0
+        }
+      ]
+    },
+    {
+      "id": "c11_r_mid",
+      "widthMeters": 5.5,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 55.0
+        },
+        {
+          "x": 80.0,
+          "y": 55.0
+        }
+      ]
+    },
+    {
+      "id": "c11_col2_w",
+      "widthMeters": 5.5,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 55.0
+        },
+        {
+          "x": 20.0,
+          "y": 80.0
+        }
+      ]
+    },
+    {
+      "id": "c11_col2_e",
+      "widthMeters": 5.5,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 80.0,
+          "y": 55.0
+        },
+        {
+          "x": 80.0,
+          "y": 80.0
+        }
+      ]
+    },
+    {
+      "id": "c11_r2_w",
+      "widthMeters": 5.5,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 80.0
+        },
+        {
+          "x": 50.0,
+          "y": 80.0
+        }
+      ]
+    },
+    {
+      "id": "c11_r2_e",
+      "widthMeters": 5.5,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 80.0
+        },
+        {
+          "x": 80.0,
+          "y": 80.0
+        }
+      ]
+    },
+    {
+      "id": "c11_exit",
+      "widthMeters": 5.5,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 80.0
+        },
+        {
+          "x": 50.0,
+          "y": 115.0
+        }
+      ]
+    },
+    {
+      "id": "c11_trap1",
+      "widthMeters": 5.5,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 30.0
+        },
+        {
+          "x": 8.0,
+          "y": 18.0
+        }
+      ]
+    }
   ]
 }

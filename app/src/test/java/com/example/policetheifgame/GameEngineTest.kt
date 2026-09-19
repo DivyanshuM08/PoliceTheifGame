@@ -513,8 +513,9 @@ class GameEngineTest {
         }
 
         // Levels 11 to 20: Puzzle maze progression
-        var prevPuzzleSpeed = 0f
-        var prevCorridorWidth = 999f
+        var prevPuzzleSpeed = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(9).thiefSpeedMps
+        var prevCorridorWidth = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(9).roadWidthMeters
+        var prevCorridorCount = 0
         for (i in 10 until 20) {
             val level = com.example.policetheifgame.game.geometry.LevelRepository.getLevel(i)
             assertTrue("Level ${i + 1} must be marked as puzzle", level.isPuzzle)
@@ -526,9 +527,17 @@ class GameEngineTest {
                 "Level ${i + 1} corridor width (${level.roadWidthMeters}) must be <= prev ($prevCorridorWidth)",
                 level.roadWidthMeters <= prevCorridorWidth
             )
-            assertTrue("Level ${i + 1} must have corridors", level.corridors.size >= 4)
+            assertTrue(
+                "Level ${i + 1} corridors (${level.corridors.size}) must increase > prev ($prevCorridorCount)",
+                level.corridors.size > prevCorridorCount
+            )
+            assertTrue(
+                "Level ${i + 1} must have dead ends",
+                level.corridors.any { it.isDeadEnd }
+            )
             prevPuzzleSpeed = level.thiefSpeedMps
             prevCorridorWidth = level.roadWidthMeters
+            prevCorridorCount = level.corridors.size
         }
     }
 
@@ -540,7 +549,7 @@ class GameEngineTest {
      */
     @Test
     fun test19_noTeleportationOnRandomTapAndCanRestartDragFromCarPosition() {
-        val viewModel = GameViewModel()
+        val viewModel = GameViewModel(initialLevelIndex = 0)
         viewModel.startGame()
 
         val viewport = GameViewport.createOverview(
@@ -650,11 +659,11 @@ class GameEngineTest {
         val engine = GameEngine(roadGeometry = geom, thiefSpeedMps = level11.thiefSpeedMps)
         engine.start()
 
-        // Police starts at (50, 12), which is inside corridor c_south [(50,10) to (50,35)]
-        assertTrue("Police start point must be on road corridor", geom.isPositionOnRoad(Point2D(50f, 12f)))
+        // Police starts at (50, 10), which is inside corridor c11_entry [(50,10) to (50,25)]
+        assertTrue("Police start point must be on road corridor", geom.isPositionOnRoad(Point2D(50f, 10f)))
 
-        // Point inside left loop corridor (30, 50) is valid
-        assertTrue("Point in left loop must be on road", geom.isPositionOnRoad(Point2D(30f, 50f)))
+        // Point inside west corridor (20, 40) is valid
+        assertTrue("Point in west corridor must be on road", geom.isPositionOnRoad(Point2D(20f, 40f)))
 
         // Point far outside corridors (0, 0) or inside maze wall island (10, 50) is OFF-ROAD
         assertFalse("Grass point outside maze must not be on road", geom.isPositionOnRoad(Point2D(0f, 0f)))
@@ -675,20 +684,20 @@ class GameEngineTest {
         val engine = GameEngine(roadGeometry = geom, thiefSpeedMps = level11.thiefSpeedMps)
         engine.start()
 
-        // Drag North along entry corridor: (50, 12) -> (50, 20)
-        engine.onPoliceDragged(Point2D(50f, 20f))
+        // Drag North along entry corridor: (50, 10) -> (50, 18)
+        engine.onPoliceDragged(Point2D(50f, 18f))
         assertEquals(0f, engine.policeHeadingDeg, 5.0f)
 
-        // Drag East within corridor: (50, 20) -> (53, 20)
-        engine.onPoliceDragged(Point2D(53f, 20f))
+        // Drag East within corridor: (50, 18) -> (52f, 18f)
+        engine.onPoliceDragged(Point2D(52f, 18f))
         assertEquals(90f, engine.policeHeadingDeg, 5.0f)
 
-        // Drag South (reversing / 180° U-turn): (53, 20) -> (53, 15)
-        engine.onPoliceDragged(Point2D(53f, 15f))
+        // Drag South (reversing / 180° U-turn): (52f, 18f) -> (52f, 14f)
+        engine.onPoliceDragged(Point2D(52f, 14f))
         assertEquals(180f, Math.abs(engine.policeHeadingDeg), 5.0f)
 
-        // Drag West: (53, 15) -> (47, 15)
-        engine.onPoliceDragged(Point2D(47f, 15f))
+        // Drag West: (52f, 14f) -> (48f, 14f)
+        engine.onPoliceDragged(Point2D(48f, 14f))
         assertEquals(-90f, engine.policeHeadingDeg, 5.0f)
     }
 

@@ -216,7 +216,8 @@ class GameEngine(
         if (status != GameStatus.PLAYING) return
 
         // Validate if touch point is within road boundaries
-        val onRoad = roadGeometry.isPositionOnRoad(targetWorldPoint, roadBoundaryToleranceMeters)
+        val effectiveTolerance = if (roadGeometry.isPuzzle) 1.2f else roadBoundaryToleranceMeters
+        val onRoad = roadGeometry.isPositionOnRoad(targetWorldPoint, effectiveTolerance)
         if (!onRoad) {
             // Police went off-road -> Thief wins
             policePosition = targetWorldPoint

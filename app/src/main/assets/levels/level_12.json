@@ -1,28 +1,269 @@
 {
   "levelId": "level_12",
-  "title": "Cul-De-Sac Trap",
-  "roadLengthMeters": 105.0,
-  "roadWidthMeters": 9.5,
-  "thiefSpeedMps": 14.5,
-  "initialGapMeters": 20.0,
+  "title": "Gridiron Peril",
+  "roadLengthMeters": 125.0,
+  "roadWidthMeters": 5.2,
+  "thiefSpeedMps": 35.0,
+  "initialGapMeters": 23.0,
   "startPositionMeters": 0.0,
-  "finishPositionMeters": 105.0,
+  "finishPositionMeters": 125.0,
   "isPuzzle": true,
-  "policeStart": {"x": 50.0, "y": 12.0},
-  "thiefStart": {"x": 50.0, "y": 30.0},
-  "destination": {"x": 60.0, "y": 105.0},
+  "policeStart": {
+    "x": 50.0,
+    "y": 10.0
+  },
+  "thiefStart": {
+    "x": 75.0,
+    "y": 25.0
+  },
+  "destination": {
+    "x": 50.0,
+    "y": 125.0
+  },
   "thiefRoute": [
-    {"x": 50.0, "y": 30.0},
-    {"x": 75.0, "y": 30.0},
-    {"x": 75.0, "y": 90.0},
-    {"x": 60.0, "y": 105.0}
+    {
+      "x": 75.0,
+      "y": 25.0
+    },
+    {
+      "x": 75.0,
+      "y": 55.0
+    },
+    {
+      "x": 50.0,
+      "y": 55.0
+    },
+    {
+      "x": 50.0,
+      "y": 85.0
+    },
+    {
+      "x": 25.0,
+      "y": 85.0
+    },
+    {
+      "x": 25.0,
+      "y": 110.0
+    },
+    {
+      "x": 50.0,
+      "y": 110.0
+    },
+    {
+      "x": 50.0,
+      "y": 125.0
+    }
   ],
   "corridors": [
-    {"id": "c_entry", "widthMeters": 9.5, "path": [{"x": 50.0, "y": 10.0}, {"x": 50.0, "y": 30.0}]},
-    {"id": "c_south_crossway", "widthMeters": 9.5, "path": [{"x": 25.0, "y": 30.0}, {"x": 75.0, "y": 30.0}]},
-    {"id": "c_dead_end", "widthMeters": 9.5, "isDeadEnd": true, "path": [{"x": 25.0, "y": 30.0}, {"x": 25.0, "y": 75.0}]},
-    {"id": "c_center_avenue", "widthMeters": 9.5, "path": [{"x": 50.0, "y": 30.0}, {"x": 50.0, "y": 90.0}]},
-    {"id": "c_right_avenue", "widthMeters": 9.5, "path": [{"x": 75.0, "y": 30.0}, {"x": 75.0, "y": 90.0}]},
-    {"id": "c_north_exit", "widthMeters": 9.5, "path": [{"x": 50.0, "y": 90.0}, {"x": 75.0, "y": 90.0}, {"x": 60.0, "y": 105.0}]}
+    {
+      "id": "c12_entry",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 10.0
+        },
+        {
+          "x": 50.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r1_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 25.0
+        },
+        {
+          "x": 50.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r1_e",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 25.0
+        },
+        {
+          "x": 75.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c12_col1_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 25.0
+        },
+        {
+          "x": 25.0,
+          "y": 55.0
+        }
+      ]
+    },
+    {
+      "id": "c12_col1_e",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 25.0
+        },
+        {
+          "x": 75.0,
+          "y": 55.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r2_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 55.0
+        },
+        {
+          "x": 50.0,
+          "y": 55.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r2_e",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 55.0
+        },
+        {
+          "x": 75.0,
+          "y": 55.0
+        }
+      ]
+    },
+    {
+      "id": "c12_col2_m",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 55.0
+        },
+        {
+          "x": 50.0,
+          "y": 85.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r3_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 85.0
+        },
+        {
+          "x": 50.0,
+          "y": 85.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r3_e",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 85.0
+        },
+        {
+          "x": 75.0,
+          "y": 85.0
+        }
+      ]
+    },
+    {
+      "id": "c12_col3_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 85.0
+        },
+        {
+          "x": 25.0,
+          "y": 110.0
+        }
+      ]
+    },
+    {
+      "id": "c12_r4_w",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 25.0,
+          "y": 110.0
+        },
+        {
+          "x": 50.0,
+          "y": 110.0
+        }
+      ]
+    },
+    {
+      "id": "c12_exit",
+      "widthMeters": 5.2,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 110.0
+        },
+        {
+          "x": 50.0,
+          "y": 125.0
+        }
+      ]
+    },
+    {
+      "id": "c12_trap1",
+      "widthMeters": 5.2,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 85.0
+        },
+        {
+          "x": 88.0,
+          "y": 85.0
+        }
+      ]
+    }
   ]
 }

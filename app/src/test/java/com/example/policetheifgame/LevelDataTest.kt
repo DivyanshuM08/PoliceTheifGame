@@ -123,8 +123,52 @@ class LevelDataTest {
                 "Level $i speed (${level.thiefSpeedMps}) must be greater than previous ($prevSpeed)",
                 level.thiefSpeedMps > prevSpeed
             )
+            org.junit.Assert.assertTrue(
+                "Level $i must have at least 12 corridors",
+                level.corridors.size >= 12
+            )
+            org.junit.Assert.assertTrue(
+                "Level $i must have deceptive dead-end traps",
+                level.corridors.any { it.isDeadEnd }
+            )
+            org.junit.Assert.assertTrue(
+                "Level $i corridor width (${level.roadWidthMeters}m) must be <= 5.5m",
+                level.roadWidthMeters <= 5.5f
+            )
+
+            // Rigorous geometry checks requested by user:
+            val geom = com.example.policetheifgame.game.geometry.RoadGeometry(level)
+            org.junit.Assert.assertTrue("Level $i police start must be on road", geom.isPositionOnRoad(geom.policeStartPosition, 0.0f))
+            org.junit.Assert.assertTrue("Level $i thief start must be on road", geom.isPositionOnRoad(geom.thiefStartPosition, 0.0f))
+            org.junit.Assert.assertTrue("Level $i destination must be on road", geom.isPositionOnRoad(geom.destinationPosition, 0.0f))
+
+            // Thief moves strictly along road corridors, never in open terrain
+            for (pt in level.thiefRoute) {
+                org.junit.Assert.assertTrue("Level $i thief route point $pt must be on road corridor", geom.isPositionOnRoad(pt, 0.0f))
+            }
+
             prevSpeed = level.thiefSpeedMps
         }
+
+        // Specific check for Level 11 and Level 20 extremes
+        val level11 = LevelData.fromJson(
+            (if (java.io.File("src/main/assets/levels/level_11.json").exists())
+                java.io.File("src/main/assets/levels/level_11.json")
+            else java.io.File("app/src/main/assets/levels/level_11.json")).readText()
+        )
+        val level20 = LevelData.fromJson(
+            (if (java.io.File("src/main/assets/levels/level_20.json").exists())
+                java.io.File("src/main/assets/levels/level_20.json")
+            else java.io.File("app/src/main/assets/levels/level_20.json")).readText()
+        )
+
+        assertEquals(33.0f, level11.thiefSpeedMps, 0.001f)
+        assertEquals(5.5f, level11.roadWidthMeters, 0.001f)
+        assertEquals(12, level11.corridors.size)
+
+        assertEquals(56.0f, level20.thiefSpeedMps, 0.001f)
+        assertEquals(3.8f, level20.roadWidthMeters, 0.001f)
+        assertEquals(40, level20.corridors.size)
     }
 }
 

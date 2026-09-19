@@ -1,37 +1,691 @@
 {
   "levelId": "level_20",
-  "title": "The Master Labyrinth",
-  "roadLengthMeters": 150.0,
-  "roadWidthMeters": 5.8,
-  "thiefSpeedMps": 33.0,
+  "title": "Mastermind's Escape",
+  "roadLengthMeters": 165.0,
+  "roadWidthMeters": 3.8,
+  "thiefSpeedMps": 56.0,
   "initialGapMeters": 32.0,
   "startPositionMeters": 0.0,
-  "finishPositionMeters": 150.0,
+  "finishPositionMeters": 165.0,
   "isPuzzle": true,
-  "policeStart": {"x": 15.0, "y": 15.0},
-  "thiefStart": {"x": 50.0, "y": 35.0},
-  "destination": {"x": 50.0, "y": 125.0},
+  "policeStart": {
+    "x": 50.0,
+    "y": 10.0
+  },
+  "thiefStart": {
+    "x": 75.0,
+    "y": 25.0
+  },
+  "destination": {
+    "x": 50.0,
+    "y": 165.0
+  },
   "thiefRoute": [
-    {"x": 50.0, "y": 35.0},
-    {"x": 65.0, "y": 35.0},
-    {"x": 65.0, "y": 55.0},
-    {"x": 85.0, "y": 55.0},
-    {"x": 85.0, "y": 105.0},
-    {"x": 50.0, "y": 105.0},
-    {"x": 50.0, "y": 125.0}
+    {
+      "x": 75.0,
+      "y": 25.0
+    },
+    {
+      "x": 75.0,
+      "y": 44.0
+    },
+    {
+      "x": 50.0,
+      "y": 44.0
+    },
+    {
+      "x": 50.0,
+      "y": 64.0
+    },
+    {
+      "x": 75.0,
+      "y": 64.0
+    },
+    {
+      "x": 75.0,
+      "y": 84.0
+    },
+    {
+      "x": 50.0,
+      "y": 84.0
+    },
+    {
+      "x": 50.0,
+      "y": 104.0
+    },
+    {
+      "x": 75.0,
+      "y": 104.0
+    },
+    {
+      "x": 75.0,
+      "y": 124.0
+    },
+    {
+      "x": 50.0,
+      "y": 124.0
+    },
+    {
+      "x": 50.0,
+      "y": 144.0
+    },
+    {
+      "x": 75.0,
+      "y": 144.0
+    },
+    {
+      "x": 75.0,
+      "y": 155.0
+    },
+    {
+      "x": 50.0,
+      "y": 155.0
+    },
+    {
+      "x": 50.0,
+      "y": 165.0
+    }
   ],
   "corridors": [
-    {"id": "c_outer_south", "widthMeters": 5.8, "path": [{"x": 15.0, "y": 10.0}, {"x": 85.0, "y": 10.0}]},
-    {"id": "c_outer_west", "widthMeters": 5.8, "path": [{"x": 15.0, "y": 10.0}, {"x": 15.0, "y": 105.0}]},
-    {"id": "c_outer_east", "widthMeters": 5.8, "path": [{"x": 85.0, "y": 10.0}, {"x": 85.0, "y": 105.0}]},
-    {"id": "c_outer_north", "widthMeters": 5.8, "path": [{"x": 15.0, "y": 105.0}, {"x": 85.0, "y": 105.0}]},
-    {"id": "c_inner_south", "widthMeters": 5.8, "path": [{"x": 35.0, "y": 35.0}, {"x": 65.0, "y": 35.0}]},
-    {"id": "c_inner_north", "widthMeters": 5.8, "path": [{"x": 35.0, "y": 75.0}, {"x": 65.0, "y": 75.0}]},
-    {"id": "c_inner_west", "widthMeters": 5.8, "path": [{"x": 35.0, "y": 35.0}, {"x": 35.0, "y": 75.0}]},
-    {"id": "c_inner_east", "widthMeters": 5.8, "path": [{"x": 65.0, "y": 35.0}, {"x": 65.0, "y": 75.0}]},
-    {"id": "c_conn_west", "widthMeters": 5.8, "path": [{"x": 15.0, "y": 55.0}, {"x": 35.0, "y": 55.0}]},
-    {"id": "c_conn_east", "widthMeters": 5.8, "path": [{"x": 65.0, "y": 55.0}, {"x": 85.0, "y": 55.0}]},
-    {"id": "c_center_trap", "widthMeters": 5.8, "isDeadEnd": true, "path": [{"x": 50.0, "y": 55.0}, {"x": 50.0, "y": 40.0}]},
-    {"id": "c_escape_chute", "widthMeters": 5.8, "path": [{"x": 50.0, "y": 75.0}, {"x": 50.0, "y": 125.0}]}
+    {
+      "id": "c20_entry",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 10.0
+        },
+        {
+          "x": 50.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r1_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 25.0
+        },
+        {
+          "x": 50.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r1_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 25.0
+        },
+        {
+          "x": 75.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c20_col1_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 25.0
+        },
+        {
+          "x": 20.0,
+          "y": 44.0
+        }
+      ]
+    },
+    {
+      "id": "c20_col1_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 25.0
+        },
+        {
+          "x": 75.0,
+          "y": 44.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r2_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 44.0
+        },
+        {
+          "x": 50.0,
+          "y": 44.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r2_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 44.0
+        },
+        {
+          "x": 75.0,
+          "y": 44.0
+        }
+      ]
+    },
+    {
+      "id": "c20_col2_m",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 44.0
+        },
+        {
+          "x": 50.0,
+          "y": 64.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r3_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 64.0
+        },
+        {
+          "x": 50.0,
+          "y": 64.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r3_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 64.0
+        },
+        {
+          "x": 75.0,
+          "y": 64.0
+        }
+      ]
+    },
+    {
+      "id": "c20_col3_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 64.0
+        },
+        {
+          "x": 20.0,
+          "y": 84.0
+        }
+      ]
+    },
+    {
+      "id": "c20_col3_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 64.0
+        },
+        {
+          "x": 75.0,
+          "y": 84.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r4_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 84.0
+        },
+        {
+          "x": 50.0,
+          "y": 84.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r4_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 84.0
+        },
+        {
+          "x": 75.0,
+          "y": 84.0
+        }
+      ]
+    },
+    {
+      "id": "c20_col4_m",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 84.0
+        },
+        {
+          "x": 50.0,
+          "y": 104.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r5_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 104.0
+        },
+        {
+          "x": 50.0,
+          "y": 104.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r5_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 104.0
+        },
+        {
+          "x": 75.0,
+          "y": 104.0
+        }
+      ]
+    },
+    {
+      "id": "c20_col5_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 104.0
+        },
+        {
+          "x": 20.0,
+          "y": 124.0
+        }
+      ]
+    },
+    {
+      "id": "c20_col5_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 104.0
+        },
+        {
+          "x": 75.0,
+          "y": 124.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r6_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 124.0
+        },
+        {
+          "x": 50.0,
+          "y": 124.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r6_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 124.0
+        },
+        {
+          "x": 75.0,
+          "y": 124.0
+        }
+      ]
+    },
+    {
+      "id": "c20_col6_m",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 124.0
+        },
+        {
+          "x": 50.0,
+          "y": 144.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r7_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 144.0
+        },
+        {
+          "x": 50.0,
+          "y": 144.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r7_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 144.0
+        },
+        {
+          "x": 75.0,
+          "y": 144.0
+        }
+      ]
+    },
+    {
+      "id": "c20_col7_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 144.0
+        },
+        {
+          "x": 20.0,
+          "y": 155.0
+        }
+      ]
+    },
+    {
+      "id": "c20_col7_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 144.0
+        },
+        {
+          "x": 75.0,
+          "y": 155.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r8_w",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 155.0
+        },
+        {
+          "x": 50.0,
+          "y": 155.0
+        }
+      ]
+    },
+    {
+      "id": "c20_r8_e",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 155.0
+        },
+        {
+          "x": 75.0,
+          "y": 155.0
+        }
+      ]
+    },
+    {
+      "id": "c20_exit",
+      "widthMeters": 3.8,
+      "isDeadEnd": false,
+      "path": [
+        {
+          "x": 50.0,
+          "y": 155.0
+        },
+        {
+          "x": 50.0,
+          "y": 165.0
+        }
+      ]
+    },
+    {
+      "id": "c20_trap1",
+      "widthMeters": 3.8,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 25.0
+        },
+        {
+          "x": 8.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c20_trap2",
+      "widthMeters": 3.8,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 25.0
+        },
+        {
+          "x": 88.0,
+          "y": 25.0
+        }
+      ]
+    },
+    {
+      "id": "c20_trap3",
+      "widthMeters": 3.8,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 44.0
+        },
+        {
+          "x": 8.0,
+          "y": 44.0
+        }
+      ]
+    },
+    {
+      "id": "c20_trap4",
+      "widthMeters": 3.8,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 44.0
+        },
+        {
+          "x": 88.0,
+          "y": 44.0
+        }
+      ]
+    },
+    {
+      "id": "c20_trap5",
+      "widthMeters": 3.8,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 64.0
+        },
+        {
+          "x": 8.0,
+          "y": 64.0
+        }
+      ]
+    },
+    {
+      "id": "c20_trap6",
+      "widthMeters": 3.8,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 64.0
+        },
+        {
+          "x": 88.0,
+          "y": 64.0
+        }
+      ]
+    },
+    {
+      "id": "c20_trap7",
+      "widthMeters": 3.8,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 84.0
+        },
+        {
+          "x": 8.0,
+          "y": 84.0
+        }
+      ]
+    },
+    {
+      "id": "c20_trap8",
+      "widthMeters": 3.8,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 84.0
+        },
+        {
+          "x": 88.0,
+          "y": 84.0
+        }
+      ]
+    },
+    {
+      "id": "c20_trap9",
+      "widthMeters": 3.8,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 104.0
+        },
+        {
+          "x": 8.0,
+          "y": 104.0
+        }
+      ]
+    },
+    {
+      "id": "c20_trap10",
+      "widthMeters": 3.8,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 75.0,
+          "y": 104.0
+        },
+        {
+          "x": 88.0,
+          "y": 104.0
+        }
+      ]
+    },
+    {
+      "id": "c20_trap11",
+      "widthMeters": 3.8,
+      "isDeadEnd": true,
+      "path": [
+        {
+          "x": 20.0,
+          "y": 155.0
+        },
+        {
+          "x": 8.0,
+          "y": 155.0
+        }
+      ]
+    }
   ]
 }
